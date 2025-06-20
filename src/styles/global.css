@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+/* 自定义动画 - Tailwind CSS v4 */
+@keyframes scaleAnim {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@utility scale {
+  animation: scaleAnim 300ms ease-in-out;
+}
+
+:root {
+  --background: #101010;
+  --sec: #a476ff;
+  --white: #dfdfdf;
+  --white-icon: #f3f3f398;
+  --white-icon-tr: #f3f3f310;
+}
+
+* {
+  font-family: "montserrat", -apple-system, system-ui, sans-serif;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+*::selection {
+  background-color: var(--sec);
+  color: var(--background);
+}
+
+/* Scrollbar styles */
+
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--container);
+  border-radius: 30px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--background);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--pink);
+}
+
+/* Scrollbar styles for Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) var(--container);
+}
