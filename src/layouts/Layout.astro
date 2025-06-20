@@ -1,11 +1,8 @@
 ---
-import '@/styles/global.css';
+import "@/styles/global.css";
 
-interface Props {
-  title: string;
-}
-
-const { title } = Astro.props;
+import { env } from "@/config/env";
+const { SITE_TITLE } = env;
 ---
 
 <!doctype html>
@@ -42,9 +39,9 @@ const { title } = Astro.props;
       />
     </noscript>
 
-    <title>{title}</title>
+    <title>{SITE_TITLE}</title>
   </head>
-  <body class="bg-[var(--background)]">
+  <body class="bg-[var(--background)] md:px-48 lg:px-20 px-9">
     <slot />
   </body>
 </html>
