@@ -1,0 +1,340 @@
+---
+// CyberBackground.astro - 独立的赛博朋克背景效果组件
+// 可配置背景效果的位置和强度
+
+export interface Props {
+	matrixOpacity?: number;
+	gridOpacity?: number;
+	auraOpacity?: number;
+	effectsPosition?: "top" | "center" | "bottom";
+}
+
+const {
+	matrixOpacity = 0.6,
+	gridOpacity = 0.4,
+	auraOpacity = 0.08,
+	effectsPosition = "center",
+} = Astro.props;
+---
+
+<!-- 黑客帝国+赛博朋克融合背景 -->
+<div class="cyber-background-container" data-position={effectsPosition}>
+  <!-- 代码雨背景 -->
+  <canvas id="matrix-canvas" class="matrix-canvas" style={`opacity: ${matrixOpacity}`}></canvas>
+  
+  <!-- 赛博空间网格 -->
+  <div class="cyber-space-grid" style={`opacity: ${gridOpacity}`}></div>
+  
+  <!-- 霓虹数据流 -->
+  <div class="data-streams">
+    <div class="data-stream data-stream-1"></div>
+    <div class="data-stream data-stream-2"></div>
+    <div class="data-stream data-stream-3"></div>
+    <div class="data-stream data-stream-4"></div>
+  </div>
+  
+  <!-- 赛博朋克光晕 -->
+  <div class="cyber-aura" style={`opacity: ${auraOpacity}`}>
+    <div class="aura-orb aura-primary"></div>
+    <div class="aura-orb aura-secondary"></div>
+    <div class="aura-orb aura-accent"></div>
+  </div>
+  
+  <!-- 全息投影效果 -->
+  <div class="hologram-overlay"></div>
+  
+  <!-- 扫描线 -->
+  <div class="scan-lines"></div>
+</div>
+
+<!-- Matrix Code Rain Script -->
+<script>
+  const canvas = document.getElementById('matrix-canvas') as HTMLCanvasElement;
+  if (canvas && canvas instanceof HTMLCanvasElement) {
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      // 设置画布大小
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      // 代码雨字符
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?'.split('');
+      const fontSize = 14;
+      const columns = Math.floor(canvas.width / fontSize);
+      const drops = Array(columns).fill(1);
+
+      function drawMatrix() {
+        if (!canvas || !ctx) return;
+        
+        // 半透明黑色覆盖，创建拖尾效果
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#39ff14'; // 黑客帝国绿色
+        ctx.font = `${fontSize}px monospace`;
+
+        for (let i = 0; i < drops.length; i++) {
+          const text = chars[Math.floor(Math.random() * chars.length)];
+          const x = i * fontSize;
+          const y = drops[i] * fontSize;
+
+          // 添加发光效果
+          ctx.shadowColor = '#39ff14';
+          ctx.shadowBlur = 8;
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+
+          // 重置雨滴
+          if (y > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+      }
+
+      // 动画循环
+      setInterval(drawMatrix, 50);
+    }
+  }
+</script>
+
+<style>
+  .cyber-background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* 位置控制 */
+  .cyber-background-container[data-position="top"] .cyber-aura {
+    transform: translateY(-30%);
+  }
+
+  .cyber-background-container[data-position="bottom"] .cyber-aura {
+    transform: translateY(30%);
+  }
+
+  /* 代码雨画布 */
+  .matrix-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* 赛博空间网格 */
+  .cyber-space-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(rgba(252, 238, 9, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(252, 238, 9, 0.08) 1px, transparent 1px),
+      linear-gradient(rgba(0, 245, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 245, 255, 0.04) 1px, transparent 1px);
+    background-size: 100px 100px, 100px 100px, 50px 50px, 50px 50px;
+    animation: grid-drift 30s linear infinite;
+  }
+
+  @keyframes grid-drift {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(100px, 100px);
+    }
+  }
+
+  /* 霓虹数据流 */
+  .data-streams {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .data-stream {
+    position: absolute;
+    width: 2px;
+    height: 100px;
+    background: linear-gradient(180deg, transparent, var(--primary), transparent);
+    animation: data-flow 8s linear infinite;
+    opacity: 0.5;
+  }
+
+  .data-stream-1 {
+    left: 20%;
+    animation-delay: 0s;
+    background: linear-gradient(180deg, transparent, var(--primary), transparent);
+  }
+
+  .data-stream-2 {
+    left: 40%;
+    animation-delay: 2s;
+    background: linear-gradient(180deg, transparent, var(--secondary), transparent);
+  }
+
+  .data-stream-3 {
+    left: 60%;
+    animation-delay: 4s;
+    background: linear-gradient(180deg, transparent, var(--accent), transparent);
+  }
+
+  .data-stream-4 {
+    left: 80%;
+    animation-delay: 6s;
+    background: linear-gradient(180deg, transparent, var(--success), transparent);
+  }
+
+  @keyframes data-flow {
+    0% {
+      transform: translateY(-100px);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.5;
+    }
+    90% {
+      opacity: 0.5;
+    }
+    100% {
+      transform: translateY(calc(100vh + 100px));
+      opacity: 0;
+    }
+  }
+
+  /* 赛博朋克光晕 */
+  .cyber-aura {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease;
+  }
+
+  .aura-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: cyber-float 12s ease-in-out infinite;
+  }
+
+  .aura-primary {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, var(--primary), transparent);
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+
+  .aura-secondary {
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, var(--secondary), transparent);
+    top: 60%;
+    right: 20%;
+    animation-delay: 4s;
+  }
+
+  .aura-accent {
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, var(--accent), transparent);
+    bottom: 30%;
+    left: 50%;
+    animation-delay: 8s;
+  }
+
+  @keyframes cyber-float {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(50px, -30px) scale(1.1);
+    }
+    66% {
+      transform: translate(-30px, 50px) scale(0.9);
+    }
+  }
+
+  /* 全息投影效果 */
+  .hologram-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 245, 255, 0.02) 2px,
+      rgba(0, 245, 255, 0.02) 4px
+    );
+    animation: hologram-flicker 0.1s linear infinite;
+  }
+
+  @keyframes hologram-flicker {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.95;
+    }
+  }
+
+  /* 扫描线 */
+  .scan-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 100px,
+      rgba(252, 238, 9, 0.02) 100px,
+      rgba(252, 238, 9, 0.02) 102px
+    );
+    animation: scan-move 15s linear infinite;
+  }
+
+  @keyframes scan-move {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
+
+  /* 响应式调整 */
+  @media (max-width: 768px) {
+    .cyber-space-grid {
+      background-size: 50px 50px, 50px 50px, 25px 25px, 25px 25px;
+    }
+    
+    .aura-orb {
+      filter: blur(40px);
+    }
+    
+    .matrix-canvas {
+      opacity: 0.4 !important;
+    }
+  }
+</style> 

@@ -1,45 +1,40 @@
 ---
 const technologies = [
-  "astro",
-  "vue",
-  "react",
-  "typeScript",
-  "tailwindcss",
-  "next",
-  "nodejs",
-  "HTML5",
-  "CSS3",
-  "javaScript",
-  "git",
-  "supabase",
-  "mysql",
-  "bash",
+	"astro",
+	"vue",
+	"react",
+	"typeScript",
+	"tailwindcss",
+	"next",
+	"nodejs",
+	"HTML5",
+	"CSS3",
+	"javaScript",
+	"git",
+	"supabase",
+	"mysql",
+	"bash",
 ];
 ---
 
 <div class="relative overflow-x-hidden py-8">
-  <div
-    class="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[var(--background)] to-transparent z-20"
-  >
-  </div>
-  <div
-    class="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[var(--background)] to-transparent z-20"
-  >
-  </div>
-
   <div class="flex animate-scroll hover:animate-paused gap-12 md:gap-20 w-max">
     {
-      [...technologies, ...technologies, ...technologies].map((tech) => (
-        <div class="flex items-center gap-2 group transition-all duration-300">
-          <img
-            src={`/svg/${tech}.svg`}
-            alt={tech}
-            class="h-7 w-auto object-contain transition-transform group-hover:scale-110 opacity-60"
-            width="30"
-            height="30"
-            loading="lazy"
-          />
-          <span class="text-lg font-medium text-[var(--white-icon)]">
+      [...technologies, ...technologies, ...technologies].map((tech, index) => (
+        <div class="flex items-center gap-2 group transition-all duration-300 tech-item">
+          <div class="relative">
+            <img
+              src={`/svg/${tech}.svg`}
+              alt={tech}
+              class="h-7 w-auto object-contain transition-all duration-300 group-hover:scale-125 opacity-60 group-hover:opacity-100 tech-icon"
+              width="30"
+              height="30"
+              loading="lazy"
+            />
+            <!-- 霓虹光晕效果 -->
+            <div class="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md bg-[var(--primary)]"></div>
+          </div>
+          <span class="text-lg font-medium text-[var(--white-icon)] group-hover:text-[var(--primary)] transition-colors duration-300 tech-text">
             {tech.charAt(0).toUpperCase() + tech.slice(1)}
           </span>
         </div>
@@ -57,6 +52,7 @@ const technologies = [
       transform: translateX(-50%);
     }
   }
+  
   .animate-scroll {
     animation: scroll 60s linear infinite;
   }
@@ -65,5 +61,57 @@ const technologies = [
     .animate-scroll {
       animation-duration: 50s;
     }
+  }
+
+  /* 赛博朋克技术图标效果 */
+  .tech-item:hover .tech-icon {
+    filter: drop-shadow(0 0 10px var(--primary)) drop-shadow(0 0 20px var(--secondary));
+  }
+
+  .tech-item:hover .tech-text {
+    text-shadow: 
+      0 0 5px var(--primary),
+      0 0 10px var(--primary);
+  }
+
+  /* 交替颜色效果 */
+  .tech-item:nth-child(3n) .tech-icon {
+    filter: hue-rotate(60deg);
+  }
+
+  .tech-item:nth-child(3n+1) .tech-icon {
+    filter: hue-rotate(120deg);
+  }
+
+  .tech-item:nth-child(3n+2) .tech-icon {
+    filter: hue-rotate(180deg);
+  }
+
+  /* 暂停动画效果 */
+  .animate-paused {
+    animation-play-state: paused;
+  }
+
+  /* 赛博朋克故障效果 */
+  @keyframes tech-glitch {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    20% {
+      transform: translateX(-2px);
+    }
+    40% {
+      transform: translateX(2px);
+    }
+    60% {
+      transform: translateX(-1px);
+    }
+    80% {
+      transform: translateX(1px);
+    }
+  }
+
+  .tech-item:hover {
+    animation: tech-glitch 0.3s infinite;
   }
 </style>

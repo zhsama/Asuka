@@ -5,6 +5,7 @@ const envSchema = z.object({
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),
+  SITE_AUTHOR: z.string().default("zhsama"),
   SITE_URL: z.url().default("http://localhost:4321"),
   SITE_TITLE: z.string().default("Zhsama's Blog"),
   SITE_START_YEAR: z.string().default("2000"),

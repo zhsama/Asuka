@@ -1,5 +1,6 @@
 ---
 import "@/styles/global.css";
+import CyberBackground from "@/components/CyberBackground.astro";
 
 import { env } from "@/config/env";
 const { SITE_TITLE } = env;
@@ -41,7 +42,22 @@ const { SITE_TITLE } = env;
 
     <title>{SITE_TITLE}</title>
   </head>
-  <body class="bg-[var(--background)] md:px-48 lg:px-20 px-9">
-    <slot />
+  <body class="cyberpunk-body md:px-48 lg:px-20 px-9">
+    <!-- 赛博朋克背景组件 -->
+    <CyberBackground />
+    
+    <!-- 页面内容 -->
+    <div class="relative z-10">
+      <slot />
+    </div>
   </body>
 </html>
+
+<style>
+  .cyberpunk-body {
+    background: #000000;
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+</style>

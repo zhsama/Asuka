@@ -6,74 +6,80 @@ import moviesfordevs from "~/public/moviesfordevs.png";
 import tron from "~/public/tron.png";
 
 interface Project {
-  title: string;
-  image: ImageMetadata;
-  link: string;
-  preview: string;
-  status: string;
+	title: string;
+	image: ImageMetadata;
+	link: string;
+	preview: string;
+	status: string;
 }
 
 const projects: Project[] = [
-  {
-    title: "MoviesForDevs",
-    image: moviesfordevs as ImageMetadata,
-    link: "https://github.com/gothsec/MoviesForDevs",
-    preview: "https://movies-for-devs.vercel.app",
-    status: "On Development",
-  },
-  {
-    title: "StockIn",
-    image: stockin as ImageMetadata,
-    link: "https://github.com/gothsec/stockin-demo",
-    preview: "https://stockin-demo.vercel.app",
-    status: "On Development",
-  },
-  {
-    title: "Svgl.app",
-    image: svgl as ImageMetadata,
-    link: "https://github.com/pheralb/svgl",
-    preview: "https://svgl.app",
-    status: "Contributor",
-  },
-  {
-    title: "Tron Legacy Web",
-    image: tron as ImageMetadata,
-    link: "https://github.com/Gothsec/Tron-Legacy-web",
-    preview: "https://tron-legacy-web.vercel.app/",
-    status: "Template (not official)",
-  },
+	{
+		title: "MoviesForDevs",
+		image: moviesfordevs as ImageMetadata,
+		link: "https://github.com/zhsama/MoviesForDevs",
+		preview: "https://movies-for-devs.vercel.app",
+		status: "On Development",
+	},
+	{
+		title: "StockIn",
+		image: stockin as ImageMetadata,
+		link: "https://github.com/zhsama/stockin-demo",
+		preview: "https://stockin-demo.vercel.app",
+		status: "On Development",
+	},
+	{
+		title: "Svgl.app",
+		image: svgl as ImageMetadata,
+		link: "https://github.com/pheralb/svgl",
+		preview: "https://svgl.app",
+		status: "Contributor",
+	},
+	{
+		title: "Tron Legacy Web",
+		image: tron as ImageMetadata,
+		link: "https://github.com/zhsama/Tron-Legacy-web",
+		preview: "https://tron-legacy-web.vercel.app/",
+		status: "Template (not official)",
+	},
 ];
 ---
 
 <section
   id="projects"
-  class="py-12 border-t border-[#ffffff10] text-[var(--white)]"
+  class="py-12 border-t border-[var(--border-light)] text-[var(--text-primary)]"
 >
-  <div class="max-w-5xl mx-auto">
-    <h2 class="text-lg text-[var(--sec)] mb-2 shiny-sec">My work</h2>
-    <h3 class="text-4xl md:text-5xl font-medium mb-8">Projects</h3>
+  <div class="max-w-5xl mx-auto relative z-10">
+    <h2 class="text-lg text-[var(--sec)] mb-2 neon-text cyberpunk-flicker">My work</h2>
+    <h3 class="text-4xl md:text-5xl font-medium mb-8 glitch-text" data-text="Projects">Projects</h3>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       {
-        projects.map((project) => (
-          <div class="group">
+        projects.map((project, index) => (
+          <div class="group project-card" style={`animation-delay: ${index * 0.1}s`}>
             <a
               href={project.preview}
               target="_blank"
               rel="noopener noreferrer"
               class="block"
             >
-              <div class="rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 mb-4">
+              <div class="rounded-2xl overflow-hidden shadow-lg transition-all duration-500 mb-4 cyberpunk-card border border-[var(--border-light)] hover:border-[var(--primary)] hover:shadow-[0_0_30px_rgba(252,238,9,0.4)] relative">
+                <!-- 扫描线效果 -->
+                <div class="absolute inset-0 pointer-events-none z-20 scanline"></div>
+                
                 <Image
                   src={project.image}
                   alt={project.title}
-                  class="w-full h-48 md:h-72 object-cover group-hover:scale-105 transition-transform duration-300"
+                  class="w-full h-48 md:h-72 object-cover group-hover:scale-110 transition-transform duration-500 group-hover:contrast-125"
                 />
+                
+                <!-- 悬停时的霓虹边框 -->
+                <div class="absolute inset-0 border-2 border-transparent group-hover:border-[var(--primary)] transition-all duration-300 rounded-2xl opacity-0 group-hover:opacity-100"></div>
               </div>
               <div class="flex items-center px-3">
                 <div class="flex-grow">
-                  <h4 class="text-2xl font-semibold">{project.title}</h4>
-                  <span class="py-1 text-sm text-[var(--white-icon)]">
+                  <h4 class="text-2xl font-semibold group-hover:text-[var(--primary)] transition-colors duration-300">{project.title}</h4>
+                  <span class="py-1 text-sm text-[var(--white-icon)] neon-text-cyan opacity-80">
                     {project.status}
                   </span>
                 </div>
@@ -82,7 +88,7 @@ const projects: Project[] = [
                     target="_blank"
                     href={project.link}
                     aria-label="GitHub"
-                    class="size-14 flex justify-center items-center text-[var(--white-icon)] hover:text-white transition duration-300 ease-in-out border border-1 border-[var(--white-icon-tr)] p-3 rounded-xl bg-[#1414149c] hover:bg-[var(--white-icon-tr)]"
+                    class="size-14 flex justify-center items-center cyberpunk-button rounded-xl group"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -97,7 +103,7 @@ const projects: Project[] = [
                     target="_blank"
                     href={project.preview}
                     aria-label="Preview"
-                    class="size-14 flex justify-center items-center text-[var(--white-icon)] hover:text-white transition duration-300 ease-in-out border border-1 border-[var(--white-icon-tr)] p-3 rounded-xl bg-[#1414149c] hover:bg-[var(--white-icon-tr)]"
+                    class="size-14 flex justify-center items-center cyberpunk-button rounded-xl group"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -117,16 +123,16 @@ const projects: Project[] = [
     </div>
     <a
       target="_blank"
-      href="https://github.com/Gothsec?tab=repositories"
+      href="https://github.com/zhsama"
       aria-label="GitHub"
-      class="w-full flex items-center justify-center gap-2 mt-9 text-[var(--white-icon)] hover:text-white transition duration-300 ease-in-out border border-[var(--white-icon-tr)] p-3 rounded-full bg-[#1414149c] hover:bg-[var(--white-icon-tr)] hover:scale-105"
+      class="cyberpunk-button w-full flex items-center justify-center gap-2 mt-9 text-[var(--white-icon)] hover:text-white transition-all duration-300 ease-in-out p-3 rounded-full hover:scale-105 group"
     >
-      <span class="md:text-lg text-md">More projects on</span>
+      <span class="md:text-lg text-md group-hover:drop-shadow-[0_0_5px_var(--primary)]">More projects on</span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="currentColor"
-        class="size-6"
+        class="size-6 group-hover:drop-shadow-[0_0_10px_var(--primary)]"
       >
         <path
           d="M12.001 2C6.47598 2 2.00098 6.475 2.00098 12C2.00098 16.425 4.86348 20.1625 8.83848 21.4875C9.33848 21.575 9.52598 21.275 9.52598 21.0125C9.52598 20.775 9.51348 19.9875 9.51348 19.15C7.00098 19.6125 6.35098 18.5375 6.15098 17.975C6.03848 17.6875 5.55098 16.8 5.12598 16.5625C4.77598 16.375 4.27598 15.9125 5.11348 15.9C5.90098 15.8875 6.46348 16.625 6.65098 16.925C7.55098 18.4375 8.98848 18.0125 9.56348 17.75C9.65098 17.1 9.91348 16.6625 10.201 16.4125C7.97598 16.1625 5.65098 15.3 5.65098 11.475C5.65098 10.3875 6.03848 9.4875 6.67598 8.7875C6.57598 8.5375 6.22598 7.5125 6.77598 6.1375C6.77598 6.1375 7.61348 5.875 9.52598 7.1625C10.326 6.9375 11.176 6.825 12.026 6.825C12.876 6.825 13.726 6.9375 14.526 7.1625C16.4385 5.8625 17.276 6.1375 17.276 6.1375C17.826 7.5125 17.476 8.5375 17.376 8.7875C18.0135 9.4875 18.401 10.375 18.401 11.475C18.401 15.3125 16.0635 16.1625 13.8385 16.4125C14.201 16.725 14.5135 17.325 14.5135 18.2625C14.5135 19.6 14.501 20.675 14.501 21.0125C14.501 21.275 14.6885 21.5875 15.1885 21.4875C19.259 20.1133 21.9999 16.2963 22.001 12C22.001 6.475 17.526 2 12.001 2Z"
@@ -135,3 +141,120 @@ const projects: Project[] = [
     </a>
   </div>
 </section>
+
+<style>
+  /* 项目卡片入场动画 */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .project-card {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  /* 增强的赛博朋克卡片效果 */
+  .cyberpunk-card {
+    position: relative;
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(26, 26, 26, 0.9));
+    backdrop-filter: blur(10px);
+  }
+
+  .cyberpunk-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    animation: scan 3s linear infinite;
+  }
+
+  @keyframes scan {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* 故障艺术文字效果 */
+  .glitch-text {
+    position: relative;
+  }
+
+  .glitch-text::before,
+  .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .glitch-text::before {
+    color: var(--secondary);
+    animation: glitch-1 0.5s infinite;
+    z-index: -2;
+  }
+
+  .glitch-text::after {
+    color: var(--accent);
+    animation: glitch-2 0.5s infinite reverse;
+    z-index: -1;
+  }
+
+  @keyframes glitch-1 {
+    0%, 100% {
+      clip: rect(0, 0, 0, 0);
+    }
+    20% {
+      clip: rect(10px, 9999px, 30px, 0);
+      transform: translate(-2px, -1px);
+    }
+    40% {
+      clip: rect(30px, 9999px, 50px, 0);
+      transform: translate(1px, 0);
+    }
+    60% {
+      clip: rect(50px, 9999px, 70px, 0);
+      transform: translate(-1px, 1px);
+    }
+    80% {
+      clip: rect(70px, 9999px, 90px, 0);
+      transform: translate(0, -2px);
+    }
+  }
+
+  @keyframes glitch-2 {
+    0%, 100% {
+      clip: rect(0, 0, 0, 0);
+    }
+    20% {
+      clip: rect(20px, 9999px, 40px, 0);
+      transform: translate(2px, 1px);
+    }
+    40% {
+      clip: rect(40px, 9999px, 60px, 0);
+      transform: translate(-1px, -1px);
+    }
+    60% {
+      clip: rect(60px, 9999px, 80px, 0);
+      transform: translate(1px, 2px);
+    }
+    80% {
+      clip: rect(80px, 9999px, 100px, 0);
+      transform: translate(-2px, 0);
+    }
+  }
+</style>

@@ -1,7 +1,7 @@
 <section id="contact" class="w-full py-12 border-t border-[#ffffff10]">
-  <div class="max-w-5xl mx-auto">
-    <h2 class="text-lg text-[var(--sec)] mb-2 shiny-sec">Let's talk</h2>
-    <h3 class="text-4xl md:text-5xl font-medium text-[var(--white)] mb-6">
+  <div class="max-w-5xl mx-auto relative z-10">
+    <h2 class="text-lg text-[var(--sec)] mb-2 neon-text cyberpunk-flicker">Let's talk</h2>
+    <h3 class="text-4xl md:text-5xl font-medium text-[var(--white)] mb-6 glitch-text" data-text="Contact">
       Contact
     </h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -10,8 +10,8 @@
           Have a question or a project in mind? Feel free to reach out.
         </p>
         <div class="flex items-center gap-2">
-          <span>Location:</span>
-          <span class="text-[var(--white)]">Colombia, Valle del cauca</span>
+          <span class="neon-text-pink">Location:</span>
+          <span class="text-[var(--white)] cyberpunk-flicker">Colombia, Valle del cauca</span>
         </div>
       </div>
 
@@ -27,34 +27,35 @@
             name="from_name"
             placeholder="Name"
             required
-            class="px-4 py-2 bg-[#1414149c] text-[var(--white)] border border-[var(--white-icon-tr)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--sec)]"
+            class="px-4 py-2 cyberpunk-input rounded-lg transition-all duration-300"
           />
           <input
             type="email"
             name="reply_to"
             placeholder="Email"
             required
-            class="px-4 py-2 bg-[#1414149c] text-[var(--white)] border border-[var(--white-icon-tr)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--sec)]"
+            class="px-4 py-2 cyberpunk-input rounded-lg transition-all duration-300"
           />
           <textarea
             name="message"
             placeholder="Message"
             rows="6"
             required
-            class="px-4 py-2 bg-[#1414149c] text-[var(--white)] border border-[var(--white-icon-tr)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--sec)] resize-none"
+            class="px-4 py-2 cyberpunk-input rounded-lg resize-none transition-all duration-300"
           ></textarea>
           <button
             type="submit"
-            class="px-4 py-2 bg-[var(--white-icon-tr)] text-[var(--white)] rounded-lg opacity-60 transition-opacity border border-[var(--white-icon-tr)] hover:opacity-100 hover:bg-[var(--white-icon-tr)]"
+            class="px-6 py-3 cyberpunk-button rounded-lg hover:scale-105 transform"
           >
-            Submit
+            <span class="relative z-10">Submit</span>
           </button>
         </form>
         <div
           id="form-message"
-          class="hidden justify-center items-center mt-4 text-[var(--white)] text-lg"
+          class="hidden flex items-center justify-center mt-4 text-[var(--white)] text-lg neon-text-green p-4 cyberpunk-badge rounded-lg bg-[rgba(57,255,20,0.1)]"
         >
-          ✅ Thank you for your message!
+          <span class="mr-2">✅</span>
+          <span class="cyberpunk-flicker">Thank you for your message!</span>
         </div>
       </div>
     </div>
@@ -68,6 +69,16 @@
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(form);
+    const submitButton = form.querySelector('button[type="submit"]');
+    
+    // 添加加载动画
+    submitButton.innerHTML = `
+      <span class="relative z-10 flex items-center justify-center">
+        <div class="cyber-loader w-5 h-5 mr-3"></div>
+        Sending...
+      </span>
+    `;
+    submitButton.disabled = true;
 
     try {
       const response = await fetch(form.action, {
@@ -79,14 +90,36 @@
         form.reset();
         form.style.display = "none";
         formMessage.classList.remove("hidden");
+        formMessage.classList.add("flex");
+        
+        // 添加成功动画
+        formMessage.style.animation = "fadeInUp 0.5s ease-out";
       } else {
         const data = await response.json();
         console.error("Error response:", data);
         alert("There was a problem sending your message.");
+        submitButton.innerHTML = '<span class="relative z-10">Submit</span>';
+        submitButton.disabled = false;
       }
     } catch (error) {
       console.error("Error:", error);
       alert("There was a problem sending your message.");
+      submitButton.innerHTML = '<span class="relative z-10">Submit</span>';
+      submitButton.disabled = false;
     }
   });
 </script>
+
+<style>
+  /* 淡入动画 */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
