@@ -40,7 +40,7 @@ const navItems: NavItem[] = [
                 href={item.href}
                 class="flex flex-col items-center gap-1 text-[var(--white-icon)] transition-colors text-xs md:text-base relative group"
               >
-                <div class="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full transition-all duration-300 scale-0 bg-[#A9FF5B] nav-indicator" />
+                <div class=" absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full transition-all duration-300 scale-0 bg-[#A9FF5B] nav-indicator" />
                 <span class="md:hidden flex items-center justify-center w-6 h-6">
                   <fragment set:html={item.icon} />
                 </span>
@@ -54,50 +54,6 @@ const navItems: NavItem[] = [
     </div>
   </nav>
 </div>
-<style>
-  nav {
-    background-color: var(--background);
-    transition:
-      background-color 0.3s ease,
-      border-radius 0.3s ease,
-      border-color 0.3s ease;
-  }
-
-  nav.scrolling {
-    background-color: var(--component-bg);
-    border-color: #ffffff10;
-    border-radius: 9999px;
-  }
-
-  nav a.active .nav-indicator {
-    transform: translateY(-50%) scale(1);
-    opacity: 1;
-  }
-
-  nav a.active {
-    color: white !important;
-  }
-
-  @media (max-width: 767px) {
-    nav {
-      width: 100% !important;
-      bottom: 0;
-      left: 50%;
-      position: fixed;
-      border-radius: 1rem 1rem 0 0;
-      border-color: #ffffff10;
-    }
-
-    nav.scrolling {
-      border-radius: 1rem 1rem 0 0;
-      background-color: var(--component-bg);
-    }
-
-    body {
-      padding-bottom: 70px;
-    }
-  }
-</style>
 
 <script>
   const nav = document.getElementById("main-nav");
@@ -156,12 +112,24 @@ const navItems: NavItem[] = [
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry: IntersectionObserverEntry) => {
+        const id = entry.target.getAttribute("id");
+
         if (entry.isIntersecting) {
-          navLinks.forEach((link) => link.classList.remove("active"));
-          const id = entry.target.getAttribute("id");
+          navLinks.forEach((link) => {
+            const indicator = link.querySelector(".nav-indicator");
+            if (indicator && indicator instanceof HTMLElement) {
+              indicator.style.transform = "translateY(-50%) scale(0)";
+              indicator.style.opacity = "0";
+            }
+          });
+
           const activeLink = document.querySelector(`nav a[href="#${id}"]`);
           if (activeLink) {
-            activeLink.classList.add("active");
+            const indicator = activeLink.querySelector(".nav-indicator");
+            if (indicator && indicator instanceof HTMLElement) {
+              indicator.style.transform = "translateY(-50%) scale(1)";
+              indicator.style.opacity = "1";
+            }
           }
         }
       });
@@ -176,13 +144,46 @@ const navItems: NavItem[] = [
 </script>
 
 <style>
-  @media (max-width: 767px) {
-    body {
-      padding-bottom: 70px;
-    }
+  nav {
+    background-color: var(--background);
+    transition:
+      background-color 0.3s ease,
+      border-radius 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  nav.scrolling {
+    background-color: var(--component-bg);
+    border-color: #ffffff10;
+    border-radius: 9999px;
+  }
+
+  nav a.active .nav-indicator {
+    transform: translateY(-50%) scale(1);
+    opacity: 1;
   }
 
   nav a.active {
     color: white !important;
+  }
+
+  @media (max-width: 767px) {
+    nav {
+      width: 100% !important;
+      bottom: 0;
+      left: 50%;
+      position: fixed;
+      border-radius: 1rem 1rem 0 0;
+      border-color: #ffffff10;
+    }
+
+    nav.scrolling {
+      border-radius: 1rem 1rem 0 0;
+      background-color: var(--component-bg);
+    }
+
+    body {
+      padding-bottom: 70px;
+    }
   }
 </style>
