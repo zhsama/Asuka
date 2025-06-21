@@ -106,7 +106,10 @@ const navItems: NavItem[] = [
   document.addEventListener("DOMContentLoaded", () => {
     const sections = document.querySelectorAll("section[id]");
     const navLinks = document.querySelectorAll("nav a[href^='#']");
-    const observerOptions = { threshold: 0.6 };
+    const observerOptions = { 
+      threshold: 0.3,
+      rootMargin: "-50px 0px -50px 0px"
+    };
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry: IntersectionObserverEntry) => {
@@ -146,18 +149,27 @@ const navItems: NavItem[] = [
     // 页面加载时检查当前位置
     const checkInitialSection = () => {
       const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
       const sections = Array.from(document.querySelectorAll("section[id]"));
       
       let currentSection = sections[0]; // 默认为第一个section
       
-      sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        const sectionTop = rect.top + scrollY;
-        
-        if (scrollY >= sectionTop - 100) {
-          currentSection = section;
-        }
-      });
+      // 检查是否在页面底部（接近contact section）
+      if (scrollY + windowHeight >= documentHeight - 100) {
+        currentSection = sections[sections.length - 1]; // 使用最后一个section (contact)
+      } else {
+        sections.forEach((section) => {
+          const rect = section.getBoundingClientRect();
+          const sectionTop = rect.top + scrollY;
+          const sectionHeight = rect.height;
+          
+          // 更宽松的检测条件
+          if (scrollY >= sectionTop - 200 && scrollY < sectionTop + sectionHeight - 100) {
+            currentSection = section;
+          }
+        });
+      }
       
       if (currentSection) {
         const id = currentSection.getAttribute("id");
@@ -190,7 +202,7 @@ const navItems: NavItem[] = [
     
     // 滚动时也检查（作为IntersectionObserver的补充）
     window.addEventListener("scroll", () => {
-      setTimeout(checkInitialSection, 100);
+      setTimeout(checkInitialSection, 50);
     }, { passive: true });
   });
 </script>

@@ -10,28 +10,27 @@
           Have a question or a project in mind? Feel free to reach out.
         </p>
         <div class="flex items-center gap-2">
-          <span class="neon-text-pink">Location:</span>
-          <span class="text-[var(--white)] cyberpunk-flicker">Colombia, Valle del cauca</span>
+          <span class="text-[var(--white)] cyberpunk-flicker">Location:</span>
+          <span class="neon-text-pink">Night City</span>
         </div>
       </div>
 
       <div>
         <form
           id="contact-form"
-          action="https://formspree.io/f/mnnjznkj"
-          method="POST"
           class="flex flex-col gap-4"
         >
+          <input type="hidden" name="access_key" value="094e2b86-78ce-4ae9-a60a-a74dd6d9468e">
           <input
             type="text"
-            name="from_name"
+            name="name"
             placeholder="Name"
             required
             class="px-4 py-2 cyberpunk-input rounded-lg transition-all duration-300"
           />
           <input
             type="email"
-            name="reply_to"
+            name="email"
             placeholder="Email"
             required
             class="px-4 py-2 cyberpunk-input rounded-lg transition-all duration-300"
@@ -47,7 +46,7 @@
             type="submit"
             class="px-6 py-3 cyberpunk-button rounded-lg hover:scale-105 transform"
           >
-            <span class="relative z-10">Submit</span>
+            <span class="neon-text-pink">Submit</span>
           </button>
         </form>
         <div
@@ -80,13 +79,23 @@
     `;
     submitButton.disabled = true;
 
+    // 转换为 JSON 格式
+    const object = Object.fromEntries(formData);
+    const json = JSON.stringify(object);
+
     try {
-      const response = await fetch(form.action, {
-        method: "POST",
-        body: formData,
-        headers: { Accept: "application/json" },
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: json
       });
-      if (response.ok) {
+      
+      const result = await response.json();
+      
+      if (response.status === 200) {
         form.reset();
         form.style.display = "none";
         formMessage.classList.remove("hidden");
@@ -94,17 +103,23 @@
         
         // 添加成功动画
         formMessage.style.animation = "fadeInUp 0.5s ease-out";
+        
+        // 3秒后隐藏成功消息并重新显示表单
+        setTimeout(() => {
+          formMessage.classList.add("hidden");
+          formMessage.classList.remove("flex");
+          form.style.display = "flex";
+        }, 3000);
       } else {
-        const data = await response.json();
-        console.error("Error response:", data);
-        alert("There was a problem sending your message.");
-        submitButton.innerHTML = '<span class="relative z-10">Submit</span>';
+        console.error("Error response:", result);
+        alert(result.message || "There was a problem sending your message.");
+        submitButton.innerHTML = '<span class="neon-text-pink">Submit</span>';
         submitButton.disabled = false;
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("There was a problem sending your message.");
-      submitButton.innerHTML = '<span class="relative z-10">Submit</span>';
+      alert("Something went wrong! Please try again.");
+      submitButton.innerHTML = '<span class="neon-text-pink">Submit</span>';
       submitButton.disabled = false;
     }
   });

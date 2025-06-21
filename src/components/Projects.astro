@@ -1,9 +1,9 @@
 ---
 import { Image } from "astro:assets";
-import svgl from "~/public/svgl.png";
-import stockin from "~/public/stockin.png";
-import moviesfordevs from "~/public/moviesfordevs.png";
-import tron from "~/public/tron.png";
+import cherry from "~/public/cherry.png";
+import ddgmcp from "~/public/ddgmcp.png";
+import ocr from "~/public/ocr.png";
+import sublink from "~/public/sublink.png";
 
 interface Project {
 	title: string;
@@ -15,32 +15,32 @@ interface Project {
 
 const projects: Project[] = [
 	{
-		title: "MoviesForDevs",
-		image: moviesfordevs as ImageMetadata,
-		link: "https://github.com/zhsama/MoviesForDevs",
-		preview: "https://movies-for-devs.vercel.app",
-		status: "On Development",
+		title: "RaycastScreenshotOcr",
+		image: ocr as ImageMetadata,
+		link: "https://github.com/zhsama/raycast-baidu-screenshot-ocr",
+		preview: "https://github.com/zhsama/raycast-baidu-screenshot-ocr",
+		status: "Developer",
 	},
 	{
-		title: "StockIn",
-		image: stockin as ImageMetadata,
-		link: "https://github.com/zhsama/stockin-demo",
-		preview: "https://stockin-demo.vercel.app",
-		status: "On Development",
+		title: "DuckDuckGoMcp",
+		image: ddgmcp as ImageMetadata,
+		link: "https://github.com/zhsama/duckduckgo-mcp-server",
+		preview: "https://github.com/zhsama/duckduckgo-mcp-server",
+		status: "Developer",
 	},
 	{
-		title: "Svgl.app",
-		image: svgl as ImageMetadata,
-		link: "https://github.com/pheralb/svgl",
-		preview: "https://svgl.app",
-		status: "Contributor",
+		title: "Cherry Studio",
+		image: cherry as ImageMetadata,
+		link: "https://github.com/CherryHQ/cherry-studio",
+		preview: "https://www.cherry-ai.com/",
+		status: "PR Some Features",
 	},
 	{
-		title: "Tron Legacy Web",
-		image: tron as ImageMetadata,
-		link: "https://github.com/zhsama/Tron-Legacy-web",
-		preview: "https://tron-legacy-web.vercel.app/",
-		status: "Template (not official)",
+		title: "Sublink",
+		image: sublink as ImageMetadata,
+		link: "https://github.com/zhsama/sublink-worker",
+		preview: "https://sublink.zhsama.xyz/",
+		status: "PR Some Features",
 	},
 ];
 ---
