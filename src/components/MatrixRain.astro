@@ -1,0 +1,180 @@
+---
+// MatrixRain.astro - 独立的黑客帝国代码雨效果组件
+// 可配置的代码雨背景效果
+
+export interface Props {
+  opacity?: number;
+  color?: string;
+  fontSize?: number;
+  speed?: number;
+  density?: number;
+  glowEffect?: boolean;
+  characters?: string;
+  zIndex?: number;
+  fullscreen?: boolean;
+  width?: string;
+  height?: string;
+  className?: string;
+}
+
+const {
+  opacity = 0.6,
+  color = '#39ff14', // 经典黑客帝国绿色
+  fontSize = 14,
+  speed = 50, // 动画间隔毫秒
+  density = 0.975, // 雨滴重置概率（越大越稀疏）
+  glowEffect = true,
+  characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?',
+  zIndex = -1,
+  fullscreen = false, // 是否全屏模式
+  width = '100%',
+  height = '100%',
+  className = '',
+} = Astro.props;
+
+// 生成唯一ID避免多个实例冲突
+const canvasId = `matrix-canvas-${Math.random().toString(36).substring(2, 11)}`;
+
+// 构建容器样式
+const containerStyle = fullscreen
+  ? `position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: ${zIndex}; pointer-events: none;`
+  : `position: relative; width: ${width}; height: ${height}; z-index: ${zIndex}; overflow: hidden;`;
+
+// 构建类名
+const containerClass = `matrix-rain-container ${fullscreen ? 'fullscreen' : 'embedded'} ${className}`.trim();
+---
+
+<!-- 代码雨背景容器 -->
+<div class={containerClass} style={containerStyle}>
+  <canvas
+    id={canvasId}
+    class="matrix-canvas"
+    style={`opacity: ${opacity}`}
+  ></canvas>
+</div>
+
+<!-- Matrix Code Rain Script -->
+<script define:vars={{ canvasId, color, fontSize, speed, density, glowEffect, characters }} is:inline>
+  // 等待DOM加载完成
+  document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById(canvasId);
+    if (canvas && canvas instanceof HTMLCanvasElement) {
+      const ctx = canvas.getContext('2d');
+      const container = canvas.parentElement;
+
+      if (ctx && container) {
+        // 设置画布大小
+        function resizeCanvas() {
+          const rect = container.getBoundingClientRect();
+          canvas.width = rect.width;
+          canvas.height = rect.height;
+        }
+        resizeCanvas();
+
+        // 监听容器大小变化
+        const resizeObserver = new ResizeObserver(resizeCanvas);
+        resizeObserver.observe(container);
+
+        // 代码雨字符数组
+        const chars = characters.split('');
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1);
+
+        function drawMatrix() {
+          if (!canvas || !ctx) return;
+          
+          // 半透明黑色覆盖，创建拖尾效果
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          // 设置字体和颜色
+          ctx.fillStyle = color;
+          ctx.font = `${fontSize}px monospace`;
+
+          // 绘制每一列的字符
+          for (let i = 0; i < drops.length; i++) {
+            const text = chars[Math.floor(Math.random() * chars.length)];
+            const x = i * fontSize;
+            const y = drops[i] * fontSize;
+
+            // 添加发光效果
+            if (glowEffect) {
+              ctx.shadowColor = color;
+              ctx.shadowBlur = 8;
+            }
+            
+            ctx.fillText(text, x, y);
+            
+            if (glowEffect) {
+              ctx.shadowBlur = 0;
+            }
+
+            // 重置雨滴位置
+            if (y > canvas.height && Math.random() > density) {
+              drops[i] = 0;
+            }
+            drops[i]++;
+          }
+        }
+
+        // 启动动画循环
+        const animationInterval = setInterval(drawMatrix, speed);
+
+        // 清理函数（当组件卸载时）
+        window.addEventListener('beforeunload', () => {
+          clearInterval(animationInterval);
+          resizeObserver.disconnect();
+        });
+      }
+    }
+  });
+</script>
+
+<style>
+  .matrix-rain-container {
+    display: block;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  /* 全屏模式 */
+  .matrix-rain-container.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    border: none !important;
+    outline: none !important;
+  }
+
+  /* 嵌入模式 */
+  .matrix-rain-container.embedded {
+    position: relative;
+    overflow: hidden;
+    pointer-events: none;
+    border: none !important;
+    outline: none !important;
+  }
+
+  .matrix-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  /* 响应式调整 */
+  @media (max-width: 768px) {
+    .matrix-canvas {
+      opacity: 0.4 !important;
+    }
+  }
+</style>

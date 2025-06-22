@@ -1,6 +1,8 @@
 ---
 import LogoWall from "@/components/LogoWall.astro";
-// import SkillsList from "../React/SkillsList.tsx";
+import SkillsList from "@/React/SkillsList.tsx";
+import MatrixRain from '@/components/MatrixRain.astro';
+
 import { env } from "@/config/env";
 const author = env.SITE_AUTHOR;
 ---
@@ -91,6 +93,23 @@ const author = env.SITE_AUTHOR;
     </div>
 
     <LogoWall />
+
+    <div class="flex flex-col lg:flex-row items-center gap-8">
+      <SkillsList client:load />
+      <div
+        class="flex justify-center md:w-full md:h-[300px] size-[290px] pt-3 md:pt-9 md:ml-16 relative"
+      >
+        <MatrixRain
+          width="100%"
+          height="100%"
+          opacity={0.8}
+          color="#39ff14"
+          fontSize={12}
+          speed={60}
+          client:load
+        />
+      </div>
+    </div>
   </div>
 </section>
 

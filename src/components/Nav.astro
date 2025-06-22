@@ -1,7 +1,10 @@
 ---
+import { env } from "@/config/env";
+
 interface NavItem {
 	label: string;
 	href: string;
+	external?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -17,6 +20,11 @@ const navItems: NavItem[] = [
 		label: "Contact",
 		href: "#contact",
 	},
+  {
+    label: "Blog",
+    href: env.BLOG_URL,
+    external: true,
+  }
 ];
 ---
 
@@ -34,6 +42,8 @@ const navItems: NavItem[] = [
             <li class="flex-1 md:flex-none">
               <a
                 href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
                 class="nav-link flex flex-col items-center gap-1 text-white transition-all duration-300 text-xs md:text-base relative group font-medium"
               >
                 <!-- 霓虹指示器 -->
@@ -42,8 +52,24 @@ const navItems: NavItem[] = [
                 <!-- 悬停效果背景 -->
                 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-lg"></div>
                 
-                <span class="hidden md:inline-block relative z-10 nav-text">{item.label}</span>
-                <span class="md:hidden relative z-10 nav-text">{item.label}</span>
+                <!-- 文本和外链图标的容器 -->
+                <div class="flex items-center gap-1 relative z-10">
+                  <span class="hidden md:inline-block nav-text">{item.label}</span>
+                  <span class="md:hidden nav-text">{item.label}</span>
+                  
+                  <!-- 外部链接图标 -->
+                  {item.external && (
+                    <svg 
+                      class="w-3 h-3 opacity-60 ml-1" 
+                      fill="currentColor" 
+                      viewBox="0 0 20 20" 
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path>
+                      <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path>
+                    </svg>
+                  )}
+                </div>
               </a>
             </li>
           ))

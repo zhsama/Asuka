@@ -76,18 +76,18 @@
   scrollbar-color: var(--primary) transparent;
 }
 
-/* 统一的赛博朋克按钮样式 */
+/* 统一的赛博朋克按钮样式 - 仿LEARN MORE */
 .cyberpunk-button {
-  background: linear-gradient(
-    135deg,
-    rgba(10, 10, 10, 0.8),
-    rgba(20, 20, 20, 0.6)
-  );
-  border: 2px solid var(--border-light);
+  background: transparent;
+  border: 2px solid var(--secondary);
+  color: var(--secondary);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(10px);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1em;
 }
 
 .cyberpunk-button::before {
@@ -100,7 +100,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(252, 238, 9, 0.3),
+    rgba(0, 245, 255, 0.2),
     transparent
   );
   transition: left 0.5s;
@@ -111,15 +111,12 @@
 }
 
 .cyberpunk-button:hover {
-  border-color: var(--primary);
-  background: linear-gradient(
-    135deg,
-    rgba(252, 238, 9, 0.1),
-    rgba(20, 20, 20, 0.8)
-  );
-  box-shadow: 0 0 20px rgba(252, 238, 9, 0.4),
-    inset 0 0 20px rgba(252, 238, 9, 0.1);
-  text-shadow: 0 0 8px var(--primary);
+  border-color: var(--secondary);
+  background: rgba(0, 245, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 245, 255, 0.5),
+    inset 0 0 20px rgba(0, 245, 255, 0.1);
+  text-shadow: 0 0 8px var(--secondary);
+  color: var(--secondary);
   transform: scale(1.02);
 }
 
