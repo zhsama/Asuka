@@ -78,17 +78,11 @@ const statItems = [
         <div class="stat-content">
           <div class="stat-value">{item.value}</div>
           <div class="stat-label">{item.label}</div>
-          <div class="stat-description">{item.description}</div>
+          {/* <div class="stat-description">{item.description}</div> */}
         </div>
         <div class="stat-glow"></div>
       </div>
     ))}
-  </div>
-  
-  <div class="stats-footer">
-    <p class="stats-note">
-      数据实时更新，记录博客成长历程
-    </p>
   </div>
 </div>
 
@@ -110,7 +104,7 @@ const statItems = [
   }
 
   .stats-grid {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6;
+    @apply grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-2;
   }
 
   .stat-item {
@@ -118,7 +112,7 @@ const statItems = [
     animation: stat-fade-in 0.6s ease-out forwards;
     animation-delay: var(--animation-delay);
     opacity: 0;
-    transform: translateY(20px);
+    /* transform: translateY(20px); */
   }
 
   .stat-item:hover {

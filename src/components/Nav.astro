@@ -1,5 +1,6 @@
 ---
 import { env } from "@/config/env";
+import ThemeSwitcher from "@/React/ThemeSwitcher";
 
 interface NavItem {
 	label: string;
@@ -29,9 +30,13 @@ const navItems: NavItem[] = [
 ---
 
 <div class="flex justify-center w-full">
+  <!-- 主题切换器 - 左侧 -->
+  <div class="fixed right-8 hidden md:block top-6 p-1.5 z-101">
+    <ThemeSwitcher client:load />
+  </div>
   <nav
     id="main-nav"
-    class="fixed left-1/2 -translate-x-1/2 z-[100] bg-[var(--background)] border border-transparent backdrop-blur-xl transition-all duration-500 ease-in-out md:top-6 md:bottom-auto bottom-0 w-[80%] cyberpunk-nav"
+    class="fixed left-1/2 -translate-x-1/2 z-[100] bg-[var(--background)] border border-transparent backdrop-blur-xl transition-all duration-500 ease-in-out md:top-6 md:bottom-auto bottom-0 w-[60%] cyberpunk-nav"
   >
     <div class="container mx-auto flex justify-center items-center p-3 relative">
       <ul
@@ -92,7 +97,7 @@ const navItems: NavItem[] = [
       const easeProgress = 1 - Math.pow(1 - scrollProgress, 4);
 
       const minWidth = 528;
-      const maxWidth = window.innerWidth * 0.8;
+      const maxWidth = window.innerWidth * 0.6;
       const currentWidth = maxWidth - (maxWidth - minWidth) * easeProgress;
 
       if (window.innerWidth >= 768) {
@@ -100,7 +105,7 @@ const navItems: NavItem[] = [
       }
     } else {
       nav?.classList.remove("scrolling");
-      nav?.style.setProperty("width", "80%");
+      nav?.style.setProperty("width", "60%");
     }
     rafId = null;
   }
@@ -332,9 +337,6 @@ const navItems: NavItem[] = [
     }
     60% {
       clip-path: inset(100% 0 0 0);
-    }
-    80% {
-      clip-path: inset(0 0 0 100%);
     }
   }
 

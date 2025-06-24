@@ -41,6 +41,15 @@ const { SITE_TITLE } = env;
     </noscript>
 
     <title>{SITE_TITLE}</title>
+    
+    <!-- 主题初始化脚本 -->
+    <script>
+      // 在页面加载前立即初始化主题，避免闪烁
+      (function() {
+        const savedThemeId = localStorage.getItem('selected-theme') || 'cyberpunk2077';
+        document.body.classList.add(`theme-${savedThemeId}`);
+      })();
+    </script>
   </head>
   <body class="cyberpunk-body md:px-48 lg:px-20 px-9">
     <!-- 赛博朋克背景组件 -->
