@@ -1,6 +1,5 @@
 ---
 import type { PaginationInfo } from '@/types/blog';
-import '@/styles/components/blog-pagination.css';
 
 interface Props {
   pagination: PaginationInfo;
@@ -138,3 +137,72 @@ function buildUrl(page: number): string {
     </div>
   </nav>
 )}
+
+<style>
+  @reference "tailwindcss";
+
+  .pagination-container {
+    @apply mt-12 space-y-4;
+  }
+
+  .pagination-info {
+    @apply text-center;
+  }
+
+  .pagination-text {
+    @apply text-[var(--text-muted)] text-sm;
+  }
+
+  .pagination-controls {
+    @apply flex items-center justify-center gap-2;
+  }
+
+  .pagination-nav {
+    @apply flex items-center gap-2 px-4 py-2 bg-[var(--component-bg)] border border-[var(--border-light)] rounded-lg text-[var(--text-secondary)] hover:text-[var(--primary)] hover:border-[var(--primary)] transition-all duration-200;
+    text-decoration: none;
+  }
+
+  .pagination-nav.disabled {
+    @apply opacity-50 cursor-not-allowed hover:text-[var(--text-secondary)] hover:border-[var(--border-light)];
+  }
+
+  .pagination-nav-icon {
+    @apply w-4 h-4;
+  }
+
+  .pagination-pages {
+    @apply flex items-center gap-1 mx-4;
+  }
+
+  .pagination-page {
+    @apply w-10 h-10 flex items-center justify-center rounded-lg text-[var(--text-secondary)] hover:text-[var(--primary)] hover:bg-[var(--primary)]/10 transition-all duration-200;
+    text-decoration: none;
+  }
+
+  .pagination-page.current {
+    @apply bg-[var(--primary)] text-black font-bold;
+  }
+
+  .pagination-ellipsis {
+    @apply w-10 h-10 flex items-center justify-center text-[var(--text-muted)];
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .pagination-controls {
+      @apply flex-col gap-4;
+    }
+    
+    .pagination-pages {
+      @apply mx-0;
+    }
+    
+    .pagination-nav {
+      @apply px-3 py-2 text-sm;
+    }
+    
+    .pagination-page {
+      @apply w-8 h-8 text-sm;
+    }
+  }
+</style>
