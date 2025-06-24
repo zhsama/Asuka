@@ -1,0 +1,210 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Nav from '@/components/Nav.astro';
+import Footer from '@/components/Footer.astro';
+import BlogCard from '@/components/blog/BlogCard.astro';
+import BlogFilter from '@/components/blog/BlogFilter.astro';
+import BlogSearch from '@/components/blog/BlogSearch.astro';
+import BlogPagination from '@/components/blog/BlogPagination.astro';
+import BlogTagCloud from '@/components/blog/BlogTagCloud.astro';
+import BlogStats from '@/components/blog/BlogStats.astro';
+import BlogNavigation from '@/components/blog/BlogNavigation.astro';
+import { getAllPosts, getFeaturedPosts, paginatePosts } from '@/utils/blog';
+
+// 获取查询参数
+const url = new URL(Astro.request.url);
+const currentPage = parseInt(url.searchParams.get('page') || '1');
+const postsPerPage = 9;
+
+// 获取所有文章并分页
+const allPosts = getAllPosts();
+const featuredPosts = getFeaturedPosts().slice(0, 3);
+const { posts, pagination } = paginatePosts(allPosts, currentPage, postsPerPage);
+
+// 页面元数据
+const title = currentPage === 1 ? '博客' : `博客 - 第 ${currentPage} 页`;
+const description = '分享技术文章、开发心得和生活感悟';
+---
+
+<Layout>
+  <Nav />
+  
+  <main class="blog-page">
+    <div class="container">
+      <!-- 页面标题 -->
+      <header class="page-header">
+        <h1 class="page-title">
+          <span class="title-text">博客</span>
+          <span class="title-accent">Blog</span>
+        </h1>
+        <p class="page-description">{description}</p>
+      </header>
+
+      <!-- 搜索栏 -->
+      <BlogSearch />
+
+      <div class="blog-layout">
+        <!-- 主内容区 -->
+        <div class="blog-main">
+          <!-- 精选文章 -->
+          {featuredPosts.length > 0 && currentPage === 1 && (
+            <section class="featured-section">
+              <h2 class="section-title">
+                <span class="title-icon">⭐</span>
+                精选文章
+              </h2>
+              <div class="featured-grid">
+                {featuredPosts.map(post => (
+                  <BlogCard post={post} featured={true} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- 最新文章 -->
+          <section class="posts-section">
+            <h2 class="section-title">
+              <span class="title-icon">📝</span>
+              {currentPage === 1 ? '最新文章' : `文章列表 - 第 ${currentPage} 页`}
+            </h2>
+            
+            {posts.length > 0 ? (
+              <>
+                <div class="posts-grid">
+                  {posts.map(post => (
+                    <BlogCard post={post} />
+                  ))}
+                </div>
+                
+                <!-- 分页 -->
+                <BlogPagination pagination={pagination} baseUrl="/blog" />
+              </>
+            ) : (
+              <div class="empty-state">
+                <div class="empty-icon">📝</div>
+                <h3 class="empty-title">暂无文章</h3>
+                <p class="empty-description">还没有发布任何文章，敬请期待！</p>
+              </div>
+            )}
+          </section>
+        </div>
+
+        <!-- 侧边栏 -->
+        <aside class="blog-sidebar">
+          <BlogNavigation currentPage="index" />
+          <BlogStats />
+          <BlogTagCloud />
+          <BlogFilter />
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  @reference "tailwindcss";
+  .blog-page {
+    @apply min-h-screen pt-24 pb-16;
+  }
+
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .page-header {
+    @apply text-center mb-12;
+  }
+
+  .page-title {
+    @apply text-4xl md:text-5xl font-bold mb-4;
+  }
+
+  .title-text {
+    @apply text-[var(--text-primary)];
+  }
+
+  .title-accent {
+    @apply text-[var(--primary)] ml-4;
+    text-shadow: 0 0 20px var(--primary);
+  }
+
+  .page-description {
+    @apply text-[var(--text-secondary)] text-lg max-w-2xl mx-auto;
+  }
+
+  .blog-layout {
+    @apply grid grid-cols-1 lg:grid-cols-4 gap-8;
+  }
+
+  .blog-main {
+    @apply lg:col-span-3;
+  }
+
+  .blog-sidebar {
+    @apply lg:col-span-1 space-y-6;
+  }
+
+  .featured-section {
+    @apply mb-12;
+  }
+
+  .posts-section {
+    @apply space-y-8;
+  }
+
+  .section-title {
+    @apply text-2xl font-bold text-[var(--text-primary)] mb-6 flex items-center;
+  }
+
+  .title-icon {
+    @apply mr-3 text-[var(--primary)];
+  }
+
+  .featured-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  .posts-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  .empty-state {
+    @apply text-center py-16;
+  }
+
+  .empty-icon {
+    @apply text-6xl mb-4;
+  }
+
+  .empty-title {
+    @apply text-xl font-bold text-[var(--text-primary)] mb-2;
+  }
+
+  .empty-description {
+    @apply text-[var(--text-muted)];
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 1024px) {
+    .blog-layout {
+      @apply grid-cols-1;
+    }
+    
+    .blog-sidebar {
+      @apply order-first;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .page-title {
+      @apply text-3xl;
+    }
+    
+    .featured-grid,
+    .posts-grid {
+      @apply grid-cols-1;
+    }
+  }
+</style>

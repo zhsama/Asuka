@@ -1,0 +1,394 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Nav from '@/components/Nav.astro';
+import Footer from '@/components/Footer.astro';
+import BlogNavigation from '@/components/blog/BlogNavigation.astro';
+import { getActiveFriendLinks } from '@/data/friends';
+
+const friendLinks = getActiveFriendLinks();
+
+// 页面元数据
+const title = '友情链接';
+const description = '推荐的优质网站和博客';
+---
+
+<Layout>
+  <Nav />
+  
+  <main class="friends-page">
+    <div class="container">
+      <!-- 页面标题 -->
+      <header class="page-header">
+        <h1 class="page-title">
+          <span class="title-text">友情链接</span>
+          <span class="title-accent">Friends</span>
+        </h1>
+        <p class="page-description">{description}</p>
+      </header>
+
+      <div class="friends-layout">
+        <!-- 主内容区 -->
+        <div class="friends-main">
+          <!-- 友链申请说明 -->
+          <div class="apply-section">
+        <h2 class="section-title">
+          <span class="title-icon">📝</span>
+          申请友链
+        </h2>
+        <div class="apply-content">
+          <p class="apply-description">
+            欢迎与我交换友情链接！如果您有优质的技术博客或网站，欢迎与我交换友链。
+          </p>
+          <div class="apply-requirements">
+            <h3 class="requirements-title">申请要求：</h3>
+            <ul class="requirements-list">
+              <li>网站内容积极向上，无违法违规内容</li>
+              <li>技术类博客或个人网站优先</li>
+              <li>网站能够正常访问，更新频率较高</li>
+              <li>网站设计美观，用户体验良好</li>
+            </ul>
+          </div>
+          <div class="my-info">
+            <h3 class="info-title">本站信息：</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">网站名称：</span>
+                <span class="info-value">Zhsama's Blog</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">网站地址：</span>
+                <span class="info-value">https://zhsama.xyz</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">网站描述：</span>
+                <span class="info-value">分享技术文章、开发心得和生活感悟</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">联系方式：</span>
+                <span class="info-value">通过邮件或评论联系</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 友链列表 -->
+      <section class="friends-section">
+        <h2 class="section-title">
+          <span class="title-icon">🔗</span>
+          友情链接
+          <span class="friends-count">({friendLinks.length})</span>
+        </h2>
+        
+        {friendLinks.length > 0 ? (
+          <div class="friends-grid">
+            {friendLinks.map(friend => (
+              <a 
+                href={friend.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="friend-card"
+              >
+                <div class="friend-avatar">
+                  {friend.avatar ? (
+                    <img src={friend.avatar} alt={friend.name} />
+                  ) : (
+                    <div class="avatar-placeholder">
+                      {friend.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+                
+                <div class="friend-content">
+                  <h3 class="friend-name">{friend.name}</h3>
+                  <p class="friend-description">{friend.description}</p>
+                  <div class="friend-url">{new URL(friend.url).hostname}</div>
+                </div>
+                
+                <div class="friend-status">
+                  <div class="status-indicator active"></div>
+                </div>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div class="empty-state">
+            <div class="empty-icon">🔗</div>
+            <h3 class="empty-title">暂无友链</h3>
+            <p class="empty-description">还没有添加任何友情链接，欢迎申请！</p>
+          </div>
+        )}
+      </section>
+
+      <!-- 友链检测状态 -->
+      <div class="status-section">
+        <h2 class="section-title">
+          <span class="title-icon">📊</span>
+          链接状态
+        </h2>
+        <div class="status-grid">
+          <div class="status-item">
+            <div class="status-icon active"></div>
+            <span class="status-label">正常</span>
+            <span class="status-count">{friendLinks.filter(f => f.status === 'active').length}</span>
+          </div>
+          <div class="status-item">
+            <div class="status-icon inactive"></div>
+            <span class="status-label">异常</span>
+            <span class="status-count">{friendLinks.filter(f => f.status === 'inactive').length}</span>
+          </div>
+          <div class="status-item">
+            <div class="status-icon total"></div>
+            <span class="status-label">总计</span>
+            <span class="status-count">{friendLinks.length}</span>
+          </div>
+        </div>
+        <p class="status-note">
+          * 链接状态每日自动检测更新
+        </p>
+      </div>
+        </div>
+
+        <!-- 侧边栏 -->
+        <aside class="friends-sidebar">
+          <BlogNavigation currentPage="friends" />
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  @reference "tailwindcss";
+  .friends-page {
+    @apply min-h-screen pt-24 pb-16;
+  }
+
+  .container {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .page-header {
+    @apply text-center mb-12;
+  }
+
+  .page-title {
+    @apply text-4xl md:text-5xl font-bold mb-4;
+  }
+
+  .title-text {
+    @apply text-[var(--text-primary)];
+  }
+
+  .title-accent {
+    @apply text-[var(--primary)] ml-4;
+    text-shadow: 0 0 20px var(--primary);
+  }
+
+  .page-description {
+    @apply text-[var(--text-secondary)] text-lg;
+  }
+
+  .friends-layout {
+    @apply grid grid-cols-1 lg:grid-cols-4 gap-8;
+  }
+
+  .friends-main {
+    @apply lg:col-span-3;
+  }
+
+  .friends-sidebar {
+    @apply lg:col-span-1 space-y-6;
+  }
+
+  .apply-section {
+    @apply mb-12 p-6 bg-[var(--component-bg)] border border-[var(--border-light)] rounded-lg;
+    backdrop-filter: blur(10px);
+  }
+
+  .section-title {
+    @apply text-2xl font-bold text-[var(--text-primary)] mb-6 flex items-center;
+  }
+
+  .title-icon {
+    @apply mr-3 text-[var(--primary)];
+  }
+
+  .friends-count {
+    @apply text-[var(--text-muted)] text-base font-normal ml-2;
+  }
+
+  .apply-content {
+    @apply space-y-6;
+  }
+
+  .apply-description {
+    @apply text-[var(--text-secondary)] leading-relaxed;
+  }
+
+  .requirements-title,
+  .info-title {
+    @apply text-lg font-bold text-[var(--text-primary)] mb-3;
+  }
+
+  .requirements-list {
+    @apply list-disc list-inside space-y-2 text-[var(--text-secondary)];
+  }
+
+  .info-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-3;
+  }
+
+  .info-item {
+    @apply flex flex-col sm:flex-row;
+  }
+
+  .info-label {
+    @apply text-[var(--text-muted)] font-medium sm:w-24 flex-shrink-0;
+  }
+
+  .info-value {
+    @apply text-[var(--text-primary)];
+  }
+
+  .friends-section {
+    @apply mb-12;
+  }
+
+  .friends-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  .friend-card {
+    @apply block p-6 bg-[var(--component-bg)] border border-[var(--border-light)] rounded-lg hover:border-[var(--primary)] hover:shadow-lg hover:shadow-[var(--primary)]/20 transition-all duration-300 relative overflow-hidden;
+    text-decoration: none;
+    backdrop-filter: blur(10px);
+  }
+
+  .friend-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .friend-avatar {
+    @apply w-16 h-16 mx-auto mb-4 rounded-full overflow-hidden;
+  }
+
+  .friend-avatar img {
+    @apply w-full h-full object-cover;
+  }
+
+  .avatar-placeholder {
+    @apply w-full h-full bg-[var(--primary)] text-black font-bold text-xl flex items-center justify-center;
+  }
+
+  .friend-content {
+    @apply text-center;
+  }
+
+  .friend-name {
+    @apply text-lg font-bold text-[var(--text-primary)] mb-2;
+  }
+
+  .friend-description {
+    @apply text-[var(--text-secondary)] text-sm mb-3 line-clamp-2;
+  }
+
+  .friend-url {
+    @apply text-[var(--text-muted)] text-xs;
+  }
+
+  .friend-status {
+    @apply absolute top-4 right-4;
+  }
+
+  .status-indicator {
+    @apply w-3 h-3 rounded-full;
+  }
+
+  .status-indicator.active {
+    @apply bg-[var(--success)];
+    box-shadow: 0 0 6px var(--success);
+  }
+
+  .status-indicator.inactive {
+    @apply bg-[var(--accent)];
+  }
+
+  .status-section {
+    @apply p-6 bg-[var(--component-bg)] border border-[var(--border-light)] rounded-lg;
+    backdrop-filter: blur(10px);
+  }
+
+  .status-grid {
+    @apply flex justify-center gap-8 mb-4;
+  }
+
+  .status-item {
+    @apply flex items-center gap-2 text-center;
+  }
+
+  .status-icon {
+    @apply w-4 h-4 rounded-full;
+  }
+
+  .status-icon.active {
+    @apply bg-[var(--success)];
+  }
+
+  .status-icon.inactive {
+    @apply bg-[var(--accent)];
+  }
+
+  .status-icon.total {
+    @apply bg-[var(--primary)];
+  }
+
+  .status-label {
+    @apply text-[var(--text-secondary)] text-sm;
+  }
+
+  .status-count {
+    @apply text-[var(--text-primary)] font-bold;
+  }
+
+  .status-note {
+    @apply text-[var(--text-muted)] text-xs text-center;
+  }
+
+  .empty-state {
+    @apply text-center py-16;
+  }
+
+  .empty-icon {
+    @apply text-6xl mb-4;
+  }
+
+  .empty-title {
+    @apply text-xl font-bold text-[var(--text-primary)] mb-2;
+  }
+
+  .empty-description {
+    @apply text-[var(--text-muted)];
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .page-title {
+      @apply text-3xl;
+    }
+    
+    .friends-grid {
+      @apply grid-cols-1;
+    }
+    
+    .status-grid {
+      @apply gap-4;
+    }
+    
+    .info-grid {
+      @apply grid-cols-1;
+    }
+  }
+</style>

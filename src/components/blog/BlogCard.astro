@@ -1,0 +1,56 @@
+---
+import type { BlogPost } from '@/types/blog';
+import { formatDate, formatReadingTime } from '@/utils/blog';
+import '@/styles/components/blog-card.css';
+
+interface Props {
+  post: BlogPost;
+  featured?: boolean;
+}
+
+const { post, featured = false } = Astro.props;
+---
+
+<article class={`blog-card ${featured ? 'featured' : ''}`}>
+  {post.coverImage && (
+    <div class="blog-card-image">
+      <img src={post.coverImage} alt={post.title} loading="lazy" />
+      <div class="image-overlay"></div>
+    </div>
+  )}
+  
+  <div class="blog-card-content">
+    <div class="blog-card-meta">
+      <span class="category">{post.category}</span>
+      <span class="reading-time">{formatReadingTime(post.readingTime)}</span>
+    </div>
+    
+    <h3 class="blog-card-title">
+      <a href={`/blog/${post.slug}`}>{post.title}</a>
+    </h3>
+    
+    <p class="blog-card-description">{post.description}</p>
+    
+    <div class="blog-card-tags">
+      {post.tags.slice(0, 3).map(tag => (
+        <span class="tag">#{tag}</span>
+      ))}
+      {post.tags.length > 3 && (
+        <span class="tag-more">+{post.tags.length - 3}</span>
+      )}
+    </div>
+    
+    <div class="blog-card-footer">
+      <div class="author-info">
+        <span class="author">{post.author}</span>
+        <span class="date">{formatDate(post.publishDate)}</span>
+      </div>
+      
+      {post.featured && (
+        <div class="featured-badge">
+          <span>精选</span>
+        </div>
+      )}
+    </div>
+  </div>
+</article>

@@ -1,0 +1,228 @@
+---
+interface Props {
+  currentPage?: string;
+}
+
+const { currentPage = 'index' } = Astro.props;
+
+const navItems = [
+  {
+    label: '最新文章',
+    href: '/blog',
+    icon: '📝',
+    key: 'index'
+  },
+  {
+    label: '精选文章',
+    href: '/blog/featured',
+    icon: '⭐',
+    key: 'featured'
+  },
+  {
+    label: '文章归档',
+    href: '/blog/archive',
+    icon: '📚',
+    key: 'archive'
+  },
+  {
+    label: '友情链接',
+    href: '/blog/friends',
+    icon: '🔗',
+    key: 'friends'
+  },
+  {
+    label: '搜索文章',
+    href: '/blog/search',
+    icon: '🔍',
+    key: 'search'
+  }
+];
+---
+
+<nav class="blog-navigation">
+  <h3 class="nav-title">
+    <span class="title-icon">🧭</span>
+    博客导航
+  </h3>
+  
+  <ul class="nav-list">
+    {navItems.map(item => (
+      <li class="nav-item">
+        <a 
+          href={item.href}
+          class={`nav-link ${currentPage === item.key ? 'active' : ''}`}
+        >
+          <span class="nav-icon">{item.icon}</span>
+          <span class="nav-label">{item.label}</span>
+          <span class="nav-arrow">→</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  
+  <div class="nav-footer">
+    <a href="/" class="back-home-link">
+      <span class="back-icon">🏠</span>
+      返回首页
+    </a>
+  </div>
+</nav>
+
+<style>
+  @reference "tailwindcss";
+  .blog-navigation {
+    @apply bg-[var(--component-bg)] border border-[var(--border-light)] rounded-lg p-6 backdrop-blur-sm;
+  }
+
+  .nav-title {
+    @apply flex items-center gap-2 text-lg font-bold text-[var(--primary)] mb-4;
+    text-shadow: 0 0 10px var(--primary);
+  }
+
+  .title-icon {
+    @apply text-xl;
+    filter: drop-shadow(0 0 5px var(--primary));
+  }
+
+  .nav-list {
+    @apply space-y-2 mb-6;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-item {
+    @apply relative;
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 px-3 py-2 text-[var(--text-secondary)] hover:text-[var(--primary)] hover:bg-[var(--primary)]/10 rounded transition-all duration-300 relative overflow-hidden;
+    text-decoration: none;
+  }
+
+  .nav-link::before {
+    content: "";
+    @apply absolute left-0 top-0 bottom-0 w-0 bg-[var(--primary)] transition-all duration-300;
+  }
+
+  .nav-link:hover::before {
+    @apply w-1;
+  }
+
+  .nav-link.active {
+    @apply text-[var(--primary)] bg-[var(--primary)]/20;
+    text-shadow: 0 0 8px var(--primary);
+  }
+
+  .nav-link.active::before {
+    @apply w-1;
+  }
+
+  .nav-icon {
+    @apply text-lg flex-shrink-0;
+    filter: drop-shadow(0 0 3px currentColor);
+  }
+
+  .nav-label {
+    @apply flex-1 font-medium;
+  }
+
+  .nav-arrow {
+    @apply text-sm opacity-0 transition-all duration-300 transform translate-x-[-10px];
+  }
+
+  .nav-link:hover .nav-arrow {
+    @apply opacity-100 translate-x-0;
+  }
+
+  .nav-link.active .nav-arrow {
+    @apply opacity-100 translate-x-0;
+    animation: arrow-pulse 2s ease-in-out infinite;
+  }
+
+  .nav-footer {
+    @apply pt-4 border-t border-[var(--border-light)];
+  }
+
+  .back-home-link {
+    @apply flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--secondary)] transition-all duration-300;
+    text-decoration: none;
+  }
+
+  .back-home-link:hover {
+    text-shadow: 0 0 5px var(--secondary);
+    transform: translateX(-2px);
+  }
+
+  .back-icon {
+    @apply text-base;
+    filter: drop-shadow(0 0 3px currentColor);
+  }
+
+  /* 动画效果 */
+  @keyframes arrow-pulse {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(3px);
+    }
+  }
+
+  /* 悬停时的发光效果 */
+  .nav-link:hover {
+    box-shadow: 0 0 15px rgba(252, 238, 9, 0.1);
+  }
+
+  .nav-link.active {
+    box-shadow: 0 0 20px rgba(252, 238, 9, 0.2);
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .blog-navigation {
+      @apply p-4;
+    }
+    
+    .nav-title {
+      @apply text-base mb-3;
+    }
+    
+    .nav-link {
+      @apply px-2 py-1.5 text-sm;
+    }
+    
+    .nav-icon {
+      @apply text-base;
+    }
+    
+    .nav-label {
+      @apply text-sm;
+    }
+  }
+
+  /* 加载动画 */
+  .nav-item {
+    animation: nav-item-fade-in 0.5s ease-out forwards;
+    animation-delay: calc(var(--index, 0) * 0.1s);
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  @keyframes nav-item-fade-in {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+</style>
+
+<script>
+  // 为导航项添加动画延迟
+  document.addEventListener('DOMContentLoaded', () => {
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach((item, index) => {
+      (item as HTMLElement).style.setProperty('--index', index.toString());
+    });
+  });
+</script>

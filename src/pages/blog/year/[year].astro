@@ -1,0 +1,282 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Nav from '@/components/Nav.astro';
+import Footer from '@/components/Footer.astro';
+import BlogCard from '@/components/blog/BlogCard.astro';
+import BlogFilter from '@/components/blog/BlogFilter.astro';
+import BlogPagination from '@/components/blog/BlogPagination.astro';
+import { getFilteredPosts, paginatePosts } from '@/utils/blog';
+
+// 获取年份用于静态生成
+export async function getStaticPaths() {
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
+  
+  return years.map(year => ({
+    params: { year: year.toString() },
+    props: { year }
+  }));
+}
+
+const { year } = Astro.params;
+const yearNum = parseInt(year!);
+
+if (!year || isNaN(yearNum)) {
+  return Astro.redirect('/404');
+}
+
+// 获取查询参数
+const url = new URL(Astro.request.url);
+const currentPage = parseInt(url.searchParams.get('page') || '1');
+const postsPerPage = 9;
+
+// 获取年份下的文章并分页
+const yearPosts = getFilteredPosts({ year: yearNum });
+const { posts, pagination } = paginatePosts(yearPosts, currentPage, postsPerPage);
+
+// 页面元数据
+const title = `${year} 年文章`;
+const description = `浏览 ${year} 年发布的所有文章`;
+---
+
+<Layout>
+  <Nav />
+  
+  <main class="year-page">
+    <div class="container">
+      <!-- 页面标题 -->
+      <header class="page-header">
+        <nav class="breadcrumb">
+          <a href="/blog" class="breadcrumb-link">博客</a>
+          <span class="breadcrumb-separator">/</span>
+          <a href="/blog/archive" class="breadcrumb-link">归档</a>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">{year} 年</span>
+        </nav>
+        
+        <h1 class="page-title">
+          <span class="year-icon">📅</span>
+          <span class="year-text">{year}</span>
+          <span class="year-suffix">年</span>
+        </h1>
+        <p class="page-description">
+          找到 <strong>{yearPosts.length}</strong> 篇文章
+        </p>
+      </header>
+
+      <div class="blog-layout">
+        <!-- 主内容区 -->
+        <div class="blog-main">
+          {posts.length > 0 ? (
+            <>
+              <!-- 年份统计 -->
+              <div class="year-stats">
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-number">{yearPosts.length}</span>
+                    <span class="stat-label">篇文章</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-number">{new Set(yearPosts.map(p => p.category)).size}</span>
+                    <span class="stat-label">个分类</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-number">{new Set(yearPosts.flatMap(p => p.tags)).size}</span>
+                    <span class="stat-label">个标签</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-number">{yearPosts.filter(p => p.featured).length}</span>
+                    <span class="stat-label">篇精选</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 文章列表 -->
+              <section class="posts-section">
+                <h2 class="section-title">
+                  {currentPage === 1 ? `${year} 年文章` : `${year} 年文章 - 第 ${currentPage} 页`}
+                </h2>
+                
+                <div class="posts-grid">
+                  {posts.map(post => (
+                    <BlogCard post={post} />
+                  ))}
+                </div>
+                
+                <!-- 分页 -->
+                <BlogPagination 
+                  pagination={pagination} 
+                  baseUrl={`/blog/year/${year}`} 
+                />
+              </section>
+            </>
+          ) : (
+            <div class="empty-state">
+              <div class="empty-icon">📅</div>
+              <h3 class="empty-title">暂无文章</h3>
+              <p class="empty-description">
+                {year} 年还没有发布任何文章，
+                <a href="/blog" class="back-link">浏览所有文章</a>
+              </p>
+            </div>
+          )}
+        </div>
+
+        <!-- 侧边栏 -->
+        <aside class="blog-sidebar">
+          <BlogFilter currentYear={yearNum} />
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  @reference "tailwindcss";
+  .year-page {
+    @apply min-h-screen pt-24 pb-16;
+  }
+
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .page-header {
+    @apply mb-12;
+  }
+
+  .breadcrumb {
+    @apply flex items-center gap-2 text-sm text-[var(--text-muted)] mb-4;
+  }
+
+  .breadcrumb-link {
+    @apply hover:text-[var(--primary)] transition-colors;
+    text-decoration: none;
+  }
+
+  .breadcrumb-separator {
+    @apply text-[var(--text-muted)];
+  }
+
+  .breadcrumb-current {
+    @apply text-[var(--text-secondary)];
+  }
+
+  .page-title {
+    @apply text-4xl md:text-5xl font-bold mb-4 flex items-center;
+  }
+
+  .year-icon {
+    @apply text-[var(--primary)] mr-3;
+    text-shadow: 0 0 10px var(--primary);
+  }
+
+  .year-text {
+    @apply text-[var(--text-primary)];
+  }
+
+  .year-suffix {
+    @apply text-[var(--text-secondary)] ml-2;
+  }
+
+  .page-description {
+    @apply text-[var(--text-secondary)] text-lg;
+  }
+
+  .page-description strong {
+    @apply text-[var(--primary)] font-bold;
+  }
+
+  .blog-layout {
+    @apply grid grid-cols-1 lg:grid-cols-4 gap-8;
+  }
+
+  .blog-main {
+    @apply lg:col-span-3 space-y-8;
+  }
+
+  .blog-sidebar {
+    @apply lg:col-span-1;
+  }
+
+  .year-stats {
+    @apply bg-[var(--component-bg)] border border-[var(--border-light)] rounded-lg p-6;
+    backdrop-filter: blur(10px);
+  }
+
+  .stats-grid {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-6;
+  }
+
+  .stat-item {
+    @apply text-center;
+  }
+
+  .stat-number {
+    @apply block text-2xl md:text-3xl font-bold text-[var(--primary)] mb-1;
+  }
+
+  .stat-label {
+    @apply text-[var(--text-muted)] text-sm;
+  }
+
+  .posts-section {
+    @apply space-y-8;
+  }
+
+  .section-title {
+    @apply text-2xl font-bold text-[var(--text-primary)];
+  }
+
+  .posts-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  .empty-state {
+    @apply text-center py-16;
+  }
+
+  .empty-icon {
+    @apply text-6xl mb-4;
+  }
+
+  .empty-title {
+    @apply text-xl font-bold text-[var(--text-primary)] mb-2;
+  }
+
+  .empty-description {
+    @apply text-[var(--text-muted)];
+  }
+
+  .back-link {
+    @apply text-[var(--primary)] hover:text-[var(--primary)]/80 transition-colors;
+    text-decoration: none;
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 1024px) {
+    .blog-layout {
+      @apply grid-cols-1;
+    }
+    
+    .blog-sidebar {
+      @apply order-first;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .page-title {
+      @apply text-3xl;
+    }
+    
+    .stats-grid {
+      @apply grid-cols-2;
+    }
+    
+    .posts-grid {
+      @apply grid-cols-1;
+    }
+  }
+</style>

@@ -1,0 +1,113 @@
+@reference "tailwindcss";
+
+.blog-card {
+  @apply relative bg-[var(--component-bg)] border border-[var(--border-light)] rounded-lg overflow-hidden transition-all duration-300 hover:border-[var(--primary)] hover:shadow-lg hover:shadow-[var(--primary)]/20;
+  backdrop-filter: blur(10px);
+}
+
+.blog-card.featured {
+  @apply border-[var(--primary)]/50;
+  box-shadow: 0 0 20px rgba(252, 238, 9, 0.1);
+}
+
+.blog-card:hover {
+  transform: translateY(-2px);
+}
+
+.blog-card-image {
+  @apply relative h-48 overflow-hidden;
+}
+
+.blog-card-image img {
+  @apply w-full h-full object-cover transition-transform duration-300;
+}
+
+.blog-card:hover .blog-card-image img {
+  transform: scale(1.05);
+}
+
+.image-overlay {
+  @apply absolute inset-0 bg-gradient-to-t from-black/60 to-transparent;
+}
+
+.blog-card-content {
+  @apply p-6;
+}
+
+.blog-card-meta {
+  @apply flex items-center justify-between mb-3 text-sm;
+}
+
+.category {
+  @apply px-2 py-1 bg-[var(--primary)]/20 text-[var(--primary)] rounded-full text-xs font-medium;
+}
+
+.reading-time {
+  @apply text-[var(--text-muted)];
+}
+
+.blog-card-title {
+  @apply mb-3;
+}
+
+.blog-card-title a {
+  @apply text-xl font-bold text-[var(--text-primary)] hover:text-[var(--primary)] transition-colors duration-200 line-clamp-2;
+  text-decoration: none;
+}
+
+.blog-card-description {
+  @apply text-[var(--text-secondary)] mb-4 line-clamp-3 leading-relaxed;
+}
+
+.blog-card-tags {
+  @apply flex flex-wrap gap-2 mb-4;
+}
+
+.tag {
+  @apply px-2 py-1 bg-[var(--secondary)]/20 text-[var(--secondary)] rounded text-xs hover:bg-[var(--secondary)]/30 transition-colors cursor-pointer;
+}
+
+.tag-more {
+  @apply px-2 py-1 bg-[var(--text-muted)]/20 text-[var(--text-muted)] rounded text-xs;
+}
+
+.blog-card-footer {
+  @apply flex items-center justify-between;
+}
+
+.author-info {
+  @apply flex flex-col gap-1;
+}
+
+.author {
+  @apply text-[var(--text-primary)] font-medium text-sm;
+}
+
+.date {
+  @apply text-[var(--text-muted)] text-xs;
+}
+
+.featured-badge {
+  @apply px-2 py-1 bg-[var(--accent)] text-white rounded-full text-xs font-medium;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .blog-card-content {
+    @apply p-4;
+  }
+  
+  .blog-card-title a {
+    @apply text-lg;
+  }
+} 

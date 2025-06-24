@@ -1,0 +1,286 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Nav from '@/components/Nav.astro';
+import Footer from '@/components/Footer.astro';
+import BlogCard from '@/components/blog/BlogCard.astro';
+import BlogFilter from '@/components/blog/BlogFilter.astro';
+import BlogPagination from '@/components/blog/BlogPagination.astro';
+import BlogNavigation from '@/components/blog/BlogNavigation.astro';
+import { getFeaturedPosts, paginatePosts } from '@/utils/blog';
+
+// 获取查询参数
+const url = new URL(Astro.request.url);
+const currentPage = parseInt(url.searchParams.get('page') || '1');
+const postsPerPage = 9;
+
+// 获取精选文章并分页
+const featuredPosts = getFeaturedPosts();
+const { posts, pagination } = paginatePosts(featuredPosts, currentPage, postsPerPage);
+
+// 页面元数据
+const title = currentPage === 1 ? '精选文章' : `精选文章 - 第 ${currentPage} 页`;
+const description = '精心挑选的优质文章推荐';
+---
+
+<Layout>
+  <Nav />
+  
+  <main class="featured-page">
+    <div class="container">
+      <!-- 页面标题 -->
+      <header class="page-header">
+        <nav class="breadcrumb">
+          <a href="/blog" class="breadcrumb-link">博客</a>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">精选文章</span>
+        </nav>
+        
+        <h1 class="page-title">
+          <span class="featured-icon">⭐</span>
+          <span class="title-text">精选文章</span>
+          <span class="title-accent">Featured</span>
+        </h1>
+        <p class="page-description">
+          {description} - 共 <strong>{featuredPosts.length}</strong> 篇精选文章
+        </p>
+      </header>
+
+      <div class="blog-layout">
+        <!-- 主内容区 -->
+        <div class="blog-main">
+          {posts.length > 0 ? (
+            <>
+              <!-- 精选说明 -->
+              <div class="featured-intro">
+                <h2 class="intro-title">为什么推荐这些文章？</h2>
+                <div class="intro-content">
+                  <div class="intro-item">
+                    <span class="intro-icon">💡</span>
+                    <div class="intro-text">
+                      <h3>深度内容</h3>
+                      <p>经过深入研究和实践验证的技术文章</p>
+                    </div>
+                  </div>
+                  <div class="intro-item">
+                    <span class="intro-icon">🎯</span>
+                    <div class="intro-text">
+                      <h3>实用价值</h3>
+                      <p>能够解决实际问题的经验分享</p>
+                    </div>
+                  </div>
+                  <div class="intro-item">
+                    <span class="intro-icon">🔥</span>
+                    <div class="intro-text">
+                      <h3>热门话题</h3>
+                      <p>关注度高、讨论活跃的技术话题</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 文章列表 -->
+              <section class="posts-section">
+                <h2 class="section-title">
+                  {currentPage === 1 ? '精选文章' : `精选文章 - 第 ${currentPage} 页`}
+                </h2>
+                
+                <div class="posts-grid">
+                  {posts.map(post => (
+                    <BlogCard post={post} featured={true} />
+                  ))}
+                </div>
+                
+                <!-- 分页 -->
+                <BlogPagination pagination={pagination} baseUrl="/blog/featured" />
+              </section>
+            </>
+          ) : (
+            <div class="empty-state">
+              <div class="empty-icon">⭐</div>
+              <h3 class="empty-title">暂无精选文章</h3>
+              <p class="empty-description">
+                还没有精选文章，
+                <a href="/blog" class="back-link">浏览所有文章</a>
+              </p>
+            </div>
+          )}
+        </div>
+
+        <!-- 侧边栏 -->
+        <aside class="blog-sidebar">
+          <BlogNavigation currentPage="featured" />
+          <BlogFilter />
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  @reference "tailwindcss";
+  .featured-page {
+    @apply min-h-screen pt-24 pb-16;
+  }
+
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .page-header {
+    @apply mb-12;
+  }
+
+  .breadcrumb {
+    @apply flex items-center gap-2 text-sm text-[var(--text-muted)] mb-4;
+  }
+
+  .breadcrumb-link {
+    @apply hover:text-[var(--primary)] transition-colors;
+    text-decoration: none;
+  }
+
+  .breadcrumb-separator {
+    @apply text-[var(--text-muted)];
+  }
+
+  .breadcrumb-current {
+    @apply text-[var(--text-secondary)];
+  }
+
+  .page-title {
+    @apply text-4xl md:text-5xl font-bold mb-4 flex items-center;
+  }
+
+  .featured-icon {
+    @apply text-[var(--accent)] mr-3;
+    text-shadow: 0 0 10px var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  .title-text {
+    @apply text-[var(--text-primary)];
+  }
+
+  .title-accent {
+    @apply text-[var(--primary)] ml-4;
+    text-shadow: 0 0 20px var(--primary);
+  }
+
+  .page-description {
+    @apply text-[var(--text-secondary)] text-lg;
+  }
+
+  .page-description strong {
+    @apply text-[var(--primary)] font-bold;
+  }
+
+  .blog-layout {
+    @apply grid grid-cols-1 lg:grid-cols-4 gap-8;
+  }
+
+  .blog-main {
+    @apply lg:col-span-3 space-y-12;
+  }
+
+  .blog-sidebar {
+    @apply lg:col-span-1;
+  }
+
+  .featured-intro {
+    @apply bg-[var(--component-bg)] border border-[var(--border-light)] rounded-lg p-6;
+    backdrop-filter: blur(10px);
+  }
+
+  .intro-title {
+    @apply text-xl font-bold text-[var(--text-primary)] mb-6;
+  }
+
+  .intro-content {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-6;
+  }
+
+  .intro-item {
+    @apply flex items-start gap-3;
+  }
+
+  .intro-icon {
+    @apply text-2xl flex-shrink-0;
+  }
+
+  .intro-text h3 {
+    @apply font-bold text-[var(--text-primary)] mb-1;
+  }
+
+  .intro-text p {
+    @apply text-[var(--text-secondary)] text-sm;
+  }
+
+  .posts-section {
+    @apply space-y-8;
+  }
+
+  .section-title {
+    @apply text-2xl font-bold text-[var(--text-primary)];
+  }
+
+  .posts-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  .empty-state {
+    @apply text-center py-16;
+  }
+
+  .empty-icon {
+    @apply text-6xl mb-4;
+  }
+
+  .empty-title {
+    @apply text-xl font-bold text-[var(--text-primary)] mb-2;
+  }
+
+  .empty-description {
+    @apply text-[var(--text-muted)];
+  }
+
+  .back-link {
+    @apply text-[var(--primary)] hover:text-[var(--primary)]/80 transition-colors;
+    text-decoration: none;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 1024px) {
+    .blog-layout {
+      @apply grid-cols-1;
+    }
+    
+    .blog-sidebar {
+      @apply order-first;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .page-title {
+      @apply text-3xl;
+    }
+    
+    .intro-content {
+      @apply grid-cols-1;
+    }
+    
+    .posts-grid {
+      @apply grid-cols-1;
+    }
+  }
+</style>

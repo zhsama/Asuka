@@ -1,0 +1,164 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Nav from '@/components/Nav.astro';
+import Footer from '@/components/Footer.astro';
+import BlogCard from '@/components/blog/BlogCard.astro';
+import { getPostBySlug, getAllPosts, getRelatedPosts, formatDate, formatReadingTime } from '@/utils/blog';
+import '@/styles/pages/blog-post.css';
+
+// 获取所有文章的 slug 用于静态生成
+export async function getStaticPaths() {
+  const posts = getAllPosts();
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post }
+  }));
+}
+
+const { slug } = Astro.params;
+const post = getPostBySlug(slug!);
+
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+// 获取相关文章
+const relatedPosts = getRelatedPosts(post, 3);
+
+// 页面元数据
+const title = post.title;
+const description = post.description;
+---
+
+<Layout>
+  <Nav />
+  
+  <main class="blog-post-page">
+    <div class="container">
+      <!-- 返回链接 -->
+      <nav class="breadcrumb">
+        <a href="/blog" class="breadcrumb-link">
+          <svg class="breadcrumb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+          返回博客
+        </a>
+      </nav>
+
+      <article class="blog-post">
+        <!-- 文章头部 -->
+        <header class="post-header">
+          {post.coverImage && (
+            <div class="post-cover">
+              <img src={post.coverImage} alt={post.title} />
+              <div class="cover-overlay"></div>
+            </div>
+          )}
+          
+          <div class="post-meta">
+            <div class="meta-tags">
+              <span class="category">{post.category}</span>
+              {post.featured && (
+                <span class="featured-badge">精选</span>
+              )}
+            </div>
+            
+            <h1 class="post-title">{post.title}</h1>
+            <p class="post-description">{post.description}</p>
+            
+            <div class="post-info">
+              <div class="author-info">
+                <span class="author">作者：{post.author}</span>
+                <span class="date">发布于 {formatDate(post.publishDate)}</span>
+                {post.updateDate && post.updateDate !== post.publishDate && (
+                  <span class="update-date">更新于 {formatDate(post.updateDate)}</span>
+                )}
+              </div>
+              
+              <div class="reading-info">
+                <span class="reading-time">{formatReadingTime(post.readingTime)}</span>
+              </div>
+            </div>
+            
+            <div class="post-tags">
+              {post.tags.map(tag => (
+                <a href={`/blog/tag/${encodeURIComponent(tag)}`} class="tag">
+                  #{tag}
+                </a>
+              ))}
+            </div>
+          </div>
+        </header>
+
+        <!-- 文章内容 -->
+        <div class="post-content">
+          <div class="content-wrapper" set:html={post.content} />
+        </div>
+
+        <!-- 文章底部 -->
+        <footer class="post-footer">
+          <div class="post-actions">
+            <button class="action-btn like-btn" onclick="toggleLike()">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+              </svg>
+              <span>点赞</span>
+            </button>
+            
+            <button class="action-btn share-btn" onclick="sharePost()">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+              </svg>
+              <span>分享</span>
+            </button>
+          </div>
+        </footer>
+      </article>
+
+      <!-- 相关文章 -->
+      {relatedPosts.length > 0 && (
+        <section class="related-posts">
+          <h2 class="section-title">
+            <span class="title-icon">🔗</span>
+            相关文章
+          </h2>
+          <div class="related-grid">
+            {relatedPosts.map(relatedPost => (
+              <BlogCard post={relatedPost} />
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  function toggleLike() {
+    const likeBtn = document.querySelector('.like-btn');
+    if (likeBtn) {
+      likeBtn.classList.toggle('liked');
+      // 这里可以添加实际的点赞逻辑
+    }
+  }
+
+  function sharePost() {
+    if (navigator.share) {
+      navigator.share({
+        title: document.title,
+        url: window.location.href
+      });
+    } else {
+      // 复制链接到剪贴板
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('链接已复制到剪贴板');
+      });
+    }
+  }
+
+  // 全局函数
+  (window as any).toggleLike = toggleLike;
+  (window as any).sharePost = sharePost;
+</script>

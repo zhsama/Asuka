@@ -1,0 +1,303 @@
+---
+import BlogCard from '@/components/blog/BlogCard.astro';
+import { getAllPosts, getFeaturedPosts } from '@/utils/blog';
+
+// 获取最新的3篇文章和精选文章
+const latestPosts = getAllPosts().slice(0, 3);
+const featuredPosts = getFeaturedPosts().slice(0, 2);
+---
+
+<section class="blog-preview-section" id="blog">
+  <div class="container">
+    <!-- 标题区域 -->
+    <header class="section-header">
+      <h2 class="section-title">
+        <span class="title-text">最新文章</span>
+        <span class="title-accent">Latest Posts</span>
+      </h2>
+      <p class="section-description">
+        分享技术见解、开发经验和个人思考
+      </p>
+    </header>
+
+    <!-- 精选文章 -->
+    {featuredPosts.length > 0 && (
+      <div class="featured-section">
+        <h3 class="subsection-title">
+          <span class="featured-icon">⭐</span>
+          精选推荐
+        </h3>
+        <div class="featured-grid">
+          {featuredPosts.map(post => (
+            <BlogCard post={post} featured={true} />
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- 最新文章 -->
+    <div class="latest-section">
+      <h3 class="subsection-title">
+        <span class="latest-icon">📝</span>
+        最新发布
+      </h3>
+      <div class="latest-grid">
+        {latestPosts.map(post => (
+          <BlogCard post={post} />
+        ))}
+      </div>
+    </div>
+
+    <!-- 查看更多按钮 -->
+    <div class="more-section">
+      <a href="/blog" class="more-button cyberpunk-button">
+        <span class="button-text">查看所有文章</span>
+        <span class="button-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 背景装饰 -->
+  <div class="section-bg">
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+  </div>
+</section>
+
+<style>
+  @reference "tailwindcss";
+
+  .blog-preview-section {
+    @apply relative py-20 md:py-32 overflow-hidden;
+    background: linear-gradient(135deg, var(--background) 0%, #0a0a0f 50%, var(--background) 100%);
+  }
+
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10;
+  }
+
+  /* 标题区域 */
+  .section-header {
+    @apply text-center mb-16;
+  }
+
+  .section-title {
+    @apply mb-6;
+  }
+
+  .title-text {
+    @apply block text-4xl md:text-5xl lg:text-6xl font-bold text-[var(--text-primary)] mb-2;
+    text-shadow: 
+      0 0 20px var(--primary),
+      0 0 40px var(--primary),
+      0 0 60px var(--primary);
+    animation: glitch-text 4s infinite;
+  }
+
+  .title-accent {
+    @apply block text-lg md:text-xl text-[var(--secondary)] font-light tracking-widest uppercase;
+    text-shadow: 0 0 10px var(--secondary);
+  }
+
+  .section-description {
+    @apply text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed;
+  }
+
+  /* 子标题 */
+  .subsection-title {
+    @apply flex items-center gap-3 text-2xl md:text-3xl font-bold text-[var(--primary)] mb-8;
+    text-shadow: 0 0 15px var(--primary);
+  }
+
+  .featured-icon,
+  .latest-icon {
+    @apply text-3xl;
+    filter: drop-shadow(0 0 10px var(--primary));
+  }
+
+  /* 精选文章区域 */
+  .featured-section {
+    @apply mb-16;
+  }
+
+  .featured-grid {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-8;
+  }
+
+  /* 最新文章区域 */
+  .latest-section {
+    @apply mb-16;
+  }
+
+  .latest-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+  }
+
+  /* 查看更多按钮 */
+  .more-section {
+    @apply text-center;
+  }
+
+  .more-button {
+    @apply inline-flex items-center gap-3 px-8 py-4 text-lg font-medium text-[var(--text-primary)] rounded-lg transition-all duration-300 relative overflow-hidden;
+    background: linear-gradient(45deg, transparent, rgba(252, 238, 9, 0.1));
+    border: 2px solid var(--primary);
+  }
+
+  .more-button::before {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent opacity-0 transition-opacity duration-500;
+    transform: translateX(-100%);
+  }
+
+  .more-button:hover::before {
+    @apply opacity-30;
+    transform: translateX(100%);
+    transition: transform 0.6s ease;
+  }
+
+  .more-button:hover {
+    @apply text-[var(--background)] scale-105;
+    background: rgba(252, 238, 9, 0.2);
+    box-shadow: 
+      0 0 30px var(--primary),
+      inset 0 0 30px rgba(252, 238, 9, 0.2);
+    text-shadow: 0 0 10px var(--primary);
+  }
+
+  .button-text {
+    @apply relative z-10;
+  }
+
+  .button-icon {
+    @apply w-5 h-5 transition-transform duration-300;
+  }
+
+  .more-button:hover .button-icon {
+    transform: translateX(4px);
+  }
+
+  /* 背景装饰 */
+  .section-bg {
+    @apply absolute inset-0 pointer-events-none;
+  }
+
+  .bg-grid {
+    @apply absolute inset-0 opacity-10;
+    background-image: 
+      linear-gradient(var(--border-light) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: grid-move 20s linear infinite;
+  }
+
+  .bg-glow {
+    @apply absolute inset-0;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(252, 238, 9, 0.1) 0%,
+      rgba(0, 245, 255, 0.05) 50%,
+      transparent 70%
+    );
+    animation: glow-pulse 4s ease-in-out infinite;
+  }
+
+  /* 动画效果 */
+  @keyframes grid-move {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(50px, 50px);
+    }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes glitch-text {
+    0%, 100% {
+      text-shadow: 
+        0 0 20px var(--primary),
+        0 0 40px var(--primary),
+        0 0 60px var(--primary);
+    }
+    25% {
+      text-shadow: 
+        -2px 0 var(--secondary), 
+        2px 0 var(--accent),
+        0 0 20px var(--primary);
+    }
+    50% {
+      text-shadow: 
+        2px 0 var(--secondary), 
+        -2px 0 var(--accent),
+        0 0 40px var(--primary);
+    }
+    75% {
+      text-shadow: 
+        0 0 30px var(--primary),
+        0 0 50px var(--accent);
+    }
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .blog-preview-section {
+      @apply py-16;
+    }
+
+    .section-header {
+      @apply mb-12;
+    }
+
+    .title-text {
+      @apply text-3xl;
+    }
+
+    .title-accent {
+      @apply text-base;
+    }
+
+    .section-description {
+      @apply text-base;
+    }
+
+    .subsection-title {
+      @apply text-xl mb-6;
+    }
+
+    .featured-section,
+    .latest-section {
+      @apply mb-12;
+    }
+
+    .more-button {
+      @apply px-6 py-3 text-base;
+    }
+  }
+
+  /* 卡片悬停效果增强 */
+  :global(.blog-preview-section .blog-card:hover) {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+      0 20px 40px rgba(252, 238, 9, 0.2),
+      0 0 30px rgba(0, 245, 255, 0.1);
+  }
+
+  :global(.blog-preview-section .blog-card.featured:hover) {
+    box-shadow: 
+      0 25px 50px rgba(252, 238, 9, 0.3),
+      0 0 40px rgba(252, 238, 9, 0.2);
+  }
+</style>

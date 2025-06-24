@@ -1,0 +1,337 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Nav from '@/components/Nav.astro';
+import Footer from '@/components/Footer.astro';
+import BlogCard from '@/components/blog/BlogCard.astro';
+import BlogFilter from '@/components/blog/BlogFilter.astro';
+import BlogSearch from '@/components/blog/BlogSearch.astro';
+import BlogPagination from '@/components/blog/BlogPagination.astro';
+import { searchPosts, paginatePosts } from '@/utils/blog';
+
+// 获取查询参数
+const url = new URL(Astro.request.url);
+const query = url.searchParams.get('q') || '';
+const currentPage = parseInt(url.searchParams.get('page') || '1');
+const postsPerPage = 9;
+
+// 搜索文章并分页
+let searchResults: any[] = [];
+let pagination: any = null;
+
+if (query.trim()) {
+  const allResults = searchPosts(query);
+  const paginatedResults = paginatePosts(allResults, currentPage, postsPerPage);
+  searchResults = paginatedResults.posts;
+  pagination = paginatedResults.pagination;
+}
+
+// 页面元数据
+const title = query ? `搜索: ${query}` : '搜索文章';
+const description = query ? `搜索 "${query}" 的结果` : '搜索博客文章';
+---
+
+<Layout>
+  <Nav />
+  
+  <main class="search-page">
+    <div class="container">
+      <!-- 页面标题 -->
+      <header class="page-header">
+        <nav class="breadcrumb">
+          <a href="/blog" class="breadcrumb-link">博客</a>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">搜索</span>
+        </nav>
+        
+        <h1 class="page-title">
+          <span class="search-icon">🔍</span>
+          <span class="title-text">搜索文章</span>
+        </h1>
+        
+        {query && (
+          <p class="page-description">
+            搜索 "<strong>{query}</strong>" 找到 <strong>{searchResults.length > 0 ? pagination?.totalPosts || 0 : 0}</strong> 篇文章
+          </p>
+        )}
+      </header>
+
+      <!-- 搜索栏 -->
+      <BlogSearch currentQuery={query} />
+
+      <div class="blog-layout">
+        <!-- 主内容区 -->
+        <div class="blog-main">
+          {!query.trim() ? (
+            <!-- 搜索提示 -->
+            <div class="search-tips">
+              <h2 class="tips-title">搜索提示</h2>
+              <div class="tips-content">
+                <div class="tip-item">
+                  <h3 class="tip-title">🔍 如何搜索</h3>
+                  <p class="tip-description">
+                    在上方搜索框中输入关键词，可以搜索文章标题、描述和标签。
+                  </p>
+                </div>
+                
+                <div class="tip-item">
+                  <h3 class="tip-title">💡 搜索技巧</h3>
+                  <ul class="tip-list">
+                    <li>使用空格分隔多个关键词</li>
+                    <li>搜索结果按相关性排序</li>
+                    <li>支持中英文混合搜索</li>
+                  </ul>
+                </div>
+                
+                <div class="tip-item">
+                  <h3 class="tip-title">🏷️ 热门标签</h3>
+                  <div class="hot-tags">
+                    <a href="/blog/tag/Astro" class="hot-tag">Astro</a>
+                    <a href="/blog/tag/React" class="hot-tag">React</a>
+                    <a href="/blog/tag/TypeScript" class="hot-tag">TypeScript</a>
+                    <a href="/blog/tag/前端" class="hot-tag">前端</a>
+                    <a href="/blog/tag/CSS" class="hot-tag">CSS</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : searchResults.length > 0 ? (
+            <!-- 搜索结果 -->
+            <>
+              <div class="search-results-header">
+                <h2 class="results-title">搜索结果</h2>
+                <p class="results-info">
+                  第 {pagination?.currentPage} 页，共 {pagination?.totalPages} 页
+                </p>
+              </div>
+              
+              <div class="posts-grid">
+                {searchResults.map(post => (
+                  <BlogCard post={post} />
+                ))}
+              </div>
+              
+              <!-- 分页 -->
+              {pagination && (
+                <BlogPagination 
+                  pagination={pagination} 
+                  baseUrl={`/blog/search?q=${encodeURIComponent(query)}`} 
+                />
+              )}
+            </>
+          ) : (
+            <!-- 无搜索结果 -->
+            <div class="empty-state">
+              <div class="empty-icon">🔍</div>
+              <h3 class="empty-title">未找到相关文章</h3>
+              <p class="empty-description">
+                没有找到包含 "{query}" 的文章，请尝试其他关键词。
+              </p>
+              <div class="empty-actions">
+                <a href="/blog" class="action-btn">浏览所有文章</a>
+                <button onclick="clearSearch()" class="action-btn secondary">重新搜索</button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <!-- 侧边栏 -->
+        <aside class="blog-sidebar">
+          <BlogFilter />
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  function clearSearch() {
+    const searchInput = document.querySelector('.search-input') as HTMLInputElement;
+    if (searchInput) {
+      searchInput.value = '';
+      searchInput.focus();
+    }
+  }
+
+  // 全局函数
+  (window as any).clearSearch = clearSearch;
+</script>
+
+<style>
+  @reference "tailwindcss";
+  
+  .search-page {
+    @apply min-h-screen pt-24 pb-16;
+  }
+
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .page-header {
+    @apply mb-8;
+  }
+
+  .breadcrumb {
+    @apply flex items-center gap-2 text-sm text-[var(--text-muted)] mb-4;
+  }
+
+  .breadcrumb-link {
+    @apply hover:text-[var(--primary)] transition-colors;
+    text-decoration: none;
+  }
+
+  .breadcrumb-separator {
+    @apply text-[var(--text-muted)];
+  }
+
+  .breadcrumb-current {
+    @apply text-[var(--text-secondary)];
+  }
+
+  .page-title {
+    @apply text-4xl md:text-5xl font-bold mb-4 flex items-center;
+  }
+
+  .search-icon {
+    @apply text-[var(--primary)] mr-3;
+    text-shadow: 0 0 10px var(--primary);
+  }
+
+  .title-text {
+    @apply text-[var(--text-primary)];
+  }
+
+  .page-description {
+    @apply text-[var(--text-secondary)] text-lg;
+  }
+
+  .page-description strong {
+    @apply text-[var(--primary)] font-bold;
+  }
+
+  .blog-layout {
+    @apply grid grid-cols-1 lg:grid-cols-4 gap-8;
+  }
+
+  .blog-main {
+    @apply lg:col-span-3;
+  }
+
+  .blog-sidebar {
+    @apply lg:col-span-1;
+  }
+
+  .search-tips {
+    @apply bg-[var(--component-bg)] border border-[var(--border-light)] rounded-lg p-6;
+    backdrop-filter: blur(10px);
+  }
+
+  .tips-title {
+    @apply text-2xl font-bold text-[var(--text-primary)] mb-6;
+  }
+
+  .tips-content {
+    @apply space-y-6;
+  }
+
+  .tip-item {
+    @apply space-y-3;
+  }
+
+  .tip-title {
+    @apply text-lg font-bold text-[var(--primary)] flex items-center;
+  }
+
+  .tip-description {
+    @apply text-[var(--text-secondary)] leading-relaxed;
+  }
+
+  .tip-list {
+    @apply list-disc list-inside space-y-1 text-[var(--text-secondary)];
+  }
+
+  .hot-tags {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .hot-tag {
+    @apply px-3 py-1 bg-[var(--secondary)]/20 text-[var(--secondary)] rounded hover:bg-[var(--secondary)]/30 transition-colors;
+    text-decoration: none;
+  }
+
+  .search-results-header {
+    @apply flex items-center justify-between mb-6;
+  }
+
+  .results-title {
+    @apply text-2xl font-bold text-[var(--text-primary)];
+  }
+
+  .results-info {
+    @apply text-[var(--text-muted)] text-sm;
+  }
+
+  .posts-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12;
+  }
+
+  .empty-state {
+    @apply text-center py-16;
+  }
+
+  .empty-icon {
+    @apply text-6xl mb-4;
+  }
+
+  .empty-title {
+    @apply text-xl font-bold text-[var(--text-primary)] mb-2;
+  }
+
+  .empty-description {
+    @apply text-[var(--text-muted)] mb-6;
+  }
+
+  .empty-actions {
+    @apply flex justify-center gap-4;
+  }
+
+  .action-btn {
+    @apply px-6 py-3 bg-[var(--primary)] text-black font-medium rounded-lg hover:bg-[var(--primary)]/90 transition-all duration-200;
+    text-decoration: none;
+  }
+
+  .action-btn.secondary {
+    @apply bg-[var(--component-bg)] text-[var(--text-primary)] border border-[var(--border-light)] hover:border-[var(--primary)];
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 1024px) {
+    .blog-layout {
+      @apply grid-cols-1;
+    }
+    
+    .blog-sidebar {
+      @apply order-first;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .page-title {
+      @apply text-3xl;
+    }
+    
+    .posts-grid {
+      @apply grid-cols-1;
+    }
+    
+    .search-results-header {
+      @apply flex-col items-start gap-2;
+    }
+    
+    .empty-actions {
+      @apply flex-col;
+    }
+  }
+</style>

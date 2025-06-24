@@ -1,0 +1,180 @@
+---
+import { getAllTags } from '@/utils/blog';
+
+interface Props {
+  maxTags?: number;
+  currentTag?: string;
+}
+
+const { maxTags = 30, currentTag } = Astro.props;
+
+const tags = getAllTags().slice(0, maxTags);
+
+// 计算标签的字体大小和颜色
+function getTagStyle(count: number, maxCount: number) {
+  const ratio = count / maxCount;
+  const fontSize = 0.8 + (ratio * 0.8); // 0.8rem to 1.6rem
+  const opacity = 0.6 + (ratio * 0.4); // 0.6 to 1.0
+  
+  return {
+    fontSize: `${fontSize}rem`,
+    opacity: opacity.toString()
+  };
+}
+
+const maxCount = Math.max(...tags.map(tag => tag.count));
+---
+
+<div class="tag-cloud">
+  <h3 class="tag-cloud-title">
+    <span class="title-icon">🏷️</span>
+    标签云
+  </h3>
+  
+  <div class="tag-cloud-container">
+    {tags.map(tag => {
+      const style = getTagStyle(tag.count, maxCount);
+      const isActive = currentTag === tag.name;
+      
+      return (
+        <a 
+          href={`/blog/tag/${encodeURIComponent(tag.name)}`}
+          class={`tag-item ${isActive ? 'active' : ''}`}
+          style={`font-size: ${style.fontSize}; opacity: ${style.opacity};`}
+          data-count={tag.count}
+        >
+          #{tag.name}
+        </a>
+      );
+    })}
+  </div>
+  
+  <div class="tag-cloud-footer">
+    <a href="/blog" class="view-all-link">
+      查看所有标签 →
+    </a>
+  </div>
+</div>
+
+<style>
+  @reference "tailwindcss";
+  .tag-cloud {
+    @apply bg-[var(--component-bg)] border border-[var(--border-light)] rounded-lg p-6 backdrop-blur-sm;
+  }
+
+  .tag-cloud-title {
+    @apply flex items-center gap-2 text-lg font-bold text-[var(--primary)] mb-4;
+    text-shadow: 0 0 10px var(--primary);
+  }
+
+  .title-icon {
+    @apply text-xl;
+    filter: drop-shadow(0 0 5px var(--primary));
+  }
+
+  .tag-cloud-container {
+    @apply flex flex-wrap gap-2 mb-4 min-h-[200px] items-start content-start;
+  }
+
+  .tag-item {
+    @apply inline-block px-2 py-1 text-[var(--secondary)] hover:text-[var(--primary)] rounded transition-all duration-300 relative;
+    text-decoration: none;
+    line-height: 1.4;
+  }
+
+  .tag-item::before {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)] opacity-0 rounded transition-opacity duration-300;
+    z-index: -1;
+  }
+
+  .tag-item:hover::before {
+    @apply opacity-10;
+  }
+
+  .tag-item:hover {
+    transform: scale(1.1);
+    text-shadow: 0 0 8px currentColor;
+  }
+
+  .tag-item.active {
+    @apply text-[var(--primary)] bg-[var(--primary)]/20;
+    text-shadow: 0 0 10px var(--primary);
+  }
+
+  .tag-item.active::before {
+    @apply opacity-20;
+  }
+
+  /* 标签计数提示 */
+  .tag-item::after {
+    content: "(" attr(data-count) ")";
+    @apply text-xs opacity-60 ml-1;
+  }
+
+  .tag-cloud-footer {
+    @apply pt-4 border-t border-[var(--border-light)];
+  }
+
+  .view-all-link {
+    @apply text-sm text-[var(--text-muted)] hover:text-[var(--secondary)] transition-colors duration-200;
+    text-decoration: none;
+  }
+
+  .view-all-link:hover {
+    text-shadow: 0 0 5px var(--secondary);
+  }
+
+  /* 动画效果 */
+  .tag-item {
+    animation: tag-float 3s ease-in-out infinite;
+    animation-delay: calc(var(--index, 0) * 0.1s);
+  }
+
+  @keyframes tag-float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-2px);
+    }
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .tag-cloud {
+      @apply p-4;
+    }
+    
+    .tag-cloud-title {
+      @apply text-base mb-3;
+    }
+    
+    .tag-cloud-container {
+      @apply min-h-[150px] gap-1;
+    }
+    
+    .tag-item {
+      @apply px-1.5 py-0.5 text-sm;
+    }
+  }
+
+  /* 标签大小变化动画 */
+  .tag-item {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .tag-item:hover {
+    animation-play-state: paused;
+  }
+</style>
+
+<script>
+  // 为标签添加动画延迟
+  document.addEventListener('DOMContentLoaded', () => {
+    const tagItems = document.querySelectorAll('.tag-item');
+    tagItems.forEach((item, index) => {
+      (item as HTMLElement).style.setProperty('--index', index.toString());
+    });
+  });
+</script>

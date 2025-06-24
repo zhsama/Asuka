@@ -1,0 +1,309 @@
+---
+import { getAllPosts, getAllTags, getAllCategories, getFeaturedPosts } from '@/utils/blog';
+
+// 计算统计数据
+const allPosts = getAllPosts();
+const allTags = getAllTags();
+const allCategories = getAllCategories();
+const featuredPosts = getFeaturedPosts();
+
+const stats = {
+  totalPosts: allPosts.length,
+  totalTags: allTags.length,
+  totalCategories: allCategories.length,
+  featuredPosts: featuredPosts.length,
+  totalWords: allPosts.reduce((total, post) => total + post.readingTime * 200, 0), // 估算字数
+  avgReadingTime: Math.round(allPosts.reduce((total, post) => total + post.readingTime, 0) / allPosts.length)
+};
+
+const statItems = [
+  {
+    label: '文章总数',
+    value: stats.totalPosts,
+    icon: '📝',
+    color: 'var(--primary)',
+    description: '已发布的文章数量'
+  },
+  {
+    label: '标签数量',
+    value: stats.totalTags,
+    icon: '🏷️',
+    color: 'var(--secondary)',
+    description: '使用的标签总数'
+  },
+  {
+    label: '分类数量',
+    value: stats.totalCategories,
+    icon: '📂',
+    color: 'var(--accent)',
+    description: '文章分类总数'
+  },
+  {
+    label: '精选文章',
+    value: stats.featuredPosts,
+    icon: '⭐',
+    color: 'var(--success)',
+    description: '精心挑选的优质文章'
+  },
+  {
+    label: '总字数',
+    value: `${Math.round(stats.totalWords / 1000)}K`,
+    icon: '✍️',
+    color: 'var(--primary)',
+    description: '所有文章的总字数'
+  },
+  {
+    label: '平均阅读',
+    value: `${stats.avgReadingTime}分钟`,
+    icon: '⏱️',
+    color: 'var(--secondary)',
+    description: '平均阅读时间'
+  }
+];
+---
+
+<div class="blog-stats">
+  <h3 class="stats-title">
+    <span class="title-icon">📊</span>
+    博客统计
+  </h3>
+  
+  <div class="stats-grid">
+    {statItems.map((item, index) => (
+      <div 
+        class="stat-item" 
+        style={`--item-color: ${item.color}; --animation-delay: ${index * 0.1}s;`}
+      >
+        <div class="stat-icon">{item.icon}</div>
+        <div class="stat-content">
+          <div class="stat-value">{item.value}</div>
+          <div class="stat-label">{item.label}</div>
+          <div class="stat-description">{item.description}</div>
+        </div>
+        <div class="stat-glow"></div>
+      </div>
+    ))}
+  </div>
+  
+  <div class="stats-footer">
+    <p class="stats-note">
+      数据实时更新，记录博客成长历程
+    </p>
+  </div>
+</div>
+
+<style>
+  @reference "tailwindcss";
+  
+  .blog-stats {
+    @apply bg-[var(--component-bg)] border border-[var(--border-light)] rounded-lg p-6 backdrop-blur-sm;
+  }
+
+  .stats-title {
+    @apply flex items-center gap-2 text-lg font-bold text-[var(--primary)] mb-6;
+    text-shadow: 0 0 10px var(--primary);
+  }
+
+  .title-icon {
+    @apply text-xl;
+    filter: drop-shadow(0 0 5px var(--primary));
+  }
+
+  .stats-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6;
+  }
+
+  .stat-item {
+    @apply relative p-4 bg-gradient-to-br from-[var(--component-bg)] to-transparent border border-[var(--border-light)] rounded-lg transition-all duration-300 hover:scale-105 cursor-pointer overflow-hidden;
+    animation: stat-fade-in 0.6s ease-out forwards;
+    animation-delay: var(--animation-delay);
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .stat-item:hover {
+    border-color: var(--item-color);
+    box-shadow: 0 0 20px var(--item-color);
+  }
+
+  .stat-icon {
+    @apply text-2xl mb-2 transition-transform duration-300;
+    filter: drop-shadow(0 0 5px var(--item-color));
+  }
+
+  .stat-item:hover .stat-icon {
+    transform: scale(1.2) rotate(5deg);
+  }
+
+  .stat-content {
+    @apply relative z-10;
+  }
+
+  .stat-value {
+    @apply text-2xl font-bold mb-1;
+    color: var(--item-color);
+    text-shadow: 0 0 10px var(--item-color);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-label {
+    @apply text-sm font-medium text-[var(--text-primary)] mb-1;
+  }
+
+  .stat-description {
+    @apply text-xs text-[var(--text-muted)] leading-relaxed;
+  }
+
+  .stat-glow {
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300 pointer-events-none;
+    background: radial-gradient(circle at center, var(--item-color), transparent 70%);
+  }
+
+  .stat-item:hover .stat-glow {
+    @apply opacity-10;
+  }
+
+  .stats-footer {
+    @apply pt-4 border-t border-[var(--border-light)] text-center;
+  }
+
+  .stats-note {
+    @apply text-xs text-[var(--text-muted)] italic;
+  }
+
+  /* 动画定义 */
+  @keyframes stat-fade-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes stat-pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  /* 数字计数动画 */
+  .stat-value {
+    animation: stat-count 1s ease-out;
+    animation-delay: calc(var(--animation-delay) + 0.3s);
+  }
+
+  @keyframes stat-count {
+    from {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* 悬停时的脉冲效果 */
+  .stat-item:hover .stat-value {
+    animation: stat-pulse 1s ease-in-out infinite;
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 640px) {
+    .blog-stats {
+      @apply p-4;
+    }
+    
+    .stats-title {
+      @apply text-base mb-4;
+    }
+    
+    .stats-grid {
+      @apply grid-cols-2 gap-3;
+    }
+    
+    .stat-item {
+      @apply p-3;
+    }
+    
+    .stat-icon {
+      @apply text-xl mb-1;
+    }
+    
+    .stat-value {
+      @apply text-lg;
+    }
+    
+    .stat-label {
+      @apply text-xs;
+    }
+    
+    .stat-description {
+      @apply hidden;
+    }
+  }
+
+  /* 特殊效果：随机闪烁 */
+  .stat-item:nth-child(odd) {
+    animation-name: stat-fade-in, stat-twinkle;
+    animation-duration: 0.6s, 3s;
+    animation-delay: var(--animation-delay), calc(var(--animation-delay) + 2s);
+    animation-iteration-count: 1, infinite;
+  }
+
+  @keyframes stat-twinkle {
+    0%, 100% {
+      box-shadow: none;
+    }
+    50% {
+      box-shadow: 0 0 15px var(--item-color);
+    }
+  }
+</style>
+
+<script>
+  // 数字计数动画
+  document.addEventListener('DOMContentLoaded', () => {
+    const statValues = document.querySelectorAll('.stat-value');
+    
+    const animateNumber = (element: Element, finalValue: string) => {
+      const isNumeric = /^\d+$/.test(finalValue);
+      if (!isNumeric) return;
+      
+      const target = parseInt(finalValue);
+      const duration = 1000; // 1秒
+      const steps = 30;
+      const increment = target / steps;
+      let current = 0;
+      
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        element.textContent = Math.floor(current).toString();
+      }, duration / steps);
+    };
+    
+    // 使用 Intersection Observer 来触发动画
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const statValue = entry.target.querySelector('.stat-value');
+          if (statValue && !statValue.hasAttribute('data-animated')) {
+            statValue.setAttribute('data-animated', 'true');
+            const originalValue = statValue.textContent || '0';
+            animateNumber(statValue, originalValue);
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+    
+    document.querySelectorAll('.stat-item').forEach(item => {
+      observer.observe(item);
+    });
+  });
+</script>

@@ -1,0 +1,362 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Nav from '@/components/Nav.astro';
+import Footer from '@/components/Footer.astro';
+import BlogNavigation from '@/components/blog/BlogNavigation.astro';
+import { getArchive, formatDate } from '@/utils/blog';
+
+const archive = getArchive();
+
+// 月份名称映射
+const monthNames = [
+  '一月', '二月', '三月', '四月', '五月', '六月',
+  '七月', '八月', '九月', '十月', '十一月', '十二月'
+];
+
+// 页面元数据
+const title = '文章归档';
+const description = '按时间线浏览所有文章';
+---
+
+<Layout>
+  <Nav />
+  
+  <main class="archive-page">
+    <div class="container">
+      <!-- 页面标题 -->
+      <header class="page-header">
+        <h1 class="page-title">
+          <span class="title-text">文章归档</span>
+          <span class="title-accent">Archive</span>
+        </h1>
+        <p class="page-description">{description}</p>
+      </header>
+
+      <!-- 统计信息 -->
+      <div class="archive-stats">
+        <div class="stat-item">
+          <span class="stat-number">{archive.reduce((total, year) => total + year.months.reduce((yearTotal, month) => yearTotal + month.posts.length, 0), 0)}</span>
+          <span class="stat-label">篇文章</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{archive.length}</span>
+          <span class="stat-label">年份</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{archive.reduce((total, year) => total + year.months.length, 0)}</span>
+          <span class="stat-label">个月</span>
+        </div>
+      </div>
+
+      <div class="archive-layout">
+        <!-- 主内容区 -->
+        <div class="archive-main">
+          <!-- 归档时间线 -->
+          <div class="archive-timeline">
+            {archive.map(yearData => (
+              <div class="year-section">
+                <div class="year-header">
+                  <h2 class="year-title">{yearData.year}</h2>
+                  <span class="year-count">
+                    {yearData.months.reduce((total, month) => total + month.posts.length, 0)} 篇文章
+                  </span>
+                </div>
+                
+                <div class="months-container">
+                  {yearData.months.map(monthData => (
+                    <div class="month-section">
+                      <div class="month-header">
+                        <h3 class="month-title">
+                          <span class="month-icon">📅</span>
+                          {monthNames[monthData.month - 1]}
+                        </h3>
+                        <span class="month-count">{monthData.posts.length} 篇</span>
+                      </div>
+                      
+                      <div class="posts-list">
+                        {monthData.posts.map(post => (
+                          <article class="archive-post">
+                            <div class="post-date">
+                              <span class="day">{new Date(post.publishDate).getDate()}</span>
+                              <span class="weekday">
+                                {new Date(post.publishDate).toLocaleDateString('zh-CN', { weekday: 'short' })}
+                              </span>
+                            </div>
+                            
+                            <div class="post-content">
+                              <h4 class="post-title">
+                                <a href={`/blog/${post.slug}`}>{post.title}</a>
+                              </h4>
+                              <p class="post-description">{post.description}</p>
+                              
+                              <div class="post-meta">
+                                <span class="category">{post.category}</span>
+                                <div class="tags">
+                                  {post.tags.slice(0, 3).map(tag => (
+                                    <span class="tag">#{tag}</span>
+                                  ))}
+                                </div>
+                                {post.featured && (
+                                  <span class="featured-badge">精选</span>
+                                )}
+                              </div>
+                            </div>
+                          </article>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {archive.length === 0 && (
+            <div class="empty-state">
+              <div class="empty-icon">📚</div>
+              <h3 class="empty-title">暂无归档</h3>
+              <p class="empty-description">还没有发布任何文章，敬请期待！</p>
+            </div>
+          )}
+        </div>
+
+        <!-- 侧边栏 -->
+        <aside class="archive-sidebar">
+          <BlogNavigation currentPage="archive" />
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  @reference "tailwindcss";
+  
+  .archive-page {
+    @apply min-h-screen pt-24 pb-16;
+  }
+
+  .container {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .page-header {
+    @apply text-center mb-12;
+  }
+
+  .page-title {
+    @apply text-4xl md:text-5xl font-bold mb-4;
+  }
+
+  .title-text {
+    @apply text-[var(--text-primary)];
+  }
+
+  .title-accent {
+    @apply text-[var(--primary)] ml-4;
+    text-shadow: 0 0 20px var(--primary);
+  }
+
+  .page-description {
+    @apply text-[var(--text-secondary)] text-lg;
+  }
+
+  .archive-stats {
+    @apply flex justify-center gap-8 mb-12 p-6 bg-[var(--component-bg)] border border-[var(--border-light)] rounded-lg;
+    backdrop-filter: blur(10px);
+  }
+
+  .stat-item {
+    @apply text-center;
+  }
+
+  .stat-number {
+    @apply block text-3xl font-bold text-[var(--primary)] mb-1;
+  }
+
+  .stat-label {
+    @apply text-[var(--text-muted)] text-sm;
+  }
+
+  .archive-layout {
+    @apply grid grid-cols-1 lg:grid-cols-4 gap-8;
+  }
+
+  .archive-main {
+    @apply lg:col-span-3;
+  }
+
+  .archive-sidebar {
+    @apply lg:col-span-1 space-y-6;
+  }
+
+  .archive-timeline {
+    @apply space-y-12;
+  }
+
+  .year-section {
+    @apply relative;
+  }
+
+  .year-header {
+    @apply flex items-center justify-between mb-8 pb-4 border-b-2 border-[var(--primary)];
+  }
+
+  .year-title {
+    @apply text-3xl font-bold text-[var(--primary)];
+    text-shadow: 0 0 10px var(--primary);
+  }
+
+  .year-count {
+    @apply text-[var(--text-muted)] text-sm;
+  }
+
+  .months-container {
+    @apply space-y-8 pl-8 border-l-2 border-[var(--border-light)] relative;
+  }
+
+  .months-container::before {
+    content: '';
+    @apply absolute left-[-5px] top-0 w-2 h-2 bg-[var(--primary)] rounded-full;
+  }
+
+  .month-section {
+    @apply relative;
+  }
+
+  .month-section::before {
+    content: '';
+    @apply absolute left-[-12px] top-6 w-4 h-4 bg-[var(--secondary)] rounded-full border-2 border-[var(--component-bg)];
+  }
+
+  .month-header {
+    @apply flex items-center justify-between mb-4;
+  }
+
+  .month-title {
+    @apply text-xl font-bold text-[var(--text-primary)] flex items-center;
+  }
+
+  .month-icon {
+    @apply mr-2;
+  }
+
+  .month-count {
+    @apply text-[var(--text-muted)] text-sm;
+  }
+
+  .posts-list {
+    @apply space-y-4;
+  }
+
+  .archive-post {
+    @apply flex gap-4 p-4 bg-[var(--component-bg)] border border-[var(--border-light)] rounded-lg hover:border-[var(--primary)] transition-all duration-200;
+    backdrop-filter: blur(10px);
+  }
+
+  .archive-post:hover {
+    transform: translateX(4px);
+  }
+
+  .post-date {
+    @apply flex-shrink-0 text-center;
+  }
+
+  .day {
+    @apply block text-2xl font-bold text-[var(--primary)];
+  }
+
+  .weekday {
+    @apply block text-xs text-[var(--text-muted)] mt-1;
+  }
+
+  .post-content {
+    @apply flex-1 min-w-0;
+  }
+
+  .post-title {
+    @apply mb-2;
+  }
+
+  .post-title a {
+    @apply text-lg font-bold text-[var(--text-primary)] hover:text-[var(--primary)] transition-colors duration-200;
+    text-decoration: none;
+  }
+
+  .post-description {
+    @apply text-[var(--text-secondary)] text-sm mb-3 line-clamp-2;
+  }
+
+  .post-meta {
+    @apply flex flex-wrap items-center gap-2;
+  }
+
+  .category {
+    @apply px-2 py-1 bg-[var(--primary)]/20 text-[var(--primary)] rounded text-xs font-medium;
+  }
+
+  .tags {
+    @apply flex gap-1;
+  }
+
+  .tag {
+    @apply px-2 py-1 bg-[var(--secondary)]/20 text-[var(--secondary)] rounded text-xs;
+  }
+
+  .featured-badge {
+    @apply px-2 py-1 bg-[var(--accent)] text-white rounded text-xs font-medium;
+  }
+
+  .empty-state {
+    @apply text-center py-16;
+  }
+
+  .empty-icon {
+    @apply text-6xl mb-4;
+  }
+
+  .empty-title {
+    @apply text-xl font-bold text-[var(--text-primary)] mb-2;
+  }
+
+  .empty-description {
+    @apply text-[var(--text-muted)];
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .page-title {
+      @apply text-3xl;
+    }
+    
+    .archive-stats {
+      @apply gap-4 p-4;
+    }
+    
+    .stat-number {
+      @apply text-2xl;
+    }
+    
+    .year-title {
+      @apply text-2xl;
+    }
+    
+    .months-container {
+      @apply pl-4;
+    }
+    
+    .archive-post {
+      @apply flex-col gap-2;
+    }
+    
+    .post-date {
+      @apply flex flex-row items-center gap-2;
+    }
+    
+    .day {
+      @apply text-lg;
+    }
+  }
+</style>
