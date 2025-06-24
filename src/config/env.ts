@@ -9,7 +9,7 @@ const envSchema = z.object({
   SITE_URL: z.url().default("http://localhost:4321"),
   SITE_TITLE: z.string().default("Zhsama's Blog"),
   SITE_START_YEAR: z.string().default("2000"),
-  BLOG_URL: z.string().url().default("https://blog.zhsama.xyz"),
+  BLOG_URL: z.string().url().default("http://localhost:4321/blog"),
 });
 
 function parseEnv() {
