@@ -1,0 +1,1129 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* 自定义动画 - Tailwind CSS v4 */
+@keyframes scaleAnim {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@utility scale {
+  animation: scaleAnim 300ms ease-in-out;
+}
+
+:root {
+  /* 主题系统 - 默认为 Cyberpunk 2077 主题 */
+  --background: oklch(1 0 0);
+  --primary: oklch(0.205 0 0); /* 标志性霓虹黄 */
+  --secondary: oklch(0.97 0 0); /* 霓虹青 */
+  --accent: oklch(0.97 0 0); /* 霓虹红/粉 */
+  --success: #39ff14; /* 霓虹绿 */
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --text-muted: #888888;
+  --border: oklch(0.922 0 0);
+  --border-light: #ffffff15;
+  --component-bg: #0a0a0a;
+
+  /* 兼容性变量 */
+  --sec: var(--primary);
+  --white: var(--text-primary);
+  --white-icon: #cccccc98;
+  --white-icon-tr: #ffffff15;
+
+  /* 主题效果变量 */
+  --glow-intensity: 1.0;
+  --pulse-speed: 2s;
+  --matrix-opacity: 0.6;
+  --grid-opacity: 0.4;
+  --data-stream-opacity: 0.5;
+  --radius: 0.625rem;
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+* {
+  font-family: "montserrat", -apple-system, system-ui, sans-serif;
+}
+
+*::selection {
+  background-color: var(--sec);
+  color: var(--background);
+}
+
+/* 防止下拉菜单打开时页面位移 */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* 赛博朋克滚动条样式 */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-gradient, linear-gradient(45deg, var(--primary), var(--secondary)));
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px var(--primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, var(--secondary), var(--accent));
+  box-shadow: 0 0 15px var(--primary);
+}
+
+/* Firefox滚动条样式 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+
+/* 统一的赛博朋克按钮样式 - 仿LEARN MORE */
+.cyberpunk-button {
+  background: transparent;
+  border: 2px solid var(--secondary);
+  color: var(--secondary);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.cyberpunk-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 245, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.cyberpunk-button:hover::before {
+  left: 100%;
+}
+
+.cyberpunk-button:hover {
+  border-color: var(--secondary);
+  background: rgba(0, 245, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 245, 255, 0.5),
+    inset 0 0 20px rgba(0, 245, 255, 0.1);
+  text-shadow: 0 0 8px var(--secondary);
+  color: var(--secondary);
+  transform: scale(1.02);
+}
+
+/* 统一的表单输入框样式 */
+.cyberpunk-input {
+  background: linear-gradient(
+    135deg,
+    rgba(10, 10, 10, 0.9),
+    rgba(20, 20, 20, 0.7)
+  );
+  border: 2px solid var(--border-light);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.cyberpunk-input:focus {
+  border-color: var(--primary);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.9),
+    rgba(10, 10, 10, 0.8)
+  );
+  box-shadow: 0 0 0 1px var(--primary), 0 0 20px rgba(252, 238, 9, 0.4),
+    inset 0 0 10px rgba(252, 238, 9, 0.1);
+  outline: none;
+}
+
+.cyberpunk-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* 统一的卡片样式 */
+.cyberpunk-card {
+  background: linear-gradient(
+    135deg,
+    rgba(10, 10, 10, 0.9),
+    rgba(26, 26, 26, 0.8)
+  );
+  border: 1px solid var(--border-light);
+  backdrop-filter: blur(10px);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.cyberpunk-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  opacity: 0.7;
+}
+
+.cyberpunk-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 30px rgba(252, 238, 9, 0.3);
+}
+
+/* Cyberpunk 2077 动画效果 */
+@keyframes cyberpunk-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes cyberpunk-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 5px var(--primary);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--primary), 0 0 30px var(--primary);
+  }
+}
+
+/* 故障艺术效果 */
+@keyframes glitch {
+  0%,
+  100% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+}
+
+@keyframes glitch-text {
+  0%,
+  100% {
+    text-shadow: 0 0 5px var(--primary);
+  }
+  25% {
+    text-shadow: -2px 0 var(--secondary), 2px 0 var(--accent);
+  }
+  50% {
+    text-shadow: 2px 0 var(--secondary), -2px 0 var(--accent);
+  }
+  75% {
+    text-shadow: 0 0 10px var(--primary), 0 0 20px var(--accent);
+  }
+}
+
+/* 扫描线效果 */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* 霓虹边框动画 */
+@keyframes neon-border {
+  0%,
+  100% {
+    border-color: var(--primary);
+    box-shadow: 0 0 5px var(--primary), inset 0 0 5px var(--primary);
+  }
+  33% {
+    border-color: var(--secondary);
+    box-shadow: 0 0 10px var(--secondary), inset 0 0 10px var(--secondary);
+  }
+  66% {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent), inset 0 0 10px var(--accent);
+  }
+}
+
+.cyberpunk-flicker {
+  animation: cyberpunk-flicker 2s infinite;
+}
+
+.cyberpunk-pulse {
+  animation: cyberpunk-pulse 2s infinite;
+}
+
+.glitch {
+  animation: glitch 0.3s infinite;
+}
+
+.glitch-text {
+  animation: glitch-text 2s infinite;
+}
+
+.scanline {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(252, 238, 9, 0.1),
+    transparent
+  );
+  animation: scanline 3s linear infinite;
+}
+
+.neon-border {
+  animation: neon-border 3s infinite;
+}
+
+/* 霓虹文字效果 */
+.neon-text {
+  color: var(--primary);
+  text-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary),
+    0 0 15px var(--primary), 0 0 20px var(--primary);
+}
+
+.neon-text-cyan {
+  color: var(--secondary);
+  text-shadow: 0 0 5px var(--secondary), 0 0 10px var(--secondary),
+    0 0 15px var(--secondary), 0 0 20px var(--secondary);
+}
+
+.neon-text-pink {
+  color: var(--accent);
+  text-shadow: 0 0 5px var(--accent), 0 0 10px var(--accent),
+    0 0 15px var(--accent), 0 0 20px var(--accent);
+}
+
+.neon-text-green {
+  color: var(--success);
+  text-shadow: 0 0 5px var(--success), 0 0 10px var(--success),
+    0 0 15px var(--success), 0 0 20px var(--success);
+}
+
+/* 赛博朋克链接样式 */
+.cyberpunk-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  position: relative;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.cyberpunk-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transition: width 0.3s ease;
+  box-shadow: 0 0 5px var(--primary);
+}
+
+.cyberpunk-link:hover {
+  color: var(--primary);
+  text-shadow: 0 0 5px var(--primary);
+}
+
+.cyberpunk-link:hover::after {
+  width: 100%;
+}
+
+/* 赛博朋克标签样式 */
+.cyberpunk-badge {
+  background: linear-gradient(
+    135deg,
+    rgba(252, 238, 9, 0.2),
+    rgba(0, 245, 255, 0.1)
+  );
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px rgba(252, 238, 9, 0.3);
+  transition: all 0.3s ease;
+}
+
+.cyberpunk-badge:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(252, 238, 9, 0.3),
+    rgba(0, 245, 255, 0.2)
+  );
+  box-shadow: 0 0 20px rgba(252, 238, 9, 0.5);
+  transform: scale(1.05);
+}
+
+/* 加载动画 */
+@keyframes cyber-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.cyber-loader {
+  border: 2px solid var(--border-light);
+  border-top: 2px solid var(--primary);
+  border-radius: 50%;
+  animation: cyber-spin 1s linear infinite;
+  box-shadow: 0 0 10px var(--primary);
+}
+
+/* 特殊动画效果 */
+@keyframes data-stream {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+.data-flow {
+  animation: data-stream 2s linear infinite;
+}
+
+/* 主题特定样式 */
+
+/* Cyberpunk 2077 主题特效 */
+.theme-cyberpunk2077 {
+  --scrollbar-gradient: linear-gradient(45deg, var(--primary), var(--secondary));
+}
+
+.theme-cyberpunk2077 .cyberpunk-pulse {
+  animation-duration: calc(var(--pulse-speed));
+}
+
+/* Matrix 主题特效 */
+.theme-matrix {
+  --scrollbar-gradient: linear-gradient(45deg, var(--primary), var(--primary));
+}
+
+.theme-matrix .cyberpunk-button {
+  background: linear-gradient(135deg, rgba(0, 17, 0, 0.9), rgba(0, 34, 0, 0.7));
+  border-color: var(--primary);
+}
+
+.theme-matrix .cyberpunk-card {
+  background: linear-gradient(135deg, rgba(0, 17, 0, 0.9), rgba(0, 34, 0, 0.8));
+}
+
+.theme-matrix .neon-text {
+  animation: matrix-flicker 1.5s infinite;
+}
+
+@keyframes matrix-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+  75% { opacity: 1; }
+  85% { opacity: 0.9; }
+}
+
+/* Synthwave 主题特效 */
+.theme-synthwave {
+  --scrollbar-gradient: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+}
+
+.theme-synthwave .cyberpunk-button {
+  background: linear-gradient(135deg, rgba(26, 0, 26, 0.9), rgba(52, 0, 52, 0.7));
+  border-color: var(--primary);
+  box-shadow: 0 0 15px var(--primary)/30;
+}
+
+.theme-synthwave .cyberpunk-card {
+  background: linear-gradient(135deg, rgba(26, 0, 26, 0.9), rgba(52, 0, 52, 0.8));
+  border: 1px solid var(--primary)/20;
+}
+
+.theme-synthwave .neon-text {
+  animation: synthwave-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes synthwave-glow {
+  0% {
+    text-shadow: 
+      0 0 5px var(--primary),
+      0 0 10px var(--primary),
+      0 0 15px var(--primary);
+  }
+  100% {
+    text-shadow: 
+      0 0 8px var(--primary),
+      0 0 16px var(--primary),
+      0 0 24px var(--primary),
+      0 0 32px var(--secondary);
+  }
+}
+
+/* 主题过渡动画 */
+* {
+  transition: 
+    background-color 0.5s ease,
+    border-color 0.5s ease,
+    color 0.5s ease,
+    box-shadow 0.5s ease;
+}
+
+/* 响应式赛博朋克效果 */
+@media (max-width: 768px) {
+  .cyberpunk-button {
+    padding: 0.75rem 1rem;
+  }
+
+  .cyberpunk-input {
+    padding: 0.75rem;
+  }
+
+  .neon-text,
+  .neon-text-cyan,
+  .neon-text-pink,
+  .neon-text-green {
+    text-shadow: 0 0 3px currentColor, 0 0 6px currentColor;
+  }
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* KaTeX 数学公式样式 */
+@import 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
+
+@layer base {
+  :root {
+    /* Cyberpunk 2077 风格配色 */
+    --background: 0 0% 4%; /* 深色背景 */
+    --foreground: 0 0% 98%; /* 白色文字 */
+    --card: 0 0% 6%; /* 稍亮的卡片背景 */
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 54 100% 50%; /* 霓虹黄 #fcee09 */
+    --primary-foreground: 0 0% 4%; /* 黑色文字在黄色背景上 */
+    --secondary: 186 100% 50%; /* 霓虹青 #00f5ff */
+    --secondary-foreground: 0 0% 4%;
+    --muted: 0 0% 15%; /* 暗灰色 */
+    --muted-foreground: 0 0% 64%;
+    --accent: 186 100% 50%; /* 霓虹青作为强调色 */
+    --accent-foreground: 0 0% 4%;
+    --destructive: 0 84% 60%; /* 红色 */
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 15%; /* 边框颜色 */
+    --input: 0 0% 15%;
+    --ring: 54 100% 50%; /* 聚焦环使用霓虹黄 */
+    --chart-1: 54 100% 50%;
+    --chart-2: 186 100% 50%;
+    --chart-3: 330 100% 50%;
+    --chart-4: 120 100% 50%;
+    --chart-5: 270 100% 50%;
+    --radius: 0.75rem; /* 稍大的圆角 */
+  }
+
+  .dark {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 54 100% 50%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 186 100% 50%;
+    --secondary-foreground: 0 0% 4%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 186 100% 50%;
+    --accent-foreground: 0 0% 4%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 54 100% 50%;
+    --chart-1: 54 100% 50%;
+    --chart-2: 186 100% 50%;
+    --chart-3: 330 100% 50%;
+    --chart-4: 120 100% 50%;
+    --chart-5: 270 100% 50%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "montserrat", -apple-system, system-ui, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+  }
+
+  /* Cyberpunk 滚动条样式 */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--secondary)));
+    border-radius: 4px;
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, hsl(var(--secondary)), hsl(var(--accent)));
+    box-shadow: 0 0 15px hsl(var(--primary) / 0.7);
+  }
+
+  /* Firefox 滚动条 */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary)) transparent;
+  }
+
+  /* 选择文本样式 */
+  *::selection {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+}
+
+@layer components {
+  /* Cyberpunk 按钮样式 */
+  .btn-cyberpunk {
+    @apply relative overflow-hidden border-2 border-primary bg-transparent px-6 py-3 font-semibold text-primary transition-all duration-300 hover:bg-primary hover:text-primary-foreground;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    backdrop-filter: blur(10px);
+  }
+
+  .btn-cyberpunk::before {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent;
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+
+  .btn-cyberpunk:hover::before {
+    transform: translateX(100%);
+  }
+
+  .btn-cyberpunk:hover {
+    box-shadow: 
+      0 0 20px hsl(var(--primary) / 0.5),
+      inset 0 0 20px hsl(var(--primary) / 0.1);
+    text-shadow: 0 0 8px hsl(var(--primary-foreground));
+  }
+
+  /* Cyberpunk 卡片样式 */
+  .card-cyberpunk {
+    @apply relative overflow-hidden rounded-lg border border-border bg-card/90 backdrop-blur-sm transition-all duration-300;
+    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--muted) / 0.8));
+  }
+
+  .card-cyberpunk::before {
+    content: "";
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--secondary) / 0.1));
+  }
+
+  .card-cyberpunk:hover::before {
+    @apply opacity-100;
+  }
+
+  .card-cyberpunk:hover {
+    @apply border-primary/50 shadow-lg;
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.2);
+  }
+
+  /* Cyberpunk 输入框样式 */
+  .input-cyberpunk {
+    @apply border-2 border-border bg-background/90 text-foreground backdrop-blur-sm transition-all duration-300 placeholder:text-muted-foreground;
+  }
+
+  .input-cyberpunk:focus {
+    @apply border-primary outline-none;
+    box-shadow: 
+      0 0 0 1px hsl(var(--primary)),
+      0 0 20px hsl(var(--primary) / 0.4),
+      inset 0 0 10px hsl(var(--primary) / 0.1);
+  }
+
+  /* 工具类 */
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  /* 动画类 */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+  }
+
+  .animate-bounce-in {
+    animation: bounceIn 0.6s ease-out;
+  }
+
+  /* MDX 内容样式增强 */
+  .prose {
+    max-width: none;
+    @apply text-foreground;
+  }
+
+  .prose pre {
+    @apply relative bg-muted border border-border rounded-lg;
+  }
+
+  .prose pre::before {
+    content: attr(data-language);
+    @apply absolute top-2 right-2 text-xs text-muted-foreground bg-background px-2 py-1 rounded;
+  }
+
+  /* KaTeX 数学公式样式优化 */
+  .katex {
+    font-size: 1.1em;
+    @apply text-foreground;
+  }
+
+  .katex-display {
+    @apply my-6 overflow-x-auto;
+  }
+
+  .katex-display .katex {
+    @apply text-center;
+  }
+
+  /* 图片样式 */
+  .prose img {
+    @apply rounded-lg shadow-lg border border-border;
+  }
+
+  .prose video {
+    @apply rounded-lg shadow-lg border border-border;
+  }
+
+  /* 表格样式 */
+  .prose table {
+    @apply border-collapse w-full border border-border;
+  }
+
+  .prose th,
+  .prose td {
+    @apply border border-border px-4 py-2;
+  }
+
+  .prose th {
+    @apply bg-muted font-semibold;
+  }
+
+  /* 引用块样式 */
+  .prose blockquote {
+    @apply border-l-4 border-primary bg-muted/30 pl-4 py-2 text-foreground;
+  }
+
+  /* 代码块样式 */
+  .prose :not(pre) > code {
+    @apply bg-muted text-primary px-1.5 py-0.5 rounded text-sm font-medium border border-border;
+  }
+
+  .prose pre {
+    @apply bg-muted border border-border rounded-lg p-4 overflow-x-auto;
+  }
+
+  .prose pre code {
+    @apply bg-transparent p-0 text-sm text-foreground;
+  }
+
+  /* 链接样式 */
+  .prose a {
+    @apply text-primary hover:text-primary/80 no-underline font-medium transition-colors;
+  }
+
+  .prose a:hover {
+    @apply underline;
+    text-shadow: 0 0 5px hsl(var(--primary) / 0.5);
+  }
+
+  /* 列表样式 */
+  .prose ul,
+  .prose ol {
+    @apply space-y-1;
+  }
+
+  .prose li {
+    @apply leading-relaxed text-foreground;
+  }
+
+  /* 标题样式 */
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    @apply font-bold tracking-tight text-foreground;
+  }
+
+  .prose h1 {
+    @apply text-3xl mb-6 mt-8 text-primary;
+  }
+
+  .prose h2 {
+    @apply text-2xl mb-4 mt-8 text-primary;
+  }
+
+  .prose h3 {
+    @apply text-xl mb-3 mt-6 text-primary;
+  }
+
+  .prose h4 {
+    @apply text-lg mb-2 mt-4 text-foreground;
+  }
+
+  /* 段落样式 */
+  .prose p {
+    @apply leading-relaxed mb-4 text-foreground;
+  }
+
+  /* 分隔线样式 */
+  .prose hr {
+    @apply border-border my-8;
+  }
+}
+
+@layer utilities {
+  /* 响应式文本大小 */
+  .text-responsive {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+
+  /* Cyberpunk 霓虹文字效果 */
+  .text-neon-primary {
+    @apply text-primary;
+    text-shadow: 
+      0 0 5px hsl(var(--primary)),
+      0 0 10px hsl(var(--primary)),
+      0 0 15px hsl(var(--primary));
+  }
+
+  .text-neon-secondary {
+    @apply text-secondary;
+    text-shadow: 
+      0 0 5px hsl(var(--secondary)),
+      0 0 10px hsl(var(--secondary)),
+      0 0 15px hsl(var(--secondary));
+  }
+
+  /* Cyberpunk 渐变背景 */
+  .bg-gradient-cyberpunk {
+    background: linear-gradient(
+      135deg, 
+      hsl(var(--primary) / 0.1) 0%, 
+      hsl(var(--secondary) / 0.1) 50%,
+      hsl(var(--accent) / 0.1) 100%
+    );
+  }
+
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 100%);
+  }
+
+  .bg-gradient-secondary {
+    background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--secondary) / 0.8) 100%);
+  }
+
+  /* 玻璃态效果 */
+  .glass {
+    backdrop-filter: blur(10px);
+    background-color: hsl(var(--background) / 0.8);
+    border: 1px solid hsl(var(--border) / 0.2);
+  }
+
+  /* 阴影工具类 */
+  .shadow-cyberpunk {
+    box-shadow: 
+      0 4px 20px hsl(var(--primary) / 0.1),
+      0 0 40px hsl(var(--secondary) / 0.05);
+  }
+
+  .shadow-cyberpunk-hover {
+    box-shadow: 
+      0 8px 30px hsl(var(--primary) / 0.2),
+      0 0 60px hsl(var(--secondary) / 0.1);
+  }
+
+  /* 动画关键帧 */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes bounceIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Cyberpunk 闪烁效果 */
+  @keyframes cyberpunk-flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+      opacity: 1;
+    }
+    20%, 24%, 55% {
+      opacity: 0.4;
+    }
+  }
+
+  .animate-cyberpunk-flicker {
+    animation: cyberpunk-flicker 3s linear infinite;
+  }
+
+  /* 专注模式 */
+  .focus-mode {
+    @apply transition-all duration-300;
+  }
+
+  .focus-mode:not(:hover):not(:focus-within) {
+    @apply opacity-60 blur-sm;
+  }
+
+  /* 加载状态 */
+  .loading {
+    @apply relative overflow-hidden;
+  }
+
+  .loading::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--primary) / 0.3),
+      transparent
+    );
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
