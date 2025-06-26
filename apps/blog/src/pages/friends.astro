@@ -1,0 +1,255 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getTranslation } from '../utils/i18n';
+import type { Locale } from '../utils/i18n';
+import I18nKeys from '../locales/keys';
+import AsukaConfig from '../../asuka.config';
+
+const locale = AsukaConfig.locale as Locale;
+const friendLinks = AsukaConfig.friendLinks || [];
+---
+
+<Layout 
+  title={`${getTranslation(locale, I18nKeys.pages_friends_title)} | ${AsukaConfig.title}`}
+  description="友情链接页面"
+  showBanner={false}
+>
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+      <!-- Page Header -->
+      <header class="mb-12 text-center">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          {getTranslation(locale, I18nKeys.pages_friends_title)}
+        </h1>
+        <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          {getTranslation(locale, I18nKeys.friends_link_description)}，
+          感谢这些优秀的朋友们！
+        </p>
+      </header>
+
+      {friendLinks.length === 0 ? (
+        <div class="text-center py-16">
+          <div class="mb-4">
+            <svg class="mx-auto h-24 w-24 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4.926 4.926a9 9 0 1212.728 12.728 9 9 0 01-12.728-12.728zM15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+            暂无友情链接
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400">
+            还没有添加任何友情链接
+          </p>
+        </div>
+      ) : (
+        <div class="space-y-8">
+          <!-- Friends Grid -->
+          <div class="friends-grid">
+            {friendLinks.map((friend) => (
+              <div class="friend-card">
+                <div class="friend-avatar">
+                  <img 
+                    src={friend.avatar} 
+                    alt={`${friend.name} 头像`}
+                    loading="lazy"
+                  />
+                </div>
+                <div class="friend-info">
+                  <h3 class="friend-name">
+                    <a href={friend.url} target="_blank" rel="noopener noreferrer">
+                      {friend.name}
+                    </a>
+                  </h3>
+                  <p class="friend-description">
+                    {friend.description}
+                  </p>
+                  <div class="friend-actions">
+                    <a 
+                      href={friend.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      class="visit-link"
+                    >
+                      访问网站
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
+                        <polyline points="15,3 21,3 21,9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- Application Section -->
+          <section class="application-section">
+            <div class="application-card">
+              <h2 class="application-title">
+                申请友链
+              </h2>
+              <div class="application-content">
+                <p class="application-description">
+                  欢迎申请友情链接！请确保您的网站内容积极向上，并且能够稳定访问。
+                </p>
+                
+                <div class="application-requirements">
+                  <h3 class="requirements-title">申请要求：</h3>
+                  <ul class="requirements-list">
+                    <li>✅ 网站内容健康，无违法违规信息</li>
+                    <li>✅ 网站能够稳定访问，速度良好</li>
+                    <li>✅ 原创内容为主，转载请注明出处</li>
+                    <li>✅ 网站有一定的更新频率</li>
+                  </ul>
+                </div>
+
+                <div class="application-format">
+                  <h3 class="format-title">申请格式：</h3>
+                  <div class="format-example">
+                    <pre><code>网站名称：您的网站名称
+网站地址：https://your-website.com
+网站描述：网站的简短描述
+网站头像：头像图片链接</code></pre>
+                  </div>
+                </div>
+
+                <div class="contact-info">
+                  <p>
+                    请通过 
+                    {AsukaConfig.email ? (
+                      <a href={`mailto:${AsukaConfig.email}`} class="contact-link">
+                        邮箱联系
+                      </a>
+                    ) : (
+                      <span class="contact-text">GitHub Issues</span>
+                    )}
+                     申请友链。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  @reference "tailwindcss";
+
+  .container {
+    @apply max-w-7xl;
+  }
+
+  /* Friends Grid */
+  .friends-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  .friend-card {
+    @apply bg-white rounded-xl shadow-sm border transition-all duration-300;
+    @apply hover:shadow-md hover:-translate-y-1;
+    @apply dark:bg-gray-800 dark:border-gray-700;
+  }
+
+  .friend-avatar {
+    @apply p-6 pb-4 text-center;
+  }
+
+  .friend-avatar img {
+    @apply w-20 h-20 mx-auto rounded-full object-cover ring-4 ring-blue-50;
+    @apply dark:ring-blue-900/30;
+  }
+
+  .friend-info {
+    @apply px-6 pb-6 text-center;
+  }
+
+  .friend-name {
+    @apply mb-2;
+  }
+
+  .friend-name a {
+    @apply text-xl font-semibold text-gray-900 transition-colors;
+    @apply hover:text-blue-600 dark:text-white dark:hover:text-blue-400;
+  }
+
+  .friend-description {
+    @apply text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2;
+  }
+
+  .friend-actions {
+    @apply flex justify-center;
+  }
+
+  .visit-link {
+    @apply inline-flex items-center space-x-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg transition-colors;
+    @apply hover:bg-blue-100 hover:text-blue-700;
+    @apply dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50;
+  }
+
+  /* Application Section */
+  .application-section {
+    @apply mt-16;
+  }
+
+  .application-card {
+    @apply bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-8 border;
+    @apply dark:from-blue-900/20 dark:to-indigo-900/20 dark:border-gray-700;
+  }
+
+  .application-title {
+    @apply text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center;
+  }
+
+  .application-content {
+    @apply space-y-6;
+  }
+
+  .application-description {
+    @apply text-gray-600 dark:text-gray-300 text-center;
+  }
+
+  .application-requirements,
+  .application-format {
+    @apply bg-white rounded-lg p-6 shadow-sm;
+    @apply dark:bg-gray-800;
+  }
+
+  .requirements-title,
+  .format-title {
+    @apply text-lg font-semibold text-gray-900 dark:text-white mb-4;
+  }
+
+  .requirements-list {
+    @apply space-y-2;
+  }
+
+  .requirements-list li {
+    @apply text-gray-600 dark:text-gray-300 flex items-center;
+  }
+
+  .format-example {
+    @apply bg-gray-50 dark:bg-gray-900 rounded-lg p-4 overflow-x-auto;
+  }
+
+  .format-example pre {
+    @apply text-sm text-gray-700 dark:text-gray-300;
+  }
+
+  .contact-info {
+    @apply text-center text-gray-600 dark:text-gray-300;
+  }
+
+  .contact-link {
+    @apply text-blue-600 hover:text-blue-700 font-medium;
+    @apply dark:text-blue-400 dark:hover:text-blue-300;
+  }
+
+  .contact-text {
+    @apply font-medium text-gray-700 dark:text-gray-300;
+  }
+</style> 

@@ -1,0 +1,370 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getTranslation } from '../utils/i18n';
+import type { Locale } from '../utils/i18n';
+import I18nKeys from '../locales/keys';
+import AsukaConfig from '../../asuka.config';
+
+const locale = AsukaConfig.locale as Locale;
+---
+
+<Layout 
+  title={`${getTranslation(locale, I18nKeys.pages_about_title)} | ${AsukaConfig.title}`}
+  description={`关于 ${AsukaConfig.username} - ${AsukaConfig.author_description || '博客作者'}`}
+  showBanner={false}
+>
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+      <!-- Page Header -->
+      <header class="mb-12 text-center">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          {getTranslation(locale, I18nKeys.pages_about_title)}
+        </h1>
+      </header>
+
+      <div class="space-y-12">
+        <!-- Author Introduction -->
+        <section class="author-section">
+          <div class="author-card">
+            <div class="author-avatar">
+              <img 
+                src={AsukaConfig.avatarUrl} 
+                alt={`${AsukaConfig.username} 头像`}
+                class="avatar-image"
+              />
+              <div class="avatar-decoration"></div>
+            </div>
+            <div class="author-info">
+              <h2 class="author-name">{AsukaConfig.username}</h2>
+              <p class="author-sign">{AsukaConfig.sign}</p>
+              {AsukaConfig.author_description && (
+                <p class="author-description">
+                  {AsukaConfig.author_description}
+                </p>
+              )}
+              
+              <!-- Social Links -->
+              <div class="social-links">
+                {AsukaConfig.socialLinks.map((link) => (
+                  <a 
+                    href={link.link} 
+                    class="social-link"
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    title={link.link}
+                  >
+                    <span class="social-icon">
+                      {link.icon.includes('github') ? '🐙' : 
+                       link.icon.includes('bilibili') ? '📺' : 
+                       link.icon.includes('email') ? '📧' : 
+                       link.icon.includes('twitter') ? '🐦' : 
+                       '🔗'}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Skills & Interests -->
+        <section class="skills-section">
+          <h2 class="section-title">技能与兴趣</h2>
+          <div class="skills-grid">
+            <div class="skill-category">
+              <h3 class="category-title">
+                <span class="category-icon">💻</span>
+                编程语言
+              </h3>
+              <div class="skill-tags">
+                <span class="skill-tag">JavaScript</span>
+                <span class="skill-tag">TypeScript</span>
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">Java</span>
+                <span class="skill-tag">Go</span>
+              </div>
+            </div>
+            
+            <div class="skill-category">
+              <h3 class="category-title">
+                <span class="category-icon">🚀</span>
+                前端技术
+              </h3>
+              <div class="skill-tags">
+                <span class="skill-tag">React</span>
+                <span class="skill-tag">Vue.js</span>
+                <span class="skill-tag">Astro</span>
+                <span class="skill-tag">Next.js</span>
+                <span class="skill-tag">Tailwind CSS</span>
+              </div>
+            </div>
+            
+            <div class="skill-category">
+              <h3 class="category-title">
+                <span class="category-icon">⚙️</span>
+                后端技术
+              </h3>
+              <div class="skill-tags">
+                <span class="skill-tag">Node.js</span>
+                <span class="skill-tag">Express</span>
+                <span class="skill-tag">Prisma</span>
+                <span class="skill-tag">PostgreSQL</span>
+                <span class="skill-tag">MongoDB</span>
+              </div>
+            </div>
+            
+            <div class="skill-category">
+              <h3 class="category-title">
+                <span class="category-icon">🛠️</span>
+                开发工具
+              </h3>
+              <div class="skill-tags">
+                <span class="skill-tag">Git</span>
+                <span class="skill-tag">Docker</span>
+                <span class="skill-tag">VS Code</span>
+                <span class="skill-tag">Figma</span>
+                <span class="skill-tag">Vercel</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Timeline -->
+        <section class="timeline-section">
+          <h2 class="section-title">个人经历</h2>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <div class="timeline-date">2024</div>
+                <h3 class="timeline-title">创建个人博客</h3>
+                <p class="timeline-description">
+                  使用 Astro 搭建个人博客，记录技术学习和生活感悟
+                </p>
+              </div>
+            </div>
+            
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <div class="timeline-date">2023</div>
+                <h3 class="timeline-title">深入全栈开发</h3>
+                <p class="timeline-description">
+                  学习现代全栈开发技术栈，专注于用户体验和性能优化
+                </p>
+              </div>
+            </div>
+            
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <div class="timeline-date">2022</div>
+                <h3 class="timeline-title">开始前端开发</h3>
+                <p class="timeline-description">
+                  接触 React 和现代前端开发，对用户界面设计产生浓厚兴趣
+                </p>
+              </div>
+            </div>
+            
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <div class="timeline-date">2021</div>
+                <h3 class="timeline-title">编程启蒙</h3>
+                <p class="timeline-description">
+                  开始学习编程，从 Python 入门，逐步探索计算机科学的奥秘
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Contact -->
+        <section class="contact-section">
+          <h2 class="section-title">联系我</h2>
+          <div class="contact-grid">
+            {AsukaConfig.email && (
+              <div class="contact-item">
+                <div class="contact-icon">📧</div>
+                <div class="contact-info">
+                  <h3 class="contact-title">邮箱</h3>
+                  <a href={`mailto:${AsukaConfig.email}`} class="contact-link">
+                    {AsukaConfig.email}
+                  </a>
+                </div>
+              </div>
+            )}
+            
+            <div class="contact-item">
+              <div class="contact-icon">🌐</div>
+              <div class="contact-info">
+                <h3 class="contact-title">网站</h3>
+                <a href={AsukaConfig.site} class="contact-link">
+                  {AsukaConfig.site}
+                </a>
+              </div>
+            </div>
+            
+            <div class="contact-item">
+              <div class="contact-icon">💬</div>
+              <div class="contact-info">
+                <h3 class="contact-title">交流</h3>
+                <p class="contact-text">
+                  欢迎在博客文章下留言交流
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  @reference "tailwindcss";
+
+  .container {
+    @apply max-w-7xl;
+  }
+
+  .section-title {
+    @apply text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center;
+  }
+
+  /* Author Section */
+  .author-section {
+    @apply text-center;
+  }
+
+  .author-card {
+    @apply bg-white rounded-2xl shadow-sm border p-8;
+    @apply dark:bg-gray-800 dark:border-gray-700;
+  }
+
+  .author-avatar {
+    @apply relative inline-block mb-6;
+  }
+
+  .avatar-image {
+    @apply w-32 h-32 rounded-full object-cover ring-4 ring-blue-100;
+    @apply dark:ring-blue-900/30;
+  }
+
+  .avatar-decoration {
+    @apply absolute -bottom-2 -right-2 w-8 h-8 bg-green-400 rounded-full border-4 border-white;
+    @apply dark:border-gray-800;
+  }
+
+  .author-name {
+    @apply text-3xl font-bold text-gray-900 dark:text-white mb-2;
+  }
+
+  .author-sign {
+    @apply text-lg text-gray-600 dark:text-gray-300 mb-4 italic;
+  }
+
+  .author-description {
+    @apply text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6;
+  }
+
+  .social-links {
+    @apply flex justify-center space-x-4;
+  }
+
+  .social-link {
+    @apply flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-2xl transition-all;
+    @apply hover:bg-blue-100 hover:scale-110 hover:shadow-lg;
+    @apply dark:bg-gray-700 dark:hover:bg-blue-900/30;
+  }
+
+  /* Skills Section */
+  .skills-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+  }
+
+  .skill-category {
+    @apply bg-white rounded-xl p-6 shadow-sm border;
+    @apply dark:bg-gray-800 dark:border-gray-700;
+  }
+
+  .category-title {
+    @apply flex items-center space-x-3 text-lg font-semibold text-gray-900 dark:text-white mb-4;
+  }
+
+  .category-icon {
+    @apply text-2xl;
+  }
+
+  .skill-tags {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .skill-tag {
+    @apply px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium;
+    @apply dark:bg-blue-900/30 dark:text-blue-300;
+  }
+
+  /* Timeline Section */
+  .timeline {
+    @apply relative max-w-3xl mx-auto;
+  }
+
+  .timeline::before {
+    @apply absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700;
+    content: '';
+  }
+
+  .timeline-item {
+    @apply relative flex items-start space-x-6 pb-8;
+  }
+
+  .timeline-marker {
+    @apply relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 ring-4 ring-white;
+    @apply dark:ring-gray-900;
+  }
+
+  .timeline-content {
+    @apply flex-1 bg-white rounded-lg p-6 shadow-sm border;
+    @apply dark:bg-gray-800 dark:border-gray-700;
+  }
+
+  .timeline-date {
+    @apply text-sm font-medium text-blue-600 dark:text-blue-400 mb-2;
+  }
+
+  .timeline-title {
+    @apply text-lg font-semibold text-gray-900 dark:text-white mb-2;
+  }
+
+  .timeline-description {
+    @apply text-gray-600 dark:text-gray-300;
+  }
+
+  /* Contact Section */
+  .contact-grid {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto;
+  }
+
+  .contact-item {
+    @apply bg-white rounded-xl p-6 shadow-sm border text-center;
+    @apply dark:bg-gray-800 dark:border-gray-700;
+  }
+
+  .contact-icon {
+    @apply text-3xl mb-4;
+  }
+
+  .contact-title {
+    @apply text-lg font-semibold text-gray-900 dark:text-white mb-2;
+  }
+
+  .contact-link {
+    @apply text-blue-600 hover:text-blue-700 transition-colors;
+    @apply dark:text-blue-400 dark:hover:text-blue-300;
+  }
+
+  .contact-text {
+    @apply text-gray-600 dark:text-gray-300;
+  }
+</style> 

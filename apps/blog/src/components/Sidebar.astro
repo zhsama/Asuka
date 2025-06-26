@@ -1,0 +1,392 @@
+---
+import { getCollection } from 'astro:content';
+import { getTranslation } from '../utils/i18n';
+import type { Locale } from '../utils/i18n';
+import I18nKeys from '../locales/keys';
+import AsukaConfig from '../../asuka.config';
+
+// 获取所有博客文章
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+
+// 最新文章（前5篇）
+const recentPosts = allPosts
+  .sort((a, b) => new Date(b.data.published).getTime() - new Date(a.data.published).getTime())
+  .slice(0, 5);
+
+// 统计标签
+const tagCount = new Map<string, number>();
+allPosts.forEach(post => {
+  if (post.data.tags && post.data.tags.length > 0) {
+    post.data.tags.forEach(tag => {
+      tagCount.set(tag, (tagCount.get(tag) || 0) + 1);
+    });
+  }
+});
+
+// 热门标签（前10个）
+const popularTags = Array.from(tagCount.entries())
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 10);
+
+// 统计分类
+const categoryCount = new Map<string, number>();
+allPosts.forEach(post => {
+  if (post.data.category) {
+    categoryCount.set(post.data.category, (categoryCount.get(post.data.category) || 0) + 1);
+  }
+});
+
+const categories = Array.from(categoryCount.entries())
+  .sort((a, b) => b[1] - a[1]);
+
+const locale = AsukaConfig.locale as Locale;
+
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath } = Astro.props;
+---
+
+<aside class="sidebar">
+  <!-- Author Card -->
+  <section class="sidebar-section author-card">
+    <div class="author-avatar">
+      <img 
+        src={AsukaConfig.avatarUrl} 
+        alt={`${AsukaConfig.username} 头像`}
+        loading="lazy"
+      />
+      <div class="avatar-status"></div>
+    </div>
+    <div class="author-info">
+      <h3 class="author-name">{AsukaConfig.username}</h3>
+      <p class="author-sign">{AsukaConfig.sign}</p>
+      {AsukaConfig.author_description && (
+        <p class="author-description">
+          {AsukaConfig.author_description}
+        </p>
+      )}
+    </div>
+    <div class="author-social">
+      {AsukaConfig.socialLinks.map((link) => (
+        <a 
+          href={link.link} 
+          class="social-link"
+          target="_blank" 
+          rel="noopener noreferrer"
+          title={link.link}
+        >
+          <span class="social-icon">
+            {link.icon.includes('github') ? '🐙' : 
+             link.icon.includes('bilibili') ? '📺' : 
+             link.icon.includes('email') ? '📧' : 
+             link.icon.includes('twitter') ? '🐦' : 
+             '🔗'}
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Statistics -->
+  <section class="sidebar-section stats-card">
+    <h3 class="section-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 3v18h18"></path>
+        <path d="M7 16l4-4 4 4 6-6"></path>
+      </svg>
+      统计信息
+    </h3>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-number">{allPosts.length}</div>
+        <div class="stat-label">文章</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">{categories.length}</div>
+        <div class="stat-label">分类</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">{popularTags.length}</div>
+        <div class="stat-label">标签</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">
+          {Math.ceil(allPosts.reduce((acc, post) => acc + Number(post.data.readingTime || 5), 0) / 60)}
+        </div>
+        <div class="stat-label">小时</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Posts -->
+  {recentPosts.length > 0 && (
+    <section class="sidebar-section recent-posts">
+      <h3 class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+        </svg>
+        {getTranslation(locale, I18nKeys.side_bar_recent_posts)}
+      </h3>
+      <div class="recent-posts-list">
+        {recentPosts.map((post) => (
+          <article class="recent-post-item">
+            <div class="recent-post-meta">
+              <time class="recent-post-date">
+                {new Date(post.data.published).toLocaleDateString(
+                  locale === 'zh-CN' ? 'zh-CN' : 'en-US',
+                  { month: 'short', day: 'numeric' }
+                )}
+              </time>
+            </div>
+            <h4 class="recent-post-title">
+              <a href={`/posts/${post.id}`}>
+                {post.data.title}
+              </a>
+            </h4>
+          </article>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Categories -->
+  {categories.length > 0 && (
+    <section class="sidebar-section categories">
+      <h3 class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"></path>
+          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+        {getTranslation(locale, I18nKeys.pages_categories_title)}
+      </h3>
+      <div class="categories-list">
+        {categories.map(([category, count]) => (
+          <a 
+            href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}`}
+            class="category-item"
+          >
+            <span class="category-name">{category}</span>
+            <span class="category-count">{count}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Tag Cloud -->
+  {popularTags.length > 0 && (
+    <section class="sidebar-section tag-cloud">
+      <h3 class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"></path>
+          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+        {getTranslation(locale, I18nKeys.pages_tags_title)}
+      </h3>
+      <div class="tag-cloud-container">
+        {popularTags.map(([tag, count]) => {
+          const maxCount = Math.max(...popularTags.map(([, c]) => c));
+          const minCount = Math.min(...popularTags.map(([, c]) => c));
+          const ratio = maxCount === minCount ? 0.5 : (count - minCount) / (maxCount - minCount);
+          const fontSize = 0.75 + ratio * 0.5; // 0.75rem to 1.25rem
+          
+          return (
+            <a 
+              href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`}
+              class="tag-cloud-item"
+              style={`font-size: ${fontSize}rem`}
+              title={`${tag} (${count} 篇文章)`}
+            >
+              {tag}
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  )}
+
+  <!-- Navigation Links -->
+  <section class="sidebar-section navigation">
+    <h3 class="section-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 19c-5 0-9-4-9-9s4-9 9-9"></path>
+        <path d="M15 5c5 0 9 4 9 9s-4 9-9 9"></path>
+      </svg>
+      快速导航
+    </h3>
+    <nav class="nav-links">
+      <a href="/" class={currentPath === '/' ? 'nav-link active' : 'nav-link'}>
+        🏠 首页
+      </a>
+      <a href="/archive" class={currentPath === '/archive' ? 'nav-link active' : 'nav-link'}>
+        📚 归档
+      </a>
+      <a href="/categories" class={currentPath === '/categories' ? 'nav-link active' : 'nav-link'}>
+        📂 分类
+      </a>
+      <a href="/tags" class={currentPath === '/tags' ? 'nav-link active' : 'nav-link'}>
+        🏷️ 标签
+      </a>
+      <a href="/friends" class={currentPath === '/friends' ? 'nav-link active' : 'nav-link'}>
+        👥 友链
+      </a>
+      <a href="/about" class={currentPath === '/about' ? 'nav-link active' : 'nav-link'}>
+        👤 关于
+      </a>
+    </nav>
+  </section>
+</aside>
+
+<style>
+  @reference "tailwindcss";
+
+  .sidebar {
+    @apply space-y-6;
+  }
+
+  /* Section Styles */
+  .sidebar-section {
+    @apply bg-white rounded-xl p-6 shadow-sm border;
+    @apply dark:bg-gray-800 dark:border-gray-700;
+  }
+
+  .section-title {
+    @apply flex items-center space-x-2 text-lg font-semibold text-gray-900 dark:text-white mb-4;
+  }
+
+  .section-title svg {
+    @apply text-blue-600 dark:text-blue-400;
+  }
+
+  /* Author Card */
+  .author-card {
+    @apply text-center;
+  }
+
+  .author-avatar {
+    @apply relative inline-block mb-4;
+  }
+
+  .author-avatar img {
+    @apply w-20 h-20 rounded-full object-cover ring-4 ring-blue-50;
+    @apply dark:ring-blue-900/30;
+  }
+
+  .avatar-status {
+    @apply absolute -bottom-1 -right-1 w-6 h-6 bg-green-400 rounded-full border-4 border-white;
+    @apply dark:border-gray-800;
+  }
+
+  .author-name {
+    @apply text-xl font-bold text-gray-900 dark:text-white mb-1;
+  }
+
+  .author-sign {
+    @apply text-sm text-gray-600 dark:text-gray-300 mb-3 italic;
+  }
+
+  .author-description {
+    @apply text-sm text-gray-600 dark:text-gray-300 mb-4;
+  }
+
+  .author-social {
+    @apply flex justify-center space-x-3;
+  }
+
+  .social-link {
+    @apply flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-lg transition-all;
+    @apply hover:bg-blue-100 hover:scale-110;
+    @apply dark:bg-gray-700 dark:hover:bg-blue-900/30;
+  }
+
+  /* Statistics */
+  .stats-grid {
+    @apply grid grid-cols-2 gap-4;
+  }
+
+  .stat-item {
+    @apply text-center;
+  }
+
+  .stat-number {
+    @apply text-2xl font-bold text-blue-600 dark:text-blue-400;
+  }
+
+  .stat-label {
+    @apply text-sm text-gray-600 dark:text-gray-400;
+  }
+
+  /* Recent Posts */
+  .recent-posts-list {
+    @apply space-y-4;
+  }
+
+  .recent-post-item {
+    @apply border-l-4 border-blue-100 pl-4 dark:border-blue-900/30;
+  }
+
+  .recent-post-meta {
+    @apply mb-2;
+  }
+
+  .recent-post-date {
+    @apply text-xs text-gray-500 dark:text-gray-400 font-medium;
+  }
+
+  .recent-post-title {
+    @apply text-sm;
+  }
+
+  .recent-post-title a {
+    @apply text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors;
+    @apply font-medium;
+  }
+
+  /* Categories */
+  .categories-list {
+    @apply space-y-2;
+  }
+
+  .category-item {
+    @apply flex items-center justify-between p-3 rounded-lg bg-gray-50 transition-colors;
+    @apply hover:bg-gray-100 dark:bg-gray-700/50 dark:hover:bg-gray-700;
+  }
+
+  .category-name {
+    @apply text-sm font-medium text-gray-700 dark:text-gray-300;
+  }
+
+  .category-count {
+    @apply text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full;
+  }
+
+  /* Tag Cloud */
+  .tag-cloud-container {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .tag-cloud-item {
+    @apply inline-block px-3 py-1 rounded-full font-medium transition-all;
+    @apply text-gray-600 bg-gray-100 hover:bg-blue-100 hover:text-blue-600;
+    @apply dark:text-gray-300 dark:bg-gray-700 dark:hover:bg-blue-900/30 dark:hover:text-blue-400;
+    @apply hover:scale-105;
+  }
+
+  /* Navigation */
+  .nav-links {
+    @apply space-y-2;
+  }
+
+  .nav-link {
+    @apply flex items-center space-x-3 p-3 rounded-lg text-sm font-medium transition-colors;
+    @apply text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700;
+  }
+
+  .nav-link.active {
+    @apply bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400;
+  }
+</style> 

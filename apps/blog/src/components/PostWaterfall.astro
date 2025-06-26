@@ -1,0 +1,164 @@
+---
+import AsukaConfig from "~/asuka.config";
+
+export interface Props {
+  posts: any[];
+}
+
+const { posts } = Astro.props;
+const waterfallConfig = AsukaConfig.waterfallColumns || {
+  default: 3,
+  lg: 3,
+  md: 2,
+  sm: 1
+};
+---
+
+<div class="waterfall-container" data-columns={JSON.stringify(waterfallConfig)}>
+  <div class="waterfall-grid">
+    <slot />
+  </div>
+</div>
+
+<script>
+  function initWaterfall() {
+    const container = document.querySelector('.waterfall-container') as HTMLElement;
+    const grid = document.querySelector('.waterfall-grid') as HTMLElement;
+    if (!container || !grid) return;
+
+    const configData = container.getAttribute('data-columns');
+    if (!configData) return;
+
+    const config = JSON.parse(configData);
+    
+    function getColumnCount() {
+      const width = window.innerWidth;
+      if (width >= 1024) return config.lg;
+      if (width >= 768) return config.md;
+      if (width >= 640) return config.sm;
+      return config.default;
+    }
+
+    function organizeColumns() {
+      const columnCount = getColumnCount();
+      const cards = Array.from(grid.children) as HTMLElement[];
+      
+      // 清除现有的列样式
+      grid.style.columnCount = '';
+      grid.style.columns = '';
+      
+      // 如果是单列，直接返回
+      if (columnCount === 1) {
+        grid.style.columnCount = '1';
+        return;
+      }
+
+      // 创建列数组
+      const columns: HTMLElement[][] = Array.from({ length: columnCount }, () => []);
+      const columnHeights = new Array(columnCount).fill(0);
+
+      // 将卡片分配到高度最小的列
+      cards.forEach((card) => {
+        const minHeightIndex = columnHeights.indexOf(Math.min(...columnHeights));
+        columns[minHeightIndex].push(card);
+        columnHeights[minHeightIndex] += card.offsetHeight + 24; // 24px margin
+      });
+
+      // 使用CSS Grid实现
+      grid.style.display = 'grid';
+      grid.style.gridTemplateColumns = `repeat(${columnCount}, 1fr)`;
+      grid.style.gap = '1.5rem';
+      grid.style.alignItems = 'start';
+
+      // 重新排列DOM元素
+      columns.forEach((column, columnIndex) => {
+        column.forEach((card, cardIndex) => {
+          card.style.gridColumn = `${columnIndex + 1}`;
+          card.style.gridRow = `${cardIndex + 1}`;
+        });
+      });
+    }
+
+    // 使用ResizeObserver监听尺寸变化
+    const resizeObserver = new ResizeObserver(() => {
+      organizeColumns();
+    });
+
+    resizeObserver.observe(container);
+
+    // 初始化
+    setTimeout(() => {
+      organizeColumns();
+    }, 100);
+
+    // 监听图片加载完成
+    const images = grid.querySelectorAll('img');
+    let loadedImages = 0;
+    
+    function onImageLoad() {
+      loadedImages++;
+      if (loadedImages === images.length) {
+        setTimeout(organizeColumns, 50);
+      }
+    }
+
+    images.forEach(img => {
+      if (img.complete) {
+        onImageLoad();
+      } else {
+        img.addEventListener('load', onImageLoad);
+        img.addEventListener('error', onImageLoad);
+      }
+    });
+  }
+
+  // 页面加载完成后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWaterfall);
+  } else {
+    initWaterfall();
+  }
+</script>
+
+<style>
+  @reference "tailwindcss";
+  
+  .waterfall-container {
+    @apply w-full;
+  }
+
+  .waterfall-grid {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+    
+    /* 移动端单列 */
+    @apply sm:columns-1;
+    
+    /* 平板双列 */
+    @apply md:columns-2;
+    
+    /* 桌面三列 */
+    @apply lg:columns-3;
+    
+    column-gap: 1.5rem;
+    column-fill: balance;
+  }
+
+  /* Fallback for browsers that don't support CSS Grid */
+  @supports not (display: grid) {
+    .waterfall-grid {
+      column-count: 1;
+    }
+    
+    @media (min-width: 768px) {
+      .waterfall-grid {
+        column-count: 2;
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .waterfall-grid {
+        column-count: 3;
+      }
+    }
+  }
+</style> 

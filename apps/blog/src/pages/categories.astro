@@ -1,0 +1,215 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import { getTranslation } from '../utils/i18n';
+import type { Locale } from '../utils/i18n';
+import I18nKeys from '../locales/keys';
+import AsukaConfig from '../../asuka.config';
+
+// 获取所有博客文章
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+
+// 统计分类
+const categoryCount = new Map<string, number>();
+const categoryPosts = new Map<string, typeof allPosts>();
+
+allPosts.forEach(post => {
+  if (post.data.category) {
+    const category = post.data.category;
+    categoryCount.set(category, (categoryCount.get(category) || 0) + 1);
+    
+    if (!categoryPosts.has(category)) {
+      categoryPosts.set(category, []);
+    }
+    categoryPosts.get(category)!.push(post);
+  }
+});
+
+// 转换为数组并按文章数量排序
+const categories = Array.from(categoryCount.entries())
+  .sort((a, b) => b[1] - a[1]);
+
+const locale = AsukaConfig.locale as Locale;
+const totalCategories = categories.length;
+---
+
+<Layout 
+  title={`${getTranslation(locale, I18nKeys.pages_categories_title)} | ${AsukaConfig.title}`}
+  description="博客文章分类页面"
+  showBanner={false}
+>
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-6xl mx-auto">
+      <!-- Page Header -->
+      <header class="mb-12 text-center">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          {getTranslation(locale, I18nKeys.pages_categories_title)}
+        </h1>
+        <p class="text-gray-600 dark:text-gray-400">
+          共 <span class="font-semibold text-blue-600 dark:text-blue-400">{totalCategories}</span> 个分类
+        </p>
+      </header>
+
+      {categories.length === 0 ? (
+        <div class="text-center py-16">
+          <div class="mb-4">
+            <svg class="mx-auto h-24 w-24 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+            暂无分类
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400">
+            还没有发布带分类的文章
+          </p>
+        </div>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categories.map(([category, count]) => {
+            const posts = categoryPosts.get(category) || [];
+            const recentPosts = posts
+              .sort((a, b) => new Date(b.data.published).getTime() - new Date(a.data.published).getTime())
+              .slice(0, 3);
+            
+            return (
+              <div class="category-card">
+                <div class="category-header">
+                  <div class="category-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"></path>
+                      <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                    </svg>
+                  </div>
+                  <div class="category-info">
+                    <h2 class="category-name">
+                      <a href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}`}>
+                        {category}
+                      </a>
+                    </h2>
+                    <p class="category-count">
+                      {count} 篇文章
+                    </p>
+                  </div>
+                </div>
+
+                {recentPosts.length > 0 && (
+                  <div class="recent-posts">
+                    <h3 class="recent-posts-title">最新文章</h3>
+                    <ul class="recent-posts-list">
+                      {recentPosts.map((post) => (
+                        <li class="recent-post-item">
+                          <a href={`/posts/${post.id}`} class="recent-post-link">
+                            <span class="recent-post-title">{post.data.title}</span>
+                            <time class="recent-post-date">
+                              {new Date(post.data.published).toLocaleDateString(
+                                locale === 'zh-CN' ? 'zh-CN' : 'en-US',
+                                { month: 'short', day: 'numeric' }
+                              )}
+                            </time>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div class="category-footer">
+                  <a href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}`} class="view-all-link">
+                    查看全部
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="m9 18 6-6-6-6"></path>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  @reference "tailwindcss";
+
+  .container {
+    @apply max-w-7xl;
+  }
+
+  .category-card {
+    @apply bg-white rounded-xl shadow-sm border transition-all duration-300;
+    @apply hover:shadow-md hover:-translate-y-1;
+    @apply dark:bg-gray-800 dark:border-gray-700;
+  }
+
+  .category-header {
+    @apply flex items-center space-x-4 p-6 pb-4;
+  }
+
+  .category-icon {
+    @apply flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50 text-blue-600;
+    @apply dark:bg-blue-900/30 dark:text-blue-400;
+  }
+
+  .category-info {
+    @apply flex-1;
+  }
+
+  .category-name a {
+    @apply text-xl font-semibold text-gray-900 transition-colors;
+    @apply hover:text-blue-600 dark:text-white dark:hover:text-blue-400;
+  }
+
+  .category-count {
+    @apply text-sm text-gray-500 dark:text-gray-400;
+  }
+
+  .recent-posts {
+    @apply px-6 pb-4;
+  }
+
+  .recent-posts-title {
+    @apply text-sm font-medium text-gray-600 dark:text-gray-400 mb-3;
+  }
+
+  .recent-posts-list {
+    @apply space-y-2;
+  }
+
+  .recent-post-item {
+    @apply border-l-2 border-gray-100 dark:border-gray-700 pl-3;
+  }
+
+  .recent-post-link {
+    @apply flex items-start justify-between ;
+  }
+
+  .recent-post-title {
+    @apply text-sm text-gray-700 dark:text-gray-300 transition-colors line-clamp-2;
+    @apply group-hover:text-blue-600 dark:group-hover:text-blue-400;
+    flex: 1;
+    margin-right: 0.5rem;
+  }
+
+  .recent-post-date {
+    @apply text-xs text-gray-400 dark:text-gray-600 flex-shrink-0;
+  }
+
+  .category-footer {
+    @apply px-6 pb-6;
+  }
+
+  .view-all-link {
+    @apply flex items-center space-x-2 text-sm font-medium text-blue-600 transition-colors;
+    @apply hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300;
+  }
+
+  .view-all-link svg {
+    @apply transition-transform;
+    @apply group-hover:translate-x-1;
+  }
+</style> 

@@ -1,31 +1,73 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import '../styles/global.css';
+import PostCard from '../components/PostCard.astro';
+import PostWaterfall from '../components/PostWaterfall.astro';
+import { getTranslation } from '../utils/i18n';
+import type { Locale } from '../utils/i18n';
+import AsukaConfig from '../../asuka.config';
+
+// 获取所有博客文章
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+
+// 按发布时间排序
+const sortedPosts = allPosts.sort((a, b) => 
+  new Date(b.data.published).getTime() - new Date(a.data.published).getTime()
+);
+
+const locale = AsukaConfig.locale as Locale;
 ---
 
-<Layout title="Asuka's Blog" description="欢迎来到Asuka的个人博客">
-  <main class="min-h-screen bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-      <header class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">
-          Asuka's Blog
-        </h1>
-        <p class="text-lg text-gray-600">
-          分享技术、思考与生活
-        </p>
-      </header>
-      
-      <section class="max-w-4xl mx-auto">
-        <div class="bg-white rounded-lg shadow-md p-8">
-          <h2 class="text-2xl font-semibold text-gray-800 mb-4">
-            欢迎来到我的博客
-          </h2>
-          <p class="text-gray-600 leading-7">
-            这里是我分享技术文章、个人思考和生活感悟的地方。
-            博客正在建设中，敬请期待更多精彩内容。
-          </p>
+<Layout 
+  title={AsukaConfig.title}
+  description={AsukaConfig.description}
+  showBanner={true}
+>
+  <div class="container mx-auto px-4 py-8">
+    {sortedPosts.length === 0 ? (
+      <div class="text-center py-16">
+        <div class="mb-4">
+          <svg class="mx-auto h-24 w-24 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
         </div>
-      </section>
-    </div>
-  </main>
-</Layout> 
+        <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+          暂无文章
+        </h2>
+        <p class="text-gray-600 dark:text-gray-400">
+          请在 <code class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">src/content/blog</code> 目录下添加 Markdown 文章
+        </p>
+      </div>
+    ) : (
+      <PostWaterfall posts={sortedPosts}>
+        {sortedPosts.map((post) => (
+          <PostCard
+            id={post.id}
+            title={post.data.title}
+            description={post.data.description}
+            published={post.data.published}
+            tags={post.data.tags}
+            category={post.data.category}
+            cover={post.data.cover}
+            author={post.data.author}
+            readingTime={post.data.readingTime}
+            slug={post.id}
+          />
+        ))}
+      </PostWaterfall>
+    )}
+  </div>
+</Layout>
+
+<style>
+  @reference "tailwindcss";
+  .container {
+    @apply max-w-7xl;
+  }
+  
+  code {
+    @apply text-sm font-mono;
+  }
+</style> 

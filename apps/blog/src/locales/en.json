@@ -1,0 +1,41 @@
+{
+  "copy_right_author": "Copyright",
+  "copy_right_publish_date": "Published on",
+  "copy_right_license": "Licensed under",
+  
+  "nav_bar_home": "Home",
+  "nav_bar_archive": "Archive",
+  "nav_bar_about": "About",
+  "nav_bar_tags": "Tags",
+  "nav_bar_categories": "Categories",
+  "nav_bar_friends": "Friends",
+  "nav_bar_github": "GitHub",
+  "nav_bar_search_placeholder": "Search posts...",
+  
+  "post_card_words": "words",
+  "post_card_minutes": "min",
+  "post_card_read_more": "Read More",
+  
+  "side_bar_categories": "Categories",
+  "side_bar_tags": "Tags",
+  "side_bar_view_more": "View More",
+  "side_bar_recent_posts": "Recent Posts",
+  
+  "archive_year_title_count": ", {{count}} posts",
+  "archive_total_posts": "Total {{count}} posts",
+  
+  "pages_categories_archive": "Categories Archive",
+  "pages_archive_archive": "Posts Archive",
+  "pages_tags_archive": "Tags Archive",
+  "pages_tags_title": "All Tags",
+  "pages_categories_title": "All Categories",
+  "pages_friends_title": "Friend Links",
+  "pages_about_title": "About Me",
+  
+  "friends_link_description": "My Friends",
+  
+  "search_results": "Search Results",
+  "search_no_results": "No posts found",
+  
+  "back_to_top": "Back to Top"
+} 

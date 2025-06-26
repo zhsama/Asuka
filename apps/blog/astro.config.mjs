@@ -4,6 +4,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import rehypeMathjax from 'rehype-mathjax';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
@@ -21,6 +22,6 @@ export default defineConfig({
   },
   markdown: {
     remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex],
+    rehypePlugins: [rehypeMathjax],
   },
 }); 

@@ -1,0 +1,222 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import { getTranslation } from '../utils/i18n';
+import type { Locale } from '../utils/i18n';
+import I18nKeys from '../locales/keys';
+import AsukaConfig from '../../asuka.config';
+
+// 获取所有博客文章
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+
+// 按发布时间排序
+const sortedPosts = allPosts.sort((a, b) => 
+  new Date(b.data.published).getTime() - new Date(a.data.published).getTime()
+);
+
+// 按年份分组
+const postsByYear = new Map<number, typeof sortedPosts>();
+sortedPosts.forEach(post => {
+  const year = new Date(post.data.published).getFullYear();
+  if (!postsByYear.has(year)) {
+    postsByYear.set(year, []);
+  }
+  postsByYear.get(year)!.push(post);
+});
+
+// 转换为数组并按年份降序排序
+const yearGroups = Array.from(postsByYear.entries()).sort((a, b) => b[0] - a[0]);
+
+const locale = AsukaConfig.locale as Locale;
+const totalPosts = sortedPosts.length;
+---
+
+<Layout 
+  title={`${getTranslation(locale, I18nKeys.pages_archive_archive)} | ${AsukaConfig.title}`}
+  description="博客文章归档页面"
+  showBanner={false}
+>
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+      <!-- Page Header -->
+      <header class="mb-12 text-center">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          {getTranslation(locale, I18nKeys.pages_archive_archive)}
+        </h1>
+        <p class="text-gray-600 dark:text-gray-400">
+          共收录 <span class="font-semibold text-blue-600 dark:text-blue-400">{totalPosts}</span> 篇文章
+        </p>
+      </header>
+
+      {yearGroups.length === 0 ? (
+        <div class="text-center py-16">
+          <div class="mb-4">
+            <svg class="mx-auto h-24 w-24 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+            暂无文章
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400">
+            还没有发布任何文章
+          </p>
+        </div>
+      ) : (
+        <div class="space-y-12">
+          {yearGroups.map(([year, posts]) => (
+            <section class="year-section">
+              <!-- Year Header -->
+              <div class="year-header">
+                <div class="year-line"></div>
+                <h2 class="year-title">
+                  <span class="year-number">{year}</span>
+                  <span class="year-count">
+                    {posts.length} 篇文章
+                  </span>
+                </h2>
+                <div class="year-line"></div>
+              </div>
+
+              <!-- Posts List -->
+              <div class="posts-list">
+                {posts.map((post) => {
+                  const publishedDate = new Date(post.data.published);
+                  const formattedDate = publishedDate.toLocaleDateString(
+                    locale === 'zh-CN' ? 'zh-CN' : 'en-US',
+                    { month: '2-digit', day: '2-digit' }
+                  );
+                  
+                  return (
+                    <article class="post-item">
+                      <div class="post-date">
+                        <time datetime={publishedDate.toISOString()}>
+                          {formattedDate}
+                        </time>
+                      </div>
+                      <div class="post-content">
+                        <h3 class="post-title">
+                          <a href={`/posts/${post.id}`}>
+                            {post.data.title}
+                          </a>
+                        </h3>
+                        {post.data.description && (
+                          <p class="post-description">
+                            {post.data.description}
+                          </p>
+                        )}
+                        <div class="post-meta">
+                          {post.data.category && (
+                            <span class="post-category">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"></path>
+                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                              </svg>
+                              {post.data.category}
+                            </span>
+                          )}
+                          {post.data.tags && post.data.tags.length > 0 && (
+                            <div class="post-tags">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"></path>
+                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                              </svg>
+                              {post.data.tags.slice(0, 3).join(', ')}
+                              {post.data.tags.length > 3 && '...'}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  @reference "tailwindcss";
+
+  .container {
+    @apply max-w-7xl;
+  }
+
+  .year-section {
+    @apply relative;
+  }
+
+  .year-header {
+    @apply flex items-center mb-8;
+  }
+
+  .year-line {
+    @apply flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent;
+    @apply dark:via-gray-600;
+  }
+
+  .year-title {
+    @apply flex items-center space-x-3 px-6;
+  }
+
+  .year-number {
+    @apply text-3xl font-bold text-blue-600 dark:text-blue-400;
+  }
+
+  .year-count {
+    @apply text-sm text-gray-500 dark:text-gray-400;
+  }
+
+  .posts-list {
+    @apply space-y-6;
+  }
+
+  .post-item {
+    @apply flex flex-col gap-4 p-6 bg-white rounded-lg shadow-sm border transition-all;
+    @apply hover:shadow-md hover:-translate-y-0.5;
+    @apply dark:bg-gray-800 dark:border-gray-700;
+    @apply sm:flex-row sm:items-start;
+  }
+
+  .post-date {
+    @apply flex-shrink-0;
+  }
+
+  .post-date time {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+    @apply bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300;
+  }
+
+  .post-content {
+    @apply flex-1 space-y-2;
+  }
+
+  .post-title a {
+    @apply text-xl font-semibold text-gray-900 transition-colors;
+    @apply hover:text-blue-600 dark:text-white dark:hover:text-blue-400;
+  }
+
+  .post-description {
+    @apply text-gray-600 dark:text-gray-300 line-clamp-2;
+  }
+
+  .post-meta {
+    @apply flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400;
+  }
+
+  .post-category,
+  .post-tags {
+    @apply flex items-center space-x-1;
+  }
+
+  .post-category svg,
+  .post-tags svg {
+    @apply text-gray-400 dark:text-gray-600;
+  }
+</style> 
