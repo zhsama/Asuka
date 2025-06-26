@@ -7,16 +7,14 @@ import rehypeKatex from 'rehype-katex';
 import rehypeMathjax from 'rehype-mathjax';
 import tailwindcss from '@tailwindcss/vite';
 
+import icon from 'astro-icon';
+
 export default defineConfig({
   site: 'https://blog.asuka.dev',
-  integrations: [
-    react(),
-    mdx({
-      remarkPlugins: [remarkMath],
-      rehypePlugins: [rehypeKatex],
-    }),
-    sitemap()
-  ],
+  integrations: [react(), mdx({
+    remarkPlugins: [remarkMath],
+    rehypePlugins: [rehypeKatex],
+  }), sitemap(), icon()],
   vite: {
     plugins: [tailwindcss()],
   },
@@ -24,4 +22,4 @@ export default defineConfig({
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeMathjax],
   },
-}); 
+});

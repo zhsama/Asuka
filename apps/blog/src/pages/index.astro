@@ -1,11 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../layouts/Layout.astro';
-import PostCard from '../components/PostCard.astro';
-import PostWaterfall from '../components/PostWaterfall.astro';
-import { getTranslation } from '../utils/i18n';
-import type { Locale } from '../utils/i18n';
-import AsukaConfig from '../../asuka.config';
+import Layout from '@/layouts/Layout.astro';
+import PostCard from '@/components/PostCard.astro';
+import PostWaterfall from '@/components/PostWaterfall.astro';
+import AsukaConfig from '~/asuka.config';
 
 // 获取所有博客文章
 const allPosts = await getCollection('blog', ({ data }) => {
@@ -16,8 +14,6 @@ const allPosts = await getCollection('blog', ({ data }) => {
 const sortedPosts = allPosts.sort((a, b) => 
   new Date(b.data.published).getTime() - new Date(a.data.published).getTime()
 );
-
-const locale = AsukaConfig.locale as Locale;
 ---
 
 <Layout 

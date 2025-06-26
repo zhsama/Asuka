@@ -1,10 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../layouts/Layout.astro';
-import { getTranslation } from '../utils/i18n';
-import type { Locale } from '../utils/i18n';
-import I18nKeys from '../locales/keys';
-import AsukaConfig from '../../asuka.config';
+import Layout from '@/layouts/Layout.astro';
+import { getTranslation } from '@/i18n/translation';
+import type { Locale } from '@/i18n/translation';
+import AsukaConfig from '~/asuka.config';
 
 // 获取所有博客文章
 const allPosts = await getCollection('blog', ({ data }) => {
@@ -34,7 +33,7 @@ const totalPosts = sortedPosts.length;
 ---
 
 <Layout 
-  title={`${getTranslation(locale, I18nKeys.pages_archive_archive)} | ${AsukaConfig.title}`}
+  title={`${getTranslation(locale)} | ${AsukaConfig.title}`}
   description="博客文章归档页面"
   showBanner={false}
 >
@@ -43,7 +42,7 @@ const totalPosts = sortedPosts.length;
       <!-- Page Header -->
       <header class="mb-12 text-center">
         <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          {getTranslation(locale, I18nKeys.pages_archive_archive)}
+          {getTranslation(locale)}
         </h1>
         <p class="text-gray-600 dark:text-gray-400">
           共收录 <span class="font-semibold text-blue-600 dark:text-blue-400">{totalPosts}</span> 篇文章

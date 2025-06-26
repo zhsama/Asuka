@@ -1,4 +1,4 @@
-import I18nKeys from "./src/locales/keys";
+import I18nKeys from "./src/i18n/keys";
 import type { Configuration } from "./src/types/config";
 
 const AsukaConfig: Configuration = {
@@ -26,16 +26,8 @@ const AsukaConfig: Configuration = {
       href: "/about",
     },
     {
-      nameKey: I18nKeys.nav_bar_tags,
-      href: "/tags",
-    },
-    {
-      nameKey: I18nKeys.nav_bar_categories,
-      href: "/categories",
-    },
-    {
-      nameKey: I18nKeys.nav_bar_friends,
-      href: "/friends",
+      nameKey: I18nKeys.nav_bar_github,
+      href: "https://github.com/zhsama/asuka",
     },
   ],
 
@@ -48,7 +40,7 @@ const AsukaConfig: Configuration = {
   socialLinks: [
     {
       icon: "line-md:github-loop",
-      link: "https://github.com/yourusername",
+      link: "https://github.com/zhsama",
     },
     {
       icon: "mingcute:bilibili-line",

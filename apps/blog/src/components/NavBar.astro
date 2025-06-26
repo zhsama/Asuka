@@ -1,98 +1,99 @@
 ---
-import AsukaConfig from "../../asuka.config";
-import { getTranslation } from "../utils/i18n";
-import type { Locale } from "../utils/i18n";
-import I18nKeys from "../locales/keys";
+import AsukaConfig from "~/asuka.config";
+import { Icon } from "astro-icon/components";
+import { i18n } from "@/i18n/translation";
 
-const locale = AsukaConfig.locale as Locale;
 const navCount = AsukaConfig.navigators.length;
 ---
 
 <nav class="nav" id="nav">
-  <div class="nav-container">
-    <!-- Mobile Brand & Menu Toggle -->
-    <div class="brand">
+  <div
+    class="relative flex h-[4rem] w-full items-center justify-between overflow-visible lg:h-[4.5rem]"
+  >
+    <div class="brand after:content-['']">
       <button
         id="menu-switcher"
         type="button"
-        class="menu-toggle"
-        aria-label="Toggle mobile menu"
+        class="h-[40px] w-[44px] content-center"
       >
-        <span class="hamburger"></span>
-        <span class="hamburger"></span>
-        <span class="hamburger"></span>
+        <Icon
+          id="menu-icon-closed"
+          size={24}
+          name="line-md:close-to-menu-transition"
+          class="mx-auto hidden"
+        />
+        <Icon
+          id="menu-icon-opened"
+          size={24}
+          name="line-md:menu-to-close-transition"
+          class="mx-auto hidden"
+        />
       </button>
       <a class="title" href="/">
         {AsukaConfig.brandTitle}
       </a>
     </div>
-
-    <!-- Desktop Brand -->
     <a class="brand-lg" href="/">
-      <div class="title">
-        <span class="brand-icon">🏠</span>
+      <div class="title space-x-2">
+        <Icon name="heroicons:home" size={32} />
         <p>{AsukaConfig.brandTitle}</p>
       </div>
     </a>
-
-    <!-- Desktop Menu -->
     <div class="menu">
-      {AsukaConfig.navigators.map((nav) => (
-        <a href={nav.href}>
-          <p>{getTranslation(locale, nav.nameKey)}</p>
-        </a>
-      ))}
+      {
+        AsukaConfig.navigators.map((nav) => (
+          <a href={nav.href}>
+            <p>{i18n(nav.nameKey)}</p>
+          </a>
+        ))
+      }
     </div>
-
-    <!-- Toolbar -->
     <div class="toolbar">
-      <!-- Search -->
-      <div class="search-container">
-        <button type="button" id="search-toggle" class="search-button" aria-label="Toggle search">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-        </button>
-        <div id="search-bar" class="search-bar hidden">
-          <input 
-            type="text" 
-            id="search-input" 
-                         placeholder={getTranslation(locale, I18nKeys.nav_bar_search_placeholder)}
-            class="search-input"
-          />
-        </div>
+      <div class="lg:hidden">
+        <!-- <MobileSearchBar client:only="svelte" /> -->
       </div>
-
-      <!-- Theme Toggle -->
-      <button type="button" id="theme-switcher" class="theme-toggle" aria-label="Toggle theme">
-        <svg id="theme-icon-light" class="theme-icon hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="5"></circle>
-          <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>
-        </svg>
-        <svg id="theme-icon-dark" class="theme-icon hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-      </button>
+      <div class="hidden lg:block">
+        <!-- <SearchBar client:only="svelte" /> -->
+      </div>
+      <div class="theme">
+        <button type="button" id="theme-switcher">
+          <Icon
+            id="theme-icon-light"
+            name="line-md:moon-alt-to-sunny-outline-loop-transition"
+            size={24}
+            class="hidden"
+          />
+          <Icon
+            id="theme-icon-dark"
+            name="line-md:sunny-outline-to-moon-alt-loop-transition"
+            size={24}
+            class="hidden"
+          />
+        </button>
+      </div>
     </div>
   </div>
-
-  <!-- Mobile Menu -->
-  <div id="mobile-menu" class="mobile-menu">
-    <ul class="mobile-menu-nav">
-      {AsukaConfig.navigators.map((nav) => (
-        <li>
-          <a href={nav.href} class="mobile-nav-item">
-            <div class="nav-item-content">
-              <span class="nav-bullet">·</span>
-              <span>{getTranslation(locale, nav.nameKey)}</span>
-            </div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="m9 18 6-6-6-6"></path>
-            </svg>
-          </a>
-        </li>
-      ))}
+  <div id="mobile-menu" class="px-3 transition-all">
+    <ul
+      id="mobile-menu-nav"
+      class="mobile-menu-nav mobile-menu-nav-closed flex flex-col space-y-6 overflow-hidden text-xl font-medium text-[var(--text-color)] transition-all duration-300"
+    >
+      {
+        AsukaConfig.navigators.map((nav) => (
+          <li class="mt-1">
+            <a href={nav.href} class="mobile-nav-item">
+              <div class="flex flex-row items-center space-x-2">
+                <span class="text-[var(--primary-color)]">·</span>
+                <span>{i18n(nav.nameKey)}</span>
+              </div>
+              <Icon
+                name="cuida:caret-right-outline"
+                class="text-[var(--text-color-lighten)]"
+              />
+            </a>
+          </li>
+        ))
+      }
     </ul>
   </div>
 </nav>

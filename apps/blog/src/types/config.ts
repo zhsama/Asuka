@@ -1,4 +1,4 @@
-import type I18nKeys from "../locales/keys";
+import type I18nKeys from "../i18n/keys";
 
 interface FriendLink {
   name: string;

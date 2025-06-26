@@ -1,8 +1,8 @@
 ---
 import AsukaConfig from "../../asuka.config";
-import { getTranslation } from "../utils/i18n";
-import type { Locale } from "../utils/i18n";
-import I18nKeys from "../locales/keys";
+import { getTranslation } from "@/i18n/translation";
+import type { Locale } from "@/i18n/translation";
+import I18nKeys from "../i18n/keys";
 
 const locale = AsukaConfig.locale as Locale;
 const currentYear = new Date().getFullYear();
@@ -36,7 +36,7 @@ const currentYear = new Date().getFullYear();
           {AsukaConfig.navigators.slice(0, 4).map((nav) => (
             <li>
               <a href={nav.href} class="footer-link">
-                {getTranslation(locale, nav.nameKey)}
+                {getTranslation(locale)}
               </a>
             </li>
           ))}
