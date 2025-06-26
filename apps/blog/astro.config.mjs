@@ -6,7 +6,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeMathjax from 'rehype-mathjax';
 import tailwindcss from '@tailwindcss/vite';
-
+import swup from '@swup/astro';
 import icon from 'astro-icon';
 
 export default defineConfig({
@@ -14,7 +14,17 @@ export default defineConfig({
   integrations: [react(), mdx({
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
-  }), sitemap(), icon()],
+  }), sitemap(), icon(),    swup({
+    theme: false,
+    containers: ["main", "footer", ".banner-inner"],
+    smoothScrolling: true,
+    progress: true,
+    cache: true,
+    preload: true,
+    updateHead: true,
+    updateBodyClass: false,
+    globalInstance: true,
+  }),],
   vite: {
     plugins: [tailwindcss()],
   },

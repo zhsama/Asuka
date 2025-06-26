@@ -49,12 +49,12 @@ const navCount = AsukaConfig.navigators.length;
       }
     </div>
     <div class="toolbar">
-      <div class="lg:hidden">
-        <!-- <MobileSearchBar client:only="svelte" /> -->
+      <!-- <div class="lg:hidden">
+        <MobileSearchBar client:only="svelte" />
       </div>
       <div class="hidden lg:block">
-        <!-- <SearchBar client:only="svelte" /> -->
-      </div>
+        <SearchBar client:only="svelte" />
+      </div> -->
       <div class="theme">
         <button type="button" id="theme-switcher">
           <Icon
@@ -79,7 +79,7 @@ const navCount = AsukaConfig.navigators.length;
       class="mobile-menu-nav mobile-menu-nav-closed flex flex-col space-y-6 overflow-hidden text-xl font-medium text-[var(--text-color)] transition-all duration-300"
     >
       {
-        AsukaConfig.navigators.map((nav) => (
+          AsukaConfig.navigators.map((nav) => (
           <li class="mt-1">
             <a href={nav.href} class="mobile-nav-item">
               <div class="flex flex-row items-center space-x-2">
@@ -155,137 +155,103 @@ const navCount = AsukaConfig.navigators.length;
 </script>
 
 <style define:vars={{ navCount }}>
- 
   @reference "tailwindcss";
+  
   .nav {
-    @apply fixed left-1/2 z-50 flex w-full max-w-6xl flex-col rounded-b-xl bg-white/80 backdrop-blur-md transition-all duration-300;
-    @apply dark:bg-gray-900/80;
-    transform: translateX(-50%);
-    animation: slideDown 0.3s ease-out;
+    @apply fixed left-1/2 z-10 flex w-full select-none flex-col justify-end rounded-b-xl bg-[var(--card-color-transparent)] px-2.5 opacity-0 backdrop-blur-md transition-all;
+    @apply lg:w-[var(--page-width-lg)] lg:rounded-b-2xl;
+    @apply xl:w-[var(--page-width-xl)];
+    transform: translateX(-50%) translateY(-5rem);
+    animation: 300ms nav-onload-animation;
+    animation-fill-mode: forwards;
   }
 
-  .nav-container {
-    @apply relative flex h-16 w-full items-center justify-between px-4 lg:px-6;
-  }
-
-  /* Mobile Brand */
   .brand {
-    @apply flex w-full items-center justify-between lg:hidden;
+    @apply flex w-full flex-row items-center justify-between;
+    @apply lg:hidden;
   }
 
-  .brand .title {
-    @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xl font-bold text-blue-600 transition-colors;
-    @apply hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300;
+  .brand > .title {
+    @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 truncate rounded-lg px-4 py-2 text-2xl font-medium text-[var(--primary-color)] transition-all;
+    @apply hover:bg-[var(--primary-color-hover)];
+    font-family: var(--brand-font);
   }
 
-  .menu-toggle {
-    @apply flex h-10 w-10 flex-col items-center justify-center space-y-1 rounded-lg transition-colors;
-    @apply hover:bg-gray-100 dark:hover:bg-gray-800;
+  .brand button {
+    @apply mr-2 flex h-[44px] w-[44px] flex-row items-center rounded-lg text-[var(--text-color)] transition-all;
+    @apply hover:bg-[var(--primary-color-hover)] hover:text-[var(--primary-color)];
   }
 
-  .hamburger {
-    @apply h-0.5 w-6 bg-gray-600 transition-all duration-300;
-    @apply dark:bg-gray-300;
+  .brand .icon {
+    @apply w-full text-center text-2xl;
   }
 
-  .menu-toggle.open .hamburger:nth-child(1) {
-    transform: translateY(6px) rotate(45deg);
-  }
-
-  .menu-toggle.open .hamburger:nth-child(2) {
-    opacity: 0;
-  }
-
-  .menu-toggle.open .hamburger:nth-child(3) {
-    transform: translateY(-6px) rotate(-45deg);
-  }
-
-  /* Desktop Brand */
   .brand-lg {
-    @apply hidden items-center space-x-3 rounded-lg px-4 py-2 transition-colors lg:flex;
-    @apply hover:bg-gray-100 dark:hover:bg-gray-800;
+    @apply hidden h-[3.25rem] rounded-lg px-5 font-medium transition-all;
+    @apply lg:block;
+    @apply hover:bg-[var(--primary-color-hover)];
+    @apply active:scale-95;
   }
 
-  .brand-lg .title {
-    @apply flex items-center space-x-2 text-xl font-bold text-blue-600;
-    @apply dark:text-blue-400;
+  .brand-lg > .title {
+    @apply flex h-full flex-row content-center items-center text-2xl text-[var(--primary-color)];
+    font-family: var(--brand-font);
   }
 
-  .brand-icon {
-    @apply text-2xl;
+  .brand-lg .icon {
+    @apply mr-2 stroke-2 text-2xl;
   }
 
-  /* Desktop Menu */
   .menu {
-    @apply absolute left-1/2 hidden -translate-x-1/2 items-center space-x-1 lg:flex;
+    @apply absolute left-1/2 hidden -translate-x-1/2 items-center justify-between space-x-1 text-lg text-[var(--text-color)] opacity-85;
+    @apply lg:flex;
   }
 
   .menu a {
-    @apply rounded-lg px-4 py-2 font-medium text-gray-700 transition-colors;
-    @apply hover:bg-gray-100 hover:text-blue-600;
-    @apply dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-blue-400;
+    @apply flex h-[3.25rem] items-center rounded-lg px-6 transition-all;
+    @apply hover:bg-[var(--primary-color-hover)] hover:text-[var(--primary-color)];
+    @apply active:scale-95;
   }
 
-  /* Toolbar */
+  .menu p {
+    @apply font-medium leading-normal;
+    font-family: var(--primary-font);
+  }
+
   .toolbar {
-    @apply flex items-center space-x-2;
+    @apply flex flex-row items-center justify-end space-x-1 lg:mr-2;
   }
 
-  .search-container {
-    @apply relative;
+  .toolbar button {
+    @apply flex w-11 justify-center rounded-lg py-2 text-[var(--text-color)] transition-all;
+    @apply hover:bg-[var(--primary-color-hover)] hover:text-[var(--primary-color)];
   }
 
-  .search-button, .theme-toggle {
-    @apply flex h-10 w-10 items-center justify-center rounded-lg text-gray-600 transition-colors;
-    @apply hover:bg-gray-100 hover:text-blue-600;
-    @apply dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-400;
+  .toolbar .icon {
+    @apply stroke-2 text-xl;
   }
 
-  .search-bar {
-    @apply absolute right-0 top-12 w-64 rounded-lg bg-white p-2 shadow-lg;
-    @apply dark:bg-gray-800;
+  .mobile-menu-nav-closed {
+    @apply h-0 opacity-0;
   }
 
-  .search-input {
-    @apply w-full rounded-md border border-gray-300 px-3 py-2 text-sm;
-    @apply focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500;
-    @apply dark:border-gray-600 dark:bg-gray-700 dark:text-white;
+  .mobile-menu-nav-opened {
+    @apply opacity-100;
+    height: calc(var(--navCount) * 52px);
   }
 
-  /* Mobile Menu */
-  .mobile-menu {
-    @apply max-h-0 overflow-hidden transition-all duration-300 lg:hidden;
+  .mobile-menu-nav li a {
+    @apply flex flex-row items-center justify-between;
+    font-family: var(--primary-font);
   }
 
-  .mobile-menu.open {
-    max-height: calc(var(--navCount) * 3.5rem + 1rem);
-  }
-
-  .mobile-menu-nav {
-    @apply flex flex-col space-y-1 px-4 pb-4;
-  }
-
-  .mobile-nav-item {
-    @apply flex items-center justify-between rounded-lg px-4 py-3 text-gray-700 transition-colors;
-    @apply hover:bg-gray-100 hover:text-blue-600;
-    @apply dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-blue-400;
-  }
-
-  .nav-item-content {
-    @apply flex items-center space-x-3;
-  }
-
-  .nav-bullet {
-    @apply text-blue-600 dark:text-blue-400;
-  }
-
-  @keyframes slideDown {
-    from {
-      transform: translateX(-50%) translateY(-100%);
+  @keyframes nav-onload-animation {
+    0% {
+      transform: translateY(-5rem) translateX(-50%);
       opacity: 0;
     }
-    to {
-      transform: translateX(-50%) translateY(0);
+    100% {
+      transform: translateY(0) translateX(-50%);
       opacity: 1;
     }
   }

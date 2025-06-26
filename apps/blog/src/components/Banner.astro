@@ -1,445 +1,230 @@
 ---
-import { getCollection } from 'astro:content';
-import AsukaConfig from '../../asuka.config';
+import AsukaConfig from "~/asuka.config";
+import { GetCoverURLForUnspecifiedEntry } from "../utils/cover";
 
-// 获取推荐文章
-const featuredPosts = await getCollection('blog', ({ data }) => {
-  return data.draft !== true && data.featured === true;
-});
-
-// 按发布时间排序，取前3篇
-const bannerPosts = featuredPosts
-  .sort((a, b) => new Date(b.data.published).getTime() - new Date(a.data.published).getTime())
-  .slice(0, 3);
-
-// 如果没有推荐文章，则获取最新的3篇文章
-const fallbackPosts = bannerPosts.length > 0 ? [] : await getCollection('blog', ({ data }) => {
-  return data.draft !== true;
-}).then(posts => 
-  posts
-    .sort((a, b) => new Date(b.data.published).getTime() - new Date(a.data.published).getTime())
-    .slice(0, 3)
-);
-
-const displayPosts = bannerPosts.length > 0 ? bannerPosts : fallbackPosts;
-
-interface Props {
-  showBanner?: boolean;
+export interface Props {
+  title?: string;
+  subTitle?: string;
+  bannerImage?: string;
+  slug?: string;
 }
+const { title, subTitle, bannerImage, slug } = Astro.props;
 
-const { showBanner = true } = Astro.props;
+const hasTitle = title !== undefined || subTitle !== undefined;
+const hasHeaderImg = bannerImage !== undefined || slug !== undefined;
 
-if (!showBanner || displayPosts.length === 0) {
-  return;
-}
+let carouselImgsList = AsukaConfig.banners; 
+const carouselAnimationTime = `${carouselImgsList.length * 6}s`;
 ---
 
-<section class="banner-section">
-  <div class="banner-container">
-    <div class="banner-content">
-      <div class="banner-header">
-        <h2 class="banner-title">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-          </svg>
-          推荐阅读
-        </h2>
-        <p class="banner-subtitle">
-          精选优质内容，与你分享
-        </p>
-      </div>
-
-      <div class="banner-carousel" id="bannerCarousel">
-        <div class="carousel-track" id="carouselTrack">
-          {displayPosts.map((post, index) => (
-            <article class="banner-slide" data-slide={index}>
-              <div class="slide-background">
-                {post.data.cover ? (
-                  <img 
-                    src={post.data.cover} 
-                    alt={post.data.title}
-                    class="slide-bg-image"
-                  />
-                ) : (
-                  <div class="slide-bg-gradient"></div>
-                )}
-                <div class="slide-overlay"></div>
-              </div>
-              
-              <div class="slide-content">
-                <div class="slide-meta">
-                  <time class="slide-date">
-                    {new Date(post.data.published).toLocaleDateString('zh-CN', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </time>
-                  {post.data.category && (
-                    <span class="slide-category">
-                      {post.data.category}
-                    </span>
-                  )}
-                </div>
-                
-                <h3 class="slide-title">
-                  <a href={`/posts/${post.id}`}>
-                    {post.data.title}
-                  </a>
-                </h3>
-                
-                {post.data.description && (
-                  <p class="slide-description">
-                    {post.data.description}
-                  </p>
-                )}
-                
-                <div class="slide-actions">
-                  <a href={`/posts/${post.id}`} class="slide-read-more">
-                    阅读全文
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="m9 18 6-6-6-6"></path>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <!-- Navigation Dots -->
-        {displayPosts.length > 1 && (
-          <div class="carousel-dots">
-            {displayPosts.map((_, index) => (
-              <button 
-                class={`carousel-dot ${index === 0 ? 'active' : ''}`}
-                data-slide={index}
-                aria-label={`切换到第 ${index + 1} 个轮播项`}
-              ></button>
+<div id="banner" class="banner onload-animation-fade-in">
+  <div class="transition-main banner-inner h-full w-full">
+    {
+      !hasHeaderImg && (
+        <div class="carousel">
+          <ul id="carousel_imgs">
+            {carouselImgsList.map((img, index) => (
+              <li
+                class="item lozad"
+                style={{ animationDelay: `${index * 6}s` }}
+                data-background-image={img}
+              />
             ))}
-          </div>
-        )}
-
-        <!-- Navigation Arrows -->
-        {displayPosts.length > 1 && (
-          <div class="carousel-nav">
-            <button class="carousel-btn carousel-prev" aria-label="上一个">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="m15 18-6-6 6-6"></path>
-              </svg>
-            </button>
-            <button class="carousel-btn carousel-next" aria-label="下一个">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="m9 18 6-6-6-6"></path>
-              </svg>
-            </button>
-          </div>
-        )}
+          </ul>
+        </div>
+      )
+    }
+    {
+      hasHeaderImg && (
+        <div class="cover">
+          <img
+            class="item lozad"
+            data-src={bannerImage ?? GetCoverURLForUnspecifiedEntry(slug ?? "")}
+            alt="PostCoverr"
+          />
+        </div>
+      )
+    }
+    <div class="relative h-[95%] w-full">
+      <div
+        class="absolute left-1/2 top-1/2 w-4/5 -translate-x-1/2 -translate-y-1/2 lg:w-3/4"
+      >
+        <div class="flex flex-col">
+          <h1
+            class:list={[hasTitle ? "title-normal" : "title-index"]}
+            class="title"
+          >
+            {title ?? AsukaConfig.title}
+          </h1>
+          <h2 class="subtitle">{subTitle ?? AsukaConfig.subTitle}</h2>
+        </div>
       </div>
     </div>
   </div>
-</section>
+  <div class="waves" id="header-waves">
+    <svg
+      class="waves"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      viewBox="0 24 150 28"
+      preserveAspectRatio="none"
+      shape-rendering="auto"
+    >
+      <defs>
+        <path
+          id="gentle-wave"
+          d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"
+        >
+        </path>
+      </defs>
+      <g class="parallax">
+        <use
+          xlink:href="#gentle-wave"
+          x="48"
+          y="0"
+          class="opacity-25"
+          style={{ animationDelay: "-2s", animationDuration: "7s" }}></use>
+        <use
+          xlink:href="#gentle-wave"
+          x="48"
+          y="3"
+          class="opacity-50"
+          style={{ animationDelay: "-3s", animationDuration: "10s" }}></use>
+        <use
+          xlink:href="#gentle-wave"
+          x="48"
+          y="5"
+          class="opacity-75"
+          style={{ animationDelay: "-4s", animationDuration: "13s" }}></use>
+        <use
+          xlink:href="#gentle-wave"
+          x="48"
+          y="7"
+          style={{ animationDelay: "-5s", animationDuration: "20s" }}></use>
+      </g>
+    </svg>
+  </div>
+</div>
 
 <script>
-  class BannerCarousel {
-    private carousel: HTMLElement | null;
-    private track: HTMLElement | null;
-    private slides: NodeListOf<HTMLElement>;
-    private dots: NodeListOf<HTMLElement>;
-    private prevBtn: HTMLElement | null;
-    private nextBtn: HTMLElement | null;
-    private currentSlide: number = 0;
-    private totalSlides: number = 0;
-    private autoplayInterval: NodeJS.Timeout | null = null;
+  const styleElement = document.createElement("style");
+  const carouselImgs = document.getElementById("carousel_imgs");
+  const carouselImgsCount = carouselImgs?.children.length ?? 0;
 
-    constructor() {
-      this.carousel = document.getElementById('bannerCarousel');
-      this.track = document.getElementById('carouselTrack');
-      this.slides = document.querySelectorAll('.banner-slide');
-      this.dots = document.querySelectorAll('.carousel-dot');
-      this.prevBtn = document.querySelector('.carousel-prev');
-      this.nextBtn = document.querySelector('.carousel-next');
-      this.totalSlides = this.slides.length;
-
-      if (this.totalSlides <= 1) return;
-
-      this.init();
+  const carouselAnimation = `
+  @keyframes carousel-animation {
+    0% {
+      opacity: 0;
+      transform: scale(1);
     }
-
-    init() {
-      this.bindEvents();
-      this.startAutoplay();
+    3% {
+      opacity: 1;
     }
-
-    bindEvents() {
-      // Dot navigation
-      this.dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => this.goToSlide(index));
-      });
-
-      // Arrow navigation
-      this.prevBtn?.addEventListener('click', () => this.prevSlide());
-      this.nextBtn?.addEventListener('click', () => this.nextSlide());
-
-      // Pause autoplay on hover
-      this.carousel?.addEventListener('mouseenter', () => this.stopAutoplay());
-      this.carousel?.addEventListener('mouseleave', () => this.startAutoplay());
-
-      // Keyboard navigation
-      document.addEventListener('keydown', (e) => {
-        if (!this.carousel?.matches(':hover')) return;
-        
-        switch (e.key) {
-          case 'ArrowLeft':
-            e.preventDefault();
-            this.prevSlide();
-            break;
-          case 'ArrowRight':
-            e.preventDefault();
-            this.nextSlide();
-            break;
-        }
-      });
-
-      // Touch/swipe support
-      let startX = 0;
-      let currentX = 0;
-      let isSwping = false;
-
-      this.carousel?.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        isSwping = true;
-        this.stopAutoplay();
-      });
-
-      this.carousel?.addEventListener('touchmove', (e) => {
-        if (!isSwping) return;
-        currentX = e.touches[0].clientX;
-      });
-
-      this.carousel?.addEventListener('touchend', () => {
-        if (!isSwping) return;
-        isSwping = false;
-
-        const diff = startX - currentX;
-        const threshold = 50;
-
-        if (Math.abs(diff) > threshold) {
-          if (diff > 0) {
-            this.nextSlide();
-          } else {
-            this.prevSlide();
-          }
-        }
-
-        this.startAutoplay();
-      });
+    8% {
+      opacity: 1;
+      animation-timing-function: ease-out;
     }
-
-    goToSlide(index: number) {
-      this.currentSlide = index;
-      this.updateCarousel();
+    ${100 / carouselImgsCount}% {
+      opacity: 1;
     }
-
-    nextSlide() {
-      this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
-      this.updateCarousel();
+    ${100 / carouselImgsCount + 50 / carouselImgsCount}% {
+      opacity: 0;
+      animation-timing-function: ease-out;
     }
-
-    prevSlide() {
-      this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
-      this.updateCarousel();
-    }
-
-    updateCarousel() {
-      // Update track position
-      if (this.track) {
-        this.track.style.transform = `translateX(-${this.currentSlide * 100}%)`;
-      }
-
-      // Update dots
-      this.dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === this.currentSlide);
-      });
-
-      // Update slide visibility for screen readers
-      this.slides.forEach((slide, index) => {
-        slide.setAttribute('aria-hidden', index !== this.currentSlide ? 'true' : 'false');
-      });
-    }
-
-    startAutoplay() {
-      if (this.totalSlides <= 1) return;
-      
-      this.stopAutoplay();
-      this.autoplayInterval = setInterval(() => {
-        this.nextSlide();
-      }, 5000); // 5 seconds
-    }
-
-    stopAutoplay() {
-      if (this.autoplayInterval) {
-        clearInterval(this.autoplayInterval);
-        this.autoplayInterval = null;
-      }
+    100% {
+      opacity: 0;
+      transform: scale(2);
     }
   }
-
-  // Initialize carousel when DOM is loaded
-  document.addEventListener('DOMContentLoaded', () => {
-    new BannerCarousel();
-  });
+  `;
+  styleElement.textContent = carouselAnimation;
+  let bannerElement = document.getElementById("banner");
+  if (bannerElement && !bannerElement.querySelector("style"))
+    bannerElement.appendChild(styleElement);
 </script>
 
-<style>
+<style define:vars={{ carouselAnimationTime }}>
   @reference "tailwindcss";
-
-  .banner-section {
-    @apply mb-12;
+  .banner {
+    @apply relative h-[calc(var(--banner-height)*3/4)] opacity-100 lg:h-[var(--banner-height)];
   }
 
-  .banner-container {
-    @apply container mx-auto px-4;
+  .carousel {
+    @apply absolute left-0 top-0 -z-10 block h-[calc(var(--banner-height)*3/4)] w-full overflow-hidden bg-white lg:h-[var(--banner-height)];
+    animation-fill-mode: forwards;
   }
 
-  .banner-content {
-    @apply max-w-7xl mx-auto;
+  .carousel::before {
+    @apply absolute left-0 top-0 z-10 block h-full w-full bg-black/25 transition-all content-[''];
+    @apply dark:bg-black/30;
   }
 
-  .banner-header {
-    @apply text-center mb-8;
+  .carousel .item {
+    @apply absolute left-0 top-0 z-0 h-full w-full origin-center bg-cover bg-center bg-no-repeat opacity-0;
+    animation: carousel-animation var(--carouselAnimationTime) linear infinite
+      0s;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
   }
 
-  .banner-title {
-    @apply flex items-center justify-center space-x-2 text-2xl font-bold text-gray-900 dark:text-white mb-2;
+  .cover {
+    @apply absolute left-0 top-0 z-0 block h-[var(--banner-height)] w-full overflow-hidden bg-white;
   }
 
-  .banner-title svg {
-    @apply text-yellow-500;
+  .cover::before {
+    @apply absolute left-0 top-0 z-10 block h-full w-full bg-black/25 transition-all content-[''];
+    @apply dark:bg-black/30;
   }
 
-  .banner-subtitle {
-    @apply text-gray-600 dark:text-gray-400;
+  .cover .item {
+    @apply h-full w-full object-cover;
   }
 
-  /* Carousel */
-  .banner-carousel {
-    @apply relative rounded-2xl overflow-hidden shadow-2xl;
+  .title {
+    @apply mt-8 text-center font-bold text-[var(--title-color)] drop-shadow-lg lg:mt-1;
+    font-family: var(--title-font);
   }
 
-  .carousel-track {
-    @apply flex transition-transform duration-500 ease-in-out;
+  .title-index {
+    @apply mb-0 text-6xl leading-[5rem] lg:mb-1 lg:text-8xl;
   }
 
-  .banner-slide {
-    @apply relative w-full flex-shrink-0 h-80 lg:h-96;
+  .title-normal {
+    @apply mb-1 text-3xl lg:text-5xl;
   }
 
-  .slide-background {
-    @apply absolute inset-0;
+  .subtitle {
+    @apply text-center text-xl text-[var(--subtitle-color)] drop-shadow-md lg:text-3xl;
+    font-family: var(--subtitle-font);
   }
 
-  .slide-bg-image {
-    @apply w-full h-full object-cover;
+  .waves {
+    @apply absolute -bottom-[1px] h-[10vh] max-h-[9.375rem] min-h-[3.125rem] w-full;
+    @apply md:h-[15vh];
   }
 
-  .slide-bg-gradient {
-    @apply w-full h-full bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800;
+  .waves > .parallax use {
+    @apply fill-[var(--background-color)];
+    animation: wave 25s cubic-bezier(0.5, 0.5, 0.45, 0.5) infinite;
   }
 
-  .slide-overlay {
-    @apply absolute inset-0 bg-black/40;
-  }
-
-  .slide-content {
-    @apply relative z-10 h-full flex flex-col justify-end p-8 lg:p-12 text-white;
-  }
-
-  .slide-meta {
-    @apply flex items-center space-x-4 mb-4;
-  }
-
-  .slide-date {
-    @apply text-sm opacity-90;
-  }
-
-  .slide-category {
-    @apply text-xs px-3 py-1 bg-white/20 rounded-full backdrop-blur-sm;
-  }
-
-  .slide-title {
-    @apply mb-4;
-  }
-
-  .slide-title a {
-    @apply text-2xl lg:text-4xl font-bold leading-tight hover:text-yellow-300 transition-colors;
-  }
-
-  .slide-description {
-    @apply text-lg opacity-90 mb-6 line-clamp-2 lg:line-clamp-3;
-  }
-
-  .slide-actions {
-    @apply flex items-center;
-  }
-
-  .slide-read-more {
-    @apply inline-flex items-center space-x-2 px-6 py-3 bg-white text-gray-900 rounded-lg font-medium transition-all;
-    @apply hover:bg-yellow-100 hover:scale-105 hover:shadow-lg;
-  }
-
-  /* Navigation */
-  .carousel-dots {
-    @apply absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2;
-  }
-
-  .carousel-dot {
-    @apply w-3 h-3 rounded-full bg-white/50 transition-all;
-    @apply hover:bg-white/70;
-  }
-
-  .carousel-dot.active {
-    @apply bg-white;
-  }
-
-  .carousel-nav {
-    @apply absolute inset-y-0 left-0 right-0 flex items-center justify-between pointer-events-none;
-  }
-
-  .carousel-btn {
-    @apply flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full text-white transition-all pointer-events-auto;
-    @apply hover:bg-white/30 hover:scale-110;
-    @apply mx-4;
-  }
-
-  .carousel-prev {
-    @apply ml-4;
-  }
-
-  .carousel-next {
-    @apply mr-4;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .banner-slide {
-      @apply h-64;
+  @keyframes wave {
+    0% {
+      transform: translate3d(-90px, 0, 0);
     }
-
-    .slide-content {
-      @apply p-6;
+    100% {
+      transform: translate3d(85px, 0, 0);
     }
+  }
 
-    .slide-title a {
-      @apply text-xl;
+  @keyframes banner-onload-animation {
+    0% {
+      opacity: 0;
+      height: calc(var(--banner-height) + 4rem);
     }
-
-    .slide-description {
-      @apply text-base;
-    }
-
-    .carousel-btn {
-      @apply w-10 h-10;
+    100% {
+      opacity: 1;
+      height: var(--banner-height);
     }
   }
 </style>

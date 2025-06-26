@@ -1,5 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../layouts/MainLayout.astro';
 import { getTranslation } from '@/i18n/translation';
 import type { Locale } from '@/i18n/translation';
 import I18nKeys from '../i18n/keys';
@@ -9,7 +9,7 @@ const locale = AsukaConfig.locale as Locale;
 ---
 
 <Layout 
-  title={`${getTranslation(locale, I18nKeys.pages_about_title)} | ${AsukaConfig.title}`}
+  title={`${getTranslation(locale)} | ${AsukaConfig.title}`}
   description={`关于 ${AsukaConfig.username} - ${AsukaConfig.author_description || '博客作者'}`}
   showBanner={false}
 >
@@ -18,7 +18,7 @@ const locale = AsukaConfig.locale as Locale;
       <!-- Page Header -->
       <header class="mb-12 text-center">
         <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          {getTranslation(locale, I18nKeys.pages_about_title)}
+          {getTranslation(locale)}
         </h1>
       </header>
 

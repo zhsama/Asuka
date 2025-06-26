@@ -47,7 +47,7 @@ const AsukaConfig: Configuration = {
       link: "https://space.bilibili.com/yourid",
     },
     {
-      icon: "mingcute:email-line",
+      icon: "line-md:email",
       link: "mailto:your-email@example.com",
     },
   ],
