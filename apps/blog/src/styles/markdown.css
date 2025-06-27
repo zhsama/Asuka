@@ -1,3 +1,5 @@
+@reference "tailwindcss";
+
 .article code:not(pre code)::before {
   content: none !important;
 }

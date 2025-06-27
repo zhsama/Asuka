@@ -1,0 +1,115 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '@/layouts/MainLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import { IdToSlug, SlugToId } from '@/utils/hash';
+import AsukaConfig from '~/asuka.config';
+
+export async function getStaticPaths() {
+  // Get all blog posts
+  const allPosts = await getCollection('blog', ({ data }) => {
+    return import.meta.env.PROD ? data.draft !== true : true;
+  });
+
+  // Get all unique tags
+  const tags = new Set<string>();
+  allPosts.forEach(post => {
+    if (post.data.tags) {
+      post.data.tags.forEach(tag => tags.add(tag));
+    }
+  });
+
+  // Generate paths for each tag
+  return Array.from(tags).map(tag => ({
+    params: { tag: IdToSlug(tag) },
+    props: { 
+      tag,
+      posts: allPosts.filter(post => post.data.tags?.includes(tag))
+    },
+  }));
+}
+
+type Props = {
+  tag: string;
+  posts: any[];
+}
+
+const { tag, posts } = Astro.props;
+
+// Sort posts by published date
+const sortedPosts = posts.sort((a, b) => 
+  new Date(b.data.published).getTime() - new Date(a.data.published).getTime()
+);
+---
+
+<Layout 
+  title={`标签：${tag} | ${AsukaConfig.title}`}
+  description={`查看所有关于 ${tag} 的文章`}
+  showBanner={false}
+>
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+      <!-- Page Header -->
+      <header class="mb-12 text-center">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          标签：#{tag}
+        </h1>
+        <p class="text-gray-600 dark:text-gray-400">
+          共 {sortedPosts.length} 篇文章
+        </p>
+      </header>
+
+      <!-- Posts List -->
+      {sortedPosts.length === 0 ? (
+        <div class="text-center py-16">
+          <div class="mb-4">
+            <svg class="mx-auto h-24 w-24 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+            暂无文章
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400">
+            该标签下还没有发布任何文章
+          </p>
+        </div>
+      ) : (
+        <div class="space-y-8">
+          {sortedPosts.map((post, index) => (
+            <div
+              class="onload-animation"
+              style={`animation-delay: calc(var(--onload-animation-delay) + ${index + 1} * var(--onload-animation-interval));`}
+            >
+              <PostCard
+                id={post.id}
+                title={post.data.title}
+                published={post.data.published}
+                category={post.data.category}
+                tags={post.data.tags}
+                description={post.data.description}
+                image={post.data.cover}
+                readingMetadata={
+                  (post.rendered?.metadata as any)?.frontmatter?.readingMetadata
+                }
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      <!-- Back to Tags -->
+      <div class="mt-12 text-center">
+        <a 
+          href="/tags"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          返回所有标签
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>

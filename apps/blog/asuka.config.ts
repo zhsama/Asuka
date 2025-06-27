@@ -2,15 +2,15 @@ import I18nKeys from "./src/i18n/keys";
 import type { Configuration } from "./src/types/config";
 
 const AsukaConfig: Configuration = {
-  title: "我的博客",
-  subTitle: "记录生活，分享技术",
-  brandTitle: "我的博客",
+  title: "zhsama's blog",
+  subTitle: "Frontend && AI",
+  brandTitle: "zhsama",
 
-  description: "一个记录技术与生活的个人博客",
+  description: "I'm a frontend developer and AI enthusiast.",
 
-  site: "https://your-blog-site.com",
+  site: "https://blog.zhsama.xyz",
 
-  locale: "zh-CN", // 设置为中文
+  locale: "zh-CN",
 
   navigators: [
     {
@@ -31,11 +31,11 @@ const AsukaConfig: Configuration = {
     },
   ],
 
-  username: "博客作者",
-  sign: "生活不止眼前的代码，还有诗和远方",
+  username: "zhsama",
+  sign: "我没有敌人",
   avatarUrl: "/avatar.webp",
-  author_description: "一个热爱技术的开发者",
-  email: "your-email@example.com",
+  author_description: "自闭症肥宅，懂一点点前端和AI",
+  email: "a602693793@gmail.com",
   
   socialLinks: [
     {
@@ -43,12 +43,12 @@ const AsukaConfig: Configuration = {
       link: "https://github.com/zhsama",
     },
     {
-      icon: "mingcute:bilibili-line",
-      link: "https://space.bilibili.com/yourid",
+      icon: "mingcute:twitter-line",
+      link: "https://x.com/a602693793",
     },
     {
       icon: "line-md:email",
-      link: "mailto:your-email@example.com",
+      link: "mailto:a602693793@gmail.com",
     },
   ],
   
@@ -84,7 +84,7 @@ const AsukaConfig: Configuration = {
   
   // SEO 配置
   seo: {
-    twitter: "@yourtwitterhandle",
+    twitter: "@a602693793",
     ogImage: "/og-image.png",
   },
   

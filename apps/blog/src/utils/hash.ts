@@ -1,5 +1,6 @@
 import AsukaConfig from "~/asuka.config";
 import CryptoJS from "crypto-js";
+import { getCollection } from "astro:content";
 
 /**
  * Converts a given slug to a hashed slug or returns the raw slug based on the configuration.
@@ -18,6 +19,40 @@ export function IdToSlug(slug: string): string {
       return slug;
     default:
       return slug;
+  }
+}
+
+/**
+ * Finds the original blog post ID from a hashed slug.
+ * This function is used to reverse the hash process for routing.
+ *
+ * @param hashedSlug - The hashed slug to find the original ID for.
+ * @returns The original post ID if found, otherwise null.
+ */
+export async function SlugToId(hashedSlug: string): Promise<string | null> {
+  if (AsukaConfig.slugMode !== "HASH") {
+    return hashedSlug;
+  }
+
+  try {
+    // Get all blog posts
+    const allPosts = await getCollection("blog", ({ data }) => {
+      return import.meta.env.PROD ? data.draft !== true : true;
+    });
+
+    // Find the post whose ID hashes to the given slug
+    for (const post of allPosts) {
+      const hash = CryptoJS.SHA256(post.id);
+      const computedSlug = hash.toString(CryptoJS.enc.Hex).slice(0, 8);
+      if (computedSlug === hashedSlug) {
+        return post.id;
+      }
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error in SlugToId:", error);
+    return null;
   }
 }
 

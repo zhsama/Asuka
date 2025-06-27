@@ -49,12 +49,28 @@ const navCount = AsukaConfig.navigators.length;
       }
     </div>
     <div class="toolbar">
-      <!-- <div class="lg:hidden">
-        <MobileSearchBar client:only="svelte" />
+      <!-- EVA主题切换器 -->
+      <div class="eva-theme-switcher">
+        <button type="button" id="eva-theme-toggle" class="eva-theme-button">
+          <Icon name="heroicons:swatch" size={24} />
+        </button>
+        <div id="eva-theme-menu" class="eva-theme-menu hidden">
+          <div class="eva-theme-title">选择EVA机体</div>
+          <button type="button" class="eva-theme-option" data-theme="eva-02">
+            <div class="eva-theme-color eva-02-color"></div>
+            <span>EVA-02 (明日香)</span>
+          </button>
+          <button type="button" class="eva-theme-option" data-theme="eva-01">
+            <div class="eva-theme-color eva-01-color"></div>
+            <span>EVA-01 (初号机)</span>
+          </button>
+          <button type="button" class="eva-theme-option" data-theme="eva-00">
+            <div class="eva-theme-color eva-00-color"></div>
+            <span>EVA-00 (零号机)</span>
+          </button>
+        </div>
       </div>
-      <div class="hidden lg:block">
-        <SearchBar client:only="svelte" />
-      </div> -->
+      <!-- 亮暗模式切换 -->
       <div class="theme">
         <button type="button" id="theme-switcher">
           <Icon
@@ -122,7 +138,60 @@ const navCount = AsukaConfig.navigators.length;
     }
   });
 
-  // Theme toggle functionality
+  // EVA Theme switching functionality
+  const evaThemeToggle = document.getElementById('eva-theme-toggle');
+  const evaThemeMenu = document.getElementById('eva-theme-menu');
+  const evaThemeOptions = document.querySelectorAll('.eva-theme-option');
+
+  // Toggle EVA theme menu
+  evaThemeToggle?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    evaThemeMenu?.classList.toggle('hidden');
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!evaThemeToggle?.contains(e.target as Node) && !evaThemeMenu?.contains(e.target as Node)) {
+      evaThemeMenu?.classList.add('hidden');
+    }
+  });
+
+  // EVA theme selection
+  evaThemeOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      const theme = option.getAttribute('data-theme');
+      if (theme) {
+        setEvaTheme(theme);
+        evaThemeMenu?.classList.add('hidden');
+        
+        // Update active state
+        evaThemeOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+      }
+    });
+  });
+
+  function setEvaTheme(theme: string) {
+    // Remove all EVA theme classes
+    document.documentElement.classList.remove('eva-01', 'eva-02', 'eva-00');
+    
+    // Apply new theme
+    if (theme && theme !== 'eva-02') { // eva-02 is default
+      document.documentElement.classList.add(theme);
+    }
+    
+    localStorage.setItem('eva-theme', theme);
+  }
+
+  // Initialize EVA theme
+  const savedEvaTheme = localStorage.getItem('eva-theme') || 'eva-02';
+  setEvaTheme(savedEvaTheme);
+  
+  // Set active option
+  const activeOption = document.querySelector(`[data-theme="${savedEvaTheme}"]`);
+  activeOption?.classList.add('active');
+
+  // Theme toggle functionality (dark/light mode)
   const themeToggle = document.getElementById('theme-switcher');
   const lightIcon = document.getElementById('theme-icon-light');
   const darkIcon = document.getElementById('theme-icon-dark');
@@ -229,6 +298,49 @@ const navCount = AsukaConfig.navigators.length;
 
   .toolbar .icon {
     @apply stroke-2 text-xl;
+  }
+
+  /* EVA主题切换器样式 */
+  .eva-theme-switcher {
+    @apply relative;
+  }
+
+  .eva-theme-button {
+    @apply flex w-11 justify-center rounded-lg py-2 text-[var(--text-color)] transition-all;
+    @apply hover:bg-[var(--primary-color-hover)] hover:text-[var(--primary-color)];
+  }
+
+  .eva-theme-menu {
+    @apply absolute right-0 top-full mt-2 w-56 rounded-lg bg-[var(--card-color)] shadow-lg border border-[var(--primary-color-lighten)] backdrop-blur-md z-50;
+  }
+
+  .eva-theme-title {
+    @apply px-4 py-3 text-sm font-medium text-[var(--text-color-lighten)] border-b border-[var(--primary-color-lighten)];
+  }
+
+  .eva-theme-option {
+    @apply flex w-full items-center space-x-3 px-4 py-3 text-left text-[var(--text-color)] transition-all;
+    @apply hover:bg-[var(--primary-color-hover)] hover:text-[var(--primary-color)];
+  }
+
+  .eva-theme-option.active {
+    @apply bg-[var(--primary-color-lighten)] text-[var(--primary-color)];
+  }
+
+  .eva-theme-color {
+    @apply w-4 h-4 rounded-full border-2 border-white shadow-sm;
+  }
+
+  .eva-02-color {
+    background: linear-gradient(135deg, oklch(52% 0.42 12), oklch(72% 0.28 25));
+  }
+
+  .eva-01-color {
+    background: linear-gradient(135deg, oklch(47% 0.18 260), oklch(78% 0.25 125));
+  }
+
+  .eva-00-color {
+    background: linear-gradient(135deg, oklch(42% 0.15 210), oklch(95% 0.01 0));
   }
 
   .mobile-menu-nav-closed {

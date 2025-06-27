@@ -8,17 +8,47 @@
 @import "./searchbar.css";
 
 :root {
-  --hue: 300;
+  /* EVA机体配色 - 基于官方设定和真实颜色代码 */
+  
+  /* EVA-02 (二号机) - 基于官方色彩数据 #d3290f, #ec2323, #e6770b */
+  --eva-02-primary: 12; /* 更准确的红色 hue，对应 #d3290f */
+  --eva-02-secondary: 25; /* 橙色配色，对应 #e6770b */
+  
+  /* EVA-01 (初号机) - 基于官方数据 #765898, #52d053, #f7bb2a */
+  --eva-01-primary: 260; /* 紫色 #765898 (118,88,152) */
+  --eva-01-secondary: 125; /* 绿色 #52d053 (82,208,83) */
+  
+  /* EVA-00 (零号机) - 基于官方数据 #1d446c, #f1f1f1 */
+  --eva-00-primary: 210; /* 蓝色 #1d446c (29,68,108) */
+  --eva-00-secondary: 0; /* 白色 #f1f1f1 (241,241,241) */
 
-  --primary-color: oklch(70% 0.15 var(--hue));
-  --primary-color-lighten: oklch(95% 0.02 var(--hue));
-  --primary-color-hover: oklch(90% 0.025 var(--hue));
-  --primary-color-transparent: oklch(70% 0.15 var(--hue) / 15%);
-  --text-color: oklch(30% 0 0);
-  --text-color-lighten: oklch(50% 0 0);
-  --card-color: oklch(100% 0 0);
-  --card-color-transparent: oklch(100% 0 0 / 85%);
-  --background-color: oklch(97% 0.01 var(--hue));
+  /* 默认使用 EVA-02 (明日香) 配色 */
+  --hue-primary: var(--eva-02-primary);
+  --hue-secondary: var(--eva-02-secondary);
+
+  /* 主色调 - 基于官方EVA-02红色 #d3290f (211,41,15) */
+  --primary-color: oklch(52% 0.42 var(--hue-primary));
+  --primary-color-lighten: oklch(94% 0.08 var(--hue-primary));
+  --primary-color-hover: oklch(88% 0.18 var(--hue-primary));
+  --primary-color-transparent: oklch(52% 0.42 var(--hue-primary) / 20%);
+  
+  /* 辅助色 - 基于官方橙色 #e6770b (230,119,11) */
+  --secondary-color: oklch(72% 0.28 var(--hue-secondary));
+  --secondary-color-lighten: oklch(92% 0.06 var(--hue-secondary));
+  
+  /* 文字颜色 */
+  --text-color: oklch(25% 0.02 var(--hue-primary));
+  --text-color-lighten: oklch(45% 0.05 var(--hue-primary));
+  
+  /* 卡片颜色 */
+  --card-color: oklch(99% 0.01 var(--hue-primary));
+  --card-color-transparent: oklch(99% 0.01 var(--hue-primary) / 90%);
+  
+  /* 背景色带有微妙的机体色调 */
+  --background-color: oklch(97% 0.02 var(--hue-primary));
+  
+  /* 强调色 - 用于特殊元素 */
+  --accent-color: oklch(78% 0.25 var(--hue-secondary));
 
   --brand-font: "Raleway", "Noto Sans SC", sans-serif;
   --primary-font: "Noto Sans SC", sans-serif;
@@ -38,18 +68,93 @@
 }
 
 :root.dark {
-  --primary-color: oklch(70% 0.125 var(--hue));
-  --primary-color-lighten: oklch(40% 0.04 var(--hue));
-  --primary-color-hover: oklch(20% 0.015 var(--hue));
-  --text-color: oklch(95% 0.002 var(--hue));
-  --text-color-lighten: oklch(90% 0.002 var(--hue));
-  --card-color: oklch(25% 0.02 var(--hue));
-  --card-color-lighten: oklch(40% 0.04 var(--hue));
-  --card-color-transparent: oklch(30% 0.025 var(--hue) / 85%);
-  --background-color: oklch(17.5% 0.015 var(--hue));
+  /* 深色模式 - 更加戏剧性的EVA配色 */
+  --primary-color: oklch(62% 0.38 var(--hue-primary));
+  --primary-color-lighten: oklch(30% 0.12 var(--hue-primary));
+  --primary-color-hover: oklch(25% 0.08 var(--hue-primary));
+  --secondary-color: oklch(80% 0.3 var(--hue-secondary));
+  --secondary-color-lighten: oklch(35% 0.1 var(--hue-secondary));
+  
+  --text-color: oklch(95% 0.01 var(--hue-primary));
+  --text-color-lighten: oklch(85% 0.02 var(--hue-primary));
+  
+  /* 深色卡片带有机体感的色调 */
+  --card-color: oklch(15% 0.04 var(--hue-primary));
+  --card-color-lighten: oklch(25% 0.08 var(--hue-primary));
+  --card-color-transparent: oklch(18% 0.05 var(--hue-primary) / 90%);
+  
+  /* 深色背景 */
+  --background-color: oklch(8% 0.03 var(--hue-primary));
+  --accent-color: oklch(85% 0.32 var(--hue-secondary));
+}
+
+/* EVA-01 初号机主题 - 基于官方紫绿配色 */
+:root.eva-01 {
+  --hue-primary: var(--eva-01-primary);
+  --hue-secondary: var(--eva-01-secondary);
+}
+
+:root.eva-01 {
+  /* 基于 #765898 (118,88,152) 的紫色 */
+  --primary-color: oklch(47% 0.18 var(--hue-primary));
+  /* 基于 #52d053 (82,208,83) 的绿色 */
+  --secondary-color: oklch(78% 0.25 var(--hue-secondary));
+  --background-color: oklch(97% 0.02 var(--hue-primary));
+  /* 橙黄胸甲点缀 #f7bb2a */
+  --accent-color: oklch(80% 0.18 45);
+}
+
+:root.eva-01.dark {
+  --primary-color: oklch(57% 0.16 var(--hue-primary));
+  --secondary-color: oklch(85% 0.22 var(--hue-secondary));
+  --background-color: oklch(8% 0.03 var(--hue-primary));
+  --accent-color: oklch(85% 0.2 45);
+}
+
+/* EVA-00 零号机主题 - 基于官方蓝白配色 */
+:root.eva-00 {
+  --hue-primary: var(--eva-00-primary);
+  --hue-secondary: var(--eva-00-secondary);
+}
+
+:root.eva-00 {
+  /* 基于 #1d446c (29,68,108) 的深蓝色 */
+  --primary-color: oklch(42% 0.15 var(--hue-primary));
+  /* 基于 #f1f1f1 (241,241,241) 的白色 */
+  --secondary-color: oklch(95% 0.01 var(--hue-secondary));
+  --background-color: oklch(98% 0.01 var(--hue-primary));
+  --accent-color: oklch(90% 0.02 var(--hue-secondary));
+}
+
+:root.eva-00.dark {
+  --primary-color: oklch(52% 0.13 var(--hue-primary));
+  --secondary-color: oklch(85% 0.02 var(--hue-secondary));
+  --background-color: oklch(10% 0.02 var(--hue-primary));
+  --accent-color: oklch(80% 0.03 var(--hue-secondary));
 }
 
 .swup-progress-bar {
   height: 5px;
-  background-color: var(--primary-color);
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+/* EVA风格的视觉效果 */
+.eva-gradient {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.eva-gradient-text {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 机体主题的特殊效果 */
+.eva-glow {
+  box-shadow: 0 0 20px var(--primary-color-transparent);
+}
+
+.eva-border {
+  border: 2px solid var(--primary-color);
 }
