@@ -1,144 +1,247 @@
-@reference "tailwindcss";
+@import "tailwindcss";
 
-.article code:not(pre code)::before {
-  content: none !important;
-}
+@layer components {
+  .article code:not(pre code)::before {
+    content: none;
+  }
 
-.article code:not(pre code)::after {
-  content: none !important;
-}
+  .article code:not(pre code)::after {
+    content: none;
+  }
 
-.article code:not(pre code) {
-  @apply text-sm;
-  font-family: var(--code-font) !important;
-  border-radius: 4px;
-  color: var(--primary-color) !important;
-  background-color: var(--primary-color-lighten) !important;
-}
+  .article code:not(pre code) {
+    font-family: var(--code-font);
+    font-size: 0.875rem;
+    border-radius: 4px;
+    color: var(--primary-color);
+    background-color: var(--primary-color-lighten);
+    padding: 0.125rem 0.25rem;
+  }
 
-.article h1,
-.article h2,
-.article h3,
-.article h4,
-.article h5,
-.article h6 {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  position: relative;
-}
+  .article h1,
+  .article h2,
+  .article h3,
+  .article h4,
+  .article h5,
+  .article h6 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+    color: var(--text-color);
+  }
 
-.article h1::before,
-.article h2::before,
-.article h3::before,
-.article h4::before,
-.article h5::before,
-.article h6::before {
-  position: absolute;
-  display: block;
-  content: " ";
-  background-color: var(--primary-color);
-  top: 2.5px;
-  bottom: 3px;
-  width: 0.3rem;
-  border-radius: 4px;
-}
+  .article h1::before,
+  .article h2::before,
+  .article h3::before,
+  .article h4::before,
+  .article h5::before,
+  .article h6::before {
+    position: absolute;
+    display: block;
+    content: " ";
+    background-color: var(--primary-color);
+    left: 0;
+    top: 0.25rem;
+    bottom: 0.25rem;
+    width: 0.3rem;
+    border-radius: 4px;
+  }
 
-.article h1 > a,
-.article h2 > a,
-.article h3 > a,
-.article h4 > a,
-.article h5 > a,
-.article h6 > a {
-  @apply m-2;
-}
+  .article h1 {
+    font-size: 2rem;
+    line-height: 2.5rem;
+  }
 
-.article li::marker {
-  color: var(--primary-color) !important;
-}
+  .article h2 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
 
-.article blockquote {
-  border-inline-start-color: var(--primary-color) !important;
-}
+  .article h3 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
 
-.article blockquote {
-  @apply py-0.5 pl-3 pr-3 lg:pl-4;
-  font-style: normal !important;
-  border-radius: 0.25rem;
-  background-color: var(--primary-color-transparent) !important;
-}
+  .article h4 {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
 
-.article blockquote blockquote {
-  @apply my-1;
-}
+  .article h5 {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
 
-.article blockquote p {
-  padding: 0;
-  margin: 0;
-  color: var(--text-color);
-}
+  .article h6 {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
 
-.article blockquote p:first-child {
-  padding-top: 0.3rem;
-}
+  .article h1 > a,
+  .article h2 > a,
+  .article h3 > a,
+  .article h4 > a,
+  .article h5 > a,
+  .article h6 > a {
+    margin: 0.5rem;
+  }
 
-.article blockquote p:last-child {
-  padding-bottom: 0.3rem;
-}
+  /* 列表样式 */
+  .article ul,
+  .article ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
 
-.article blockquote p::before {
-  content: "" !important;
-}
+  .article ul {
+    list-style-type: disc;
+  }
 
-.article blockquote p::after {
-  content: "" !important;
-}
+  .article ol {
+    list-style-type: decimal;
+  }
 
-.article a {
-  color: var(--primary-color) !important;
-}
+  .article ul ul {
+    list-style-type: circle;
+  }
 
-.article hr {
-  @apply my-6;
-  border-color: var(--primary-color-lighten) !important;
-}
+  .article ul ul ul {
+    list-style-type: square;
+  }
 
-.article pre {
-  @apply my-3;
-  overflow: hidden !important;
-}
+  .article li {
+    margin: 0.5rem 0;
+    color: var(--text-color);
+  }
 
-.article span.line {
-  font-size: 14px !important;
-  line-height: normal;
-  font-family: var(--code-font) !important;
-}
+  .article li::marker {
+    color: var(--primary-color);
+  }
 
-.article code {
-  counter-reset: line;
-}
+  .article blockquote {
+    border-inline-start-color: var(--primary-color);
+    padding: 0.5rem 0.75rem;
+    font-style: normal;
+    border-radius: 0.25rem;
+    background-color: var(--primary-color-transparent);
+    margin: 1rem 0;
+    border-left: 4px solid var(--primary-color);
+  }
 
-.article span.line:before {
-  content: counter(line);
-  counter-increment: line;
-  direction: rtl;
-  display: inline-block;
-  margin-right: 1rem;
-  width: 1rem;
-  color: rgba(255, 255, 255, 0.25);
-}
+  @media (min-width: 1024px) {
+    .article blockquote {
+      padding-left: 1rem;
+    }
+  }
 
-.article span.line:last-child:empty,
-.article span.line:last-child:has(> .article span:empty:only-child) {
-  display: none;
-}
+  .article blockquote blockquote {
+    margin: 0.25rem 0;
+  }
 
-.article p {
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
-}
+  .article blockquote p {
+    padding: 0;
+    margin: 0;
+    color: var(--text-color);
+  }
 
-.article .astro-code {
-  border-radius: 0.75rem !important;
-  scrollbar-width: thin;
+  .article blockquote p:first-child {
+    padding-top: 0.3rem;
+  }
+
+  .article blockquote p:last-child {
+    padding-bottom: 0.3rem;
+  }
+
+  .article blockquote p::before {
+    content: "";
+  }
+
+  .article blockquote p::after {
+    content: "";
+  }
+
+  .article a {
+    color: var(--primary-color);
+    text-decoration: underline;
+  }
+
+  .article a:hover {
+    color: var(--primary-color-hover);
+  }
+
+  .article hr {
+    margin: 1.5rem 0;
+    border-color: var(--primary-color-lighten);
+  }
+
+  .article pre {
+    margin: 0.75rem 0;
+    overflow: hidden;
+  }
+
+  .article span.line {
+    font-size: 14px;
+    line-height: normal;
+    font-family: var(--code-font);
+  }
+
+  .article code {
+    counter-reset: line;
+  }
+
+  .article span.line:before {
+    content: counter(line);
+    counter-increment: line;
+    direction: rtl;
+    display: inline-block;
+    margin-right: 1rem;
+    width: 1rem;
+    color: rgba(255, 255, 255, 0.25);
+  }
+
+  .article span.line:last-child:empty,
+  .article span.line:last-child:has(> .article span:empty:only-child) {
+    display: none;
+  }
+
+  .article p {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-color);
+    line-height: 1.6;
+  }
+
+  .article .astro-code {
+    border-radius: 0.75rem;
+    scrollbar-width: thin;
+  }
+
+  /* 表格样式 */
+  .article table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+
+  .article table th,
+  .article table td {
+    padding: 0.5rem;
+    border: 1px solid var(--primary-color-lighten);
+    text-align: left;
+  }
+
+  .article table th {
+    background-color: var(--primary-color-lighten);
+    font-weight: 600;
+    color: var(--text-color);
+  }
+
+  .article table td {
+    color: var(--text-color);
+  }
 }

@@ -8,9 +8,7 @@ export interface Props {
 const { class: className } = Astro.props;
 ---
 
-<div
-  class=`prose prose-sm lg:prose-base dark:prose-invert shrink max-w-full ${className ?? ''}`
->
+<div class={`markdown-content article ${className ?? ''}`}>
   <slot />
 </div>
 
