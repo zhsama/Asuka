@@ -1,13 +1,13 @@
 ---
-import { getCollection } from 'astro:content';
-import Layout from '../layouts/MainLayout.astro';
-import { getTranslation } from '@/i18n/translation';
-import type { Locale } from '@/i18n/translation';
-import I18nKeys from '../i18n/keys';
-import AsukaConfig from '../../asuka.config';
+import { getCollection } from "astro:content";
+import Layout from "../layouts/MainLayout.astro";
+import { getTranslation } from "@/i18n/translation";
+import type { Locale } from "@/i18n/translation";
+import I18nKeys from "../i18n/keys";
+import AsukaConfig from "../../asuka.config";
 
 // 获取所有博客文章
-const allPosts = await getCollection('blog', ({ data }) => {
+const allPosts = await getCollection("blog", ({ data }) => {
   return data.draft !== true;
 });
 
@@ -15,11 +15,11 @@ const allPosts = await getCollection('blog', ({ data }) => {
 const categoryCount = new Map<string, number>();
 const categoryPosts = new Map<string, typeof allPosts>();
 
-allPosts.forEach(post => {
+allPosts.forEach((post) => {
   if (post.data.category) {
     const category = post.data.category;
     categoryCount.set(category, (categoryCount.get(category) || 0) + 1);
-    
+
     if (!categoryPosts.has(category)) {
       categoryPosts.set(category, []);
     }
@@ -28,41 +28,40 @@ allPosts.forEach(post => {
 });
 
 // 转换为数组并按文章数量排序
-const categories = Array.from(categoryCount.entries())
-  .sort((a, b) => b[1] - a[1]);
+const categories = Array.from(categoryCount.entries()).sort((a, b) => b[1] - a[1]);
 
 const locale = AsukaConfig.locale as Locale;
 const totalCategories = categories.length;
 ---
 
 <Layout 
-  title={`${getTranslation(locale, I18nKeys.pages_categories_title)} | ${AsukaConfig.title}`}
-  description="博客文章分类页面"
+  title={`${getTranslation(locale)} | ${AsukaConfig.title}`}
+  subTitle="博客文章分类"
   showBanner={false}
 >
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-6xl mx-auto">
       <!-- Page Header -->
       <header class="mb-12 text-center">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          {getTranslation(locale, I18nKeys.pages_categories_title)}
+        <h1 class="page-title">
+          {getTranslation(locale)}
         </h1>
-        <p class="text-gray-600 dark:text-gray-400">
-          共 <span class="font-semibold text-blue-600 dark:text-blue-400">{totalCategories}</span> 个分类
+        <p class="page-subtitle">
+          共 <span class="eva-text-primary font-semibold">{totalCategories}</span> 个分类
         </p>
       </header>
 
       {categories.length === 0 ? (
         <div class="text-center py-16">
           <div class="mb-4">
-            <svg class="mx-auto h-24 w-24 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="mx-auto h-24 w-24 empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
             </svg>
           </div>
-          <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h2 class="empty-title">
             暂无分类
           </h2>
-          <p class="text-gray-600 dark:text-gray-400">
+          <p class="empty-description">
             还没有发布带分类的文章
           </p>
         </div>
@@ -140,10 +139,38 @@ const totalCategories = categories.length;
     @apply max-w-7xl;
   }
 
+  .page-title {
+    @apply text-4xl font-bold mb-4;
+    color: var(--text-color);
+  }
+
+  .page-subtitle {
+    color: var(--text-color-lighten);
+  }
+
+  .eva-text-primary {
+    color: var(--primary-color);
+  }
+
+  .empty-icon {
+    color: var(--text-color-lighten);
+    opacity: 0.5;
+  }
+
+  .empty-title {
+    @apply text-2xl font-semibold mb-2;
+    color: var(--text-color);
+  }
+
+  .empty-description {
+    color: var(--text-color-lighten);
+  }
+
   .category-card {
-    @apply bg-white rounded-xl shadow-sm border transition-all duration-300;
+    @apply rounded-xl shadow-sm border transition-all duration-300;
     @apply hover:shadow-md hover:-translate-y-1;
-    @apply dark:bg-gray-800 dark:border-gray-700;
+    background-color: var(--card-color);
+    border-color: var(--primary-color-lighten);
   }
 
   .category-header {
@@ -151,8 +178,9 @@ const totalCategories = categories.length;
   }
 
   .category-icon {
-    @apply flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50 text-blue-600;
-    @apply dark:bg-blue-900/30 dark:text-blue-400;
+    @apply flex h-12 w-12 items-center justify-center rounded-lg;
+    background-color: var(--primary-color-lighten);
+    color: var(--primary-color);
   }
 
   .category-info {
@@ -160,12 +188,17 @@ const totalCategories = categories.length;
   }
 
   .category-name a {
-    @apply text-xl font-semibold text-gray-900 transition-colors;
-    @apply hover:text-blue-600 dark:text-white dark:hover:text-blue-400;
+    @apply text-xl font-semibold transition-colors;
+    color: var(--text-color);
+  }
+
+  .category-name a:hover {
+    color: var(--primary-color);
   }
 
   .category-count {
-    @apply text-sm text-gray-500 dark:text-gray-400;
+    @apply text-sm;
+    color: var(--text-color-lighten);
   }
 
   .recent-posts {
@@ -173,7 +206,8 @@ const totalCategories = categories.length;
   }
 
   .recent-posts-title {
-    @apply text-sm font-medium text-gray-600 dark:text-gray-400 mb-3;
+    @apply text-sm font-medium mb-3;
+    color: var(--text-color-lighten);
   }
 
   .recent-posts-list {
@@ -181,7 +215,8 @@ const totalCategories = categories.length;
   }
 
   .recent-post-item {
-    @apply border-l-2 border-gray-100 dark:border-gray-700 pl-3;
+    @apply border-l-2 pl-3;
+    border-color: var(--primary-color-lighten);
   }
 
   .recent-post-link {
@@ -189,14 +224,20 @@ const totalCategories = categories.length;
   }
 
   .recent-post-title {
-    @apply text-sm text-gray-700 dark:text-gray-300 transition-colors line-clamp-2;
-    @apply group-hover:text-blue-600 dark:group-hover:text-blue-400;
+    @apply text-sm transition-colors line-clamp-2;
+    color: var(--text-color-lighten);
     flex: 1;
     margin-right: 0.5rem;
   }
 
+  .recent-post-title:hover {
+    color: var(--primary-color);
+  }
+
   .recent-post-date {
-    @apply text-xs text-gray-400 dark:text-gray-600 flex-shrink-0;
+    @apply text-xs flex-shrink-0;
+    color: var(--text-color-lighten);
+    opacity: 0.8;
   }
 
   .category-footer {
@@ -204,8 +245,12 @@ const totalCategories = categories.length;
   }
 
   .view-all-link {
-    @apply flex items-center space-x-2 text-sm font-medium text-blue-600 transition-colors;
-    @apply hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300;
+    @apply flex items-center space-x-2 text-sm font-medium transition-colors;
+    color: var(--primary-color);
+  }
+
+  .view-all-link:hover {
+    color: var(--primary-color-hover);
   }
 
   .view-all-link svg {

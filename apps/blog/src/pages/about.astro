@@ -1,23 +1,21 @@
 ---
-import Layout from '../layouts/MainLayout.astro';
-import { getTranslation } from '@/i18n/translation';
-import type { Locale } from '@/i18n/translation';
-import I18nKeys from '../i18n/keys';
-import AsukaConfig from '../../asuka.config';
+import Layout from "../layouts/MainLayout.astro";
+import { getTranslation } from "@/i18n/translation";
+import type { Locale } from "@/i18n/translation";
+import I18nKeys from "../i18n/keys";
+import AsukaConfig from "../../asuka.config";
 
 const locale = AsukaConfig.locale as Locale;
 ---
 
 <Layout 
   title={`${getTranslation(locale)} | ${AsukaConfig.title}`}
-  description={`关于 ${AsukaConfig.username} - ${AsukaConfig.author_description || '博客作者'}`}
-  showBanner={false}
 >
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
       <!-- Page Header -->
       <header class="mb-12 text-center">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        <h1 class="page-title">
           {getTranslation(locale)}
         </h1>
       </header>
@@ -228,8 +226,14 @@ const locale = AsukaConfig.locale as Locale;
     @apply max-w-7xl;
   }
 
+  .page-title {
+    @apply text-4xl font-bold mb-4;
+    color: var(--text-color);
+  }
+
   .section-title {
-    @apply text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center;
+    @apply text-2xl font-bold mb-8 text-center;
+    color: var(--text-color);
   }
 
   /* Author Section */
@@ -238,8 +242,9 @@ const locale = AsukaConfig.locale as Locale;
   }
 
   .author-card {
-    @apply bg-white rounded-2xl shadow-sm border p-8;
-    @apply dark:bg-gray-800 dark:border-gray-700;
+    @apply rounded-2xl shadow-sm border p-8;
+    background-color: var(--card-color);
+    border-color: var(--primary-color-lighten);
   }
 
   .author-avatar {
@@ -247,25 +252,28 @@ const locale = AsukaConfig.locale as Locale;
   }
 
   .avatar-image {
-    @apply w-32 h-32 rounded-full object-cover ring-4 ring-blue-100;
-    @apply dark:ring-blue-900/30;
+    @apply w-32 h-32 rounded-full object-cover ring-4;
+    ring-color: var(--primary-color-lighten);
   }
 
   .avatar-decoration {
-    @apply absolute -bottom-2 -right-2 w-8 h-8 bg-green-400 rounded-full border-4 border-white;
-    @apply dark:border-gray-800;
+    @apply absolute -bottom-2 -right-2 w-8 h-8 bg-green-400 rounded-full border-4;
+    border-color: var(--background-color);
   }
 
   .author-name {
-    @apply text-3xl font-bold text-gray-900 dark:text-white mb-2;
+    @apply text-3xl font-bold mb-2;
+    color: var(--text-color);
   }
 
   .author-sign {
-    @apply text-lg text-gray-600 dark:text-gray-300 mb-4 italic;
+    @apply text-lg mb-4 italic;
+    color: var(--text-color-lighten);
   }
 
   .author-description {
-    @apply text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6;
+    @apply max-w-2xl mx-auto mb-6;
+    color: var(--text-color-lighten);
   }
 
   .social-links {
@@ -273,9 +281,15 @@ const locale = AsukaConfig.locale as Locale;
   }
 
   .social-link {
-    @apply flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-2xl transition-all;
-    @apply hover:bg-blue-100 hover:scale-110 hover:shadow-lg;
-    @apply dark:bg-gray-700 dark:hover:bg-blue-900/30;
+    @apply flex h-12 w-12 items-center justify-center rounded-full text-2xl transition-all;
+    @apply hover:scale-110 hover:shadow-lg;
+    background-color: var(--card-color-lighten);
+    color: var(--text-color);
+  }
+
+  .social-link:hover {
+    background-color: var(--primary-color-lighten);
+    color: var(--primary-color);
   }
 
   /* Skills Section */
@@ -284,12 +298,14 @@ const locale = AsukaConfig.locale as Locale;
   }
 
   .skill-category {
-    @apply bg-white rounded-xl p-6 shadow-sm border;
-    @apply dark:bg-gray-800 dark:border-gray-700;
+    @apply rounded-xl p-6 shadow-sm border;
+    background-color: var(--card-color);
+    border-color: var(--primary-color-lighten);
   }
 
   .category-title {
-    @apply flex items-center space-x-3 text-lg font-semibold text-gray-900 dark:text-white mb-4;
+    @apply flex items-center space-x-3 text-lg font-semibold mb-4;
+    color: var(--text-color);
   }
 
   .category-icon {
@@ -301,8 +317,9 @@ const locale = AsukaConfig.locale as Locale;
   }
 
   .skill-tag {
-    @apply px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium;
-    @apply dark:bg-blue-900/30 dark:text-blue-300;
+    @apply px-3 py-1 rounded-full text-sm font-medium;
+    background-color: var(--primary-color-lighten);
+    color: var(--primary-color);
   }
 
   /* Timeline Section */
@@ -311,7 +328,8 @@ const locale = AsukaConfig.locale as Locale;
   }
 
   .timeline::before {
-    @apply absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700;
+    @apply absolute left-4 top-0 bottom-0 w-0.5;
+    background-color: var(--primary-color-lighten);
     content: '';
   }
 
@@ -320,25 +338,29 @@ const locale = AsukaConfig.locale as Locale;
   }
 
   .timeline-marker {
-    @apply relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 ring-4 ring-white;
-    @apply dark:ring-gray-900;
+    @apply relative z-10 flex h-8 w-8 items-center justify-center rounded-full ring-4;
+    background-color: var(--primary-color);
+    ring-color: var(--background-color);
   }
 
   .timeline-content {
-    @apply flex-1 bg-white rounded-lg p-6 shadow-sm border;
-    @apply dark:bg-gray-800 dark:border-gray-700;
+    @apply flex-1 rounded-lg p-6 shadow-sm border;
+    background-color: var(--card-color);
+    border-color: var(--primary-color-lighten);
   }
 
   .timeline-date {
-    @apply text-sm font-medium text-blue-600 dark:text-blue-400 mb-2;
+    @apply text-sm font-medium mb-2;
+    color: var(--primary-color);
   }
 
   .timeline-title {
-    @apply text-lg font-semibold text-gray-900 dark:text-white mb-2;
+    @apply text-lg font-semibold mb-2;
+    color: var(--text-color);
   }
 
   .timeline-description {
-    @apply text-gray-600 dark:text-gray-300;
+    color: var(--text-color-lighten);
   }
 
   /* Contact Section */
@@ -347,8 +369,9 @@ const locale = AsukaConfig.locale as Locale;
   }
 
   .contact-item {
-    @apply bg-white rounded-xl p-6 shadow-sm border text-center;
-    @apply dark:bg-gray-800 dark:border-gray-700;
+    @apply rounded-xl p-6 shadow-sm border text-center;
+    background-color: var(--card-color);
+    border-color: var(--primary-color-lighten);
   }
 
   .contact-icon {
@@ -356,15 +379,20 @@ const locale = AsukaConfig.locale as Locale;
   }
 
   .contact-title {
-    @apply text-lg font-semibold text-gray-900 dark:text-white mb-2;
+    @apply text-lg font-semibold mb-2;
+    color: var(--text-color);
   }
 
   .contact-link {
-    @apply text-blue-600 hover:text-blue-700 transition-colors;
-    @apply dark:text-blue-400 dark:hover:text-blue-300;
+    @apply transition-colors;
+    color: var(--primary-color);
+  }
+
+  .contact-link:hover {
+    color: var(--primary-color-hover);
   }
 
   .contact-text {
-    @apply text-gray-600 dark:text-gray-300;
+    color: var(--text-color-lighten);
   }
 </style> 

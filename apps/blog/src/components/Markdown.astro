@@ -76,35 +76,45 @@ const { class: className } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: oklch(0.45 0.01 var(--hue));
+    background-color: oklch(45% 0.02 var(--hue));
+    border: 1px solid oklch(60% 0.05 var(--hue) / 30%);
   }
 
   .btn-regular-dark:hover {
-    background-color: oklch(0.5 0.01 var(--hue));
+    background-color: oklch(50% 0.03 var(--hue));
+    border-color: oklch(70% 0.08 var(--hue) / 50%);
   }
 
   .btn-regular-dark:active {
-    background-color: oklch(0.55 0.01 var(--hue));
+    background-color: oklch(55% 0.04 var(--hue));
   }
 
   .btn-regular-dark.dark {
-    background-color: oklch(0.3 0.02 var(--hue));
+    background-color: oklch(20% 0.05 var(--hue));
+    border: 1px solid oklch(40% 0.10 var(--hue) / 40%);
   }
 
   .btn-regular-dark.dark:hover {
-    background-color: oklch(0.35 0.03 var(--hue));
+    background-color: oklch(25% 0.08 var(--hue));
+    border-color: oklch(50% 0.12 var(--hue) / 60%);
   }
 
   .btn-regular-dark.dark:active {
-    background-color: oklch(0.4 0.03 var(--hue));
+    background-color: oklch(30% 0.10 var(--hue));
   }
 
   .btn-regular-dark.success {
-    background-color: oklch(0.75 0.14 var(--hue));
+    background-color: oklch(65% 0.18 var(--hue));
+    border-color: oklch(70% 0.20 var(--hue));
   }
 
   .btn-regular-dark.success.dark {
-    background-color: oklch(0.75 0.14 var(--hue));
+    background-color: oklch(35% 0.15 var(--hue));
+    border-color: oklch(45% 0.18 var(--hue));
+  }
+
+  .copy-btn.success .success-icon.dark {
+    fill: oklch(95% 0.02 var(--hue));
   }
 
   .copy-btn-icon {
@@ -117,11 +127,19 @@ const { class: className } = Astro.props;
 
   .copy-btn .copy-icon {
     opacity: 1;
-    fill: white;
+    fill: oklch(100% 0 0);
   }
 
   .copy-btn .copy-icon.dark {
-    fill: rgba(255, 255, 255, 0.75);
+    fill: oklch(95% 0.02 var(--hue));
+  }
+
+  .copy-btn:hover .copy-icon {
+    fill: oklch(100% 0 0);
+  }
+
+  .copy-btn:hover .copy-icon.dark {
+    fill: oklch(98% 0.01 var(--hue));
   }
 
   .copy-btn.success .copy-icon {
@@ -129,8 +147,12 @@ const { class: className } = Astro.props;
   }
 
   .copy-btn .success-icon {
-    fill: white;
+    fill: oklch(100% 0 0);
     opacity: 0;
+  }
+
+  .copy-btn .success-icon.dark {
+    fill: oklch(95% 0.02 var(--hue));
   }
 
   .copy-btn.success .success-icon {

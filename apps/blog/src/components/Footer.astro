@@ -166,7 +166,7 @@ const tagKeys = [...tags.keys()];
   <!-- Site footer -->
   <footer>
     <div
-      class="divide-y divide-dashed divide-black/25 py-4 lg:pt-0 dark:divide-white/25"
+      class="divide-y divide-dashed py-4 lg:pt-0 footer-divider"
     >
       <div></div>
       <div></div>
@@ -206,5 +206,9 @@ const tagKeys = [...tags.keys()];
 
   .category:hover > p {
     @apply pl-2 text-[var(--primary-color)];
+  }
+
+  .footer-divider {
+    border-color: var(--primary-color-lighten);
   }
 </style>

@@ -1,23 +1,23 @@
 ---
-import { getCollection } from 'astro:content';
-import Layout from '@/layouts/MainLayout.astro';
-import { getTranslation } from '@/i18n/translation';
-import type { Locale } from '@/i18n/translation';
-import AsukaConfig from '~/asuka.config';
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/MainLayout.astro";
+import { getTranslation } from "@/i18n/translation";
+import type { Locale } from "@/i18n/translation";
+import AsukaConfig from "~/asuka.config";
 
 // 获取所有博客文章
-const allPosts = await getCollection('blog', ({ data }) => {
+const allPosts = await getCollection("blog", ({ data }) => {
   return data.draft !== true;
 });
 
 // 按发布时间排序
-const sortedPosts = allPosts.sort((a, b) => 
-  new Date(b.data.published).getTime() - new Date(a.data.published).getTime()
+const sortedPosts = allPosts.sort(
+  (a, b) => new Date(b.data.published).getTime() - new Date(a.data.published).getTime(),
 );
 
 // 按年份分组
 const postsByYear = new Map<number, typeof sortedPosts>();
-sortedPosts.forEach(post => {
+sortedPosts.forEach((post) => {
   const year = new Date(post.data.published).getFullYear();
   if (!postsByYear.has(year)) {
     postsByYear.set(year, []);
@@ -34,18 +34,16 @@ const totalPosts = sortedPosts.length;
 
 <Layout 
   title={`${getTranslation(locale)} | ${AsukaConfig.title}`}
-  description="博客文章归档页面"
-  showBanner={false}
 >
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
       <!-- Page Header -->
       <header class="mb-12 text-center">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        <h1 class="page-title">
           {getTranslation(locale)}
         </h1>
-        <p class="text-gray-600 dark:text-gray-400">
-          共收录 <span class="font-semibold text-blue-600 dark:text-blue-400">{totalPosts}</span> 篇文章
+        <p class="page-subtitle">
+          共收录 <span class="font-semibold eva-text-primary">{totalPosts}</span> 篇文章
         </p>
       </header>
 
@@ -56,10 +54,10 @@ const totalPosts = sortedPosts.length;
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
           </div>
-          <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h2 class="empty-title">
             暂无文章
           </h2>
-          <p class="text-gray-600 dark:text-gray-400">
+          <p class="empty-description">
             还没有发布任何文章
           </p>
         </div>
@@ -147,6 +145,28 @@ const totalPosts = sortedPosts.length;
     @apply max-w-7xl;
   }
 
+  .eva-text-primary {
+    color: var(--primary-color);
+  }
+
+  .page-title {
+    @apply text-4xl font-bold mb-4;
+    color: var(--text-color);
+  }
+
+  .page-subtitle {
+    color: var(--text-color-lighten);
+  }
+
+  .empty-title {
+    @apply text-2xl font-semibold mb-2;
+    color: var(--text-color);
+  }
+
+  .empty-description {
+    color: var(--text-color-lighten);
+  }
+
   .year-section {
     @apply relative;
   }
@@ -156,8 +176,8 @@ const totalPosts = sortedPosts.length;
   }
 
   .year-line {
-    @apply flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent;
-    @apply dark:via-gray-600;
+    @apply flex-1 h-px;
+    background: linear-gradient(to right, transparent, var(--primary-color-lighten), transparent);
   }
 
   .year-title {
@@ -165,11 +185,13 @@ const totalPosts = sortedPosts.length;
   }
 
   .year-number {
-    @apply text-3xl font-bold text-blue-600 dark:text-blue-400;
+    @apply text-3xl font-bold;
+    color: var(--primary-color);
   }
 
   .year-count {
-    @apply text-sm text-gray-500 dark:text-gray-400;
+    @apply text-sm;
+    color: var(--text-color-lighten);
   }
 
   .posts-list {
@@ -181,6 +203,13 @@ const totalPosts = sortedPosts.length;
     @apply hover:shadow-md hover:-translate-y-0.5;
     @apply dark:bg-gray-800 dark:border-gray-700;
     @apply sm:flex-row sm:items-start;
+    background-color: var(--card-color);
+    border-color: var(--primary-color-lighten);
+  }
+
+  .post-item:hover {
+    border-color: var(--primary-color-transparent);
+    box-shadow: 0 10px 25px -3px var(--primary-color-transparent), 0 4px 6px -2px var(--primary-color-transparent);
   }
 
   .post-date {
@@ -189,7 +218,8 @@ const totalPosts = sortedPosts.length;
 
   .post-date time {
     @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
-    @apply bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300;
+    background-color: var(--primary-color-lighten);
+    color: var(--primary-color);
   }
 
   .post-content {
@@ -197,16 +227,22 @@ const totalPosts = sortedPosts.length;
   }
 
   .post-title a {
-    @apply text-xl font-semibold text-gray-900 transition-colors;
-    @apply hover:text-blue-600 dark:text-white dark:hover:text-blue-400;
+    @apply text-xl font-semibold transition-colors;
+    color: var(--text-color);
+  }
+
+  .post-title a:hover {
+    color: var(--primary-color);
   }
 
   .post-description {
-    @apply text-gray-600 dark:text-gray-300 line-clamp-2;
+    @apply line-clamp-2;
+    color: var(--text-color-lighten);
   }
 
   .post-meta {
-    @apply flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400;
+    @apply flex flex-wrap items-center gap-4 text-sm;
+    color: var(--text-color-lighten);
   }
 
   .post-category,
@@ -216,6 +252,7 @@ const totalPosts = sortedPosts.length;
 
   .post-category svg,
   .post-tags svg {
-    @apply text-gray-400 dark:text-gray-600;
+    color: var(--text-color-lighten);
+    opacity: 0.7;
   }
 </style> 

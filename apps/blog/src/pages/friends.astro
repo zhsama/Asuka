@@ -1,28 +1,28 @@
 ---
-import Layout from '../layouts/MainLayout.astro';
-import { getTranslation } from '@/i18n/translation';
-import type { Locale } from '@/i18n/translation';
-import I18nKeys from '../i18n/keys';
-import AsukaConfig from '../../asuka.config';
+import Layout from "../layouts/MainLayout.astro";
+import { getTranslation } from "@/i18n/translation";
+import type { Locale } from "@/i18n/translation";
+import I18nKeys from "../i18n/keys";
+import AsukaConfig from "../../asuka.config";
 
 const locale = AsukaConfig.locale as Locale;
 const friendLinks = AsukaConfig.friendLinks || [];
 ---
 
 <Layout 
-  title={`${getTranslation(locale, I18nKeys.pages_friends_title)} | ${AsukaConfig.title}`}
-  description="友情链接页面"
+  title={`${getTranslation(locale)} | ${AsukaConfig.title}`}
+  subTitle="友情链接"
   showBanner={false}
 >
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
       <!-- Page Header -->
       <header class="mb-12 text-center">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          {getTranslation(locale, I18nKeys.pages_friends_title)}
+        <h1 class="page-title">
+          {getTranslation(locale)}
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          {getTranslation(locale, I18nKeys.friends_link_description)}，
+        <p class="page-subtitle max-w-2xl mx-auto">
+          {getTranslation(locale)}，
           感谢这些优秀的朋友们！
         </p>
       </header>
@@ -30,15 +30,15 @@ const friendLinks = AsukaConfig.friendLinks || [];
       {friendLinks.length === 0 ? (
         <div class="text-center py-16">
           <div class="mb-4">
-            <svg class="mx-auto h-24 w-24 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="mx-auto h-24 w-24 empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4.926 4.926a9 9 0 1212.728 12.728 9 9 0 01-12.728-12.728zM15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
             </svg>
           </div>
-          <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h2 class="empty-title">
             暂无友情链接
           </h2>
-          <p class="text-gray-600 dark:text-gray-400">
+          <p class="empty-description">
             还没有添加任何友情链接
           </p>
         </div>
@@ -142,6 +142,29 @@ const friendLinks = AsukaConfig.friendLinks || [];
 
   .container {
     @apply max-w-7xl;
+  }
+
+  .page-title {
+    @apply text-4xl font-bold mb-4;
+    color: var(--text-color);
+  }
+
+  .page-subtitle {
+    color: var(--text-color-lighten);
+  }
+
+  .empty-icon {
+    color: var(--text-color-lighten);
+    opacity: 0.5;
+  }
+
+  .empty-title {
+    @apply text-2xl font-semibold mb-2;
+    color: var(--text-color);
+  }
+
+  .empty-description {
+    color: var(--text-color-lighten);
   }
 
   /* Friends Grid */
