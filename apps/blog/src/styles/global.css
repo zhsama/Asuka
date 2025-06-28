@@ -59,9 +59,9 @@
 
   --banner-height: 55vh;
   --title-font: var(--brand-font);
-  --title-color: oklch(100% 0 0 / 95%);
+  --title-color: oklch(15% 0.05 var(--hue-primary) / 95%);
   --subtitle-font: var(--brand-font);
-  --subtitle-color: oklch(100% 0 0 / 85%);
+  --subtitle-color: oklch(20% 0.08 var(--hue-primary) / 85%);
 
   --onload-animation-delay: 100ms;
   --onload-animation-interval: 100ms;
@@ -86,6 +86,10 @@
   /* 深色背景 */
   --background-color: oklch(8% 0.03 var(--hue-primary));
   --accent-color: oklch(85% 0.32 var(--hue-secondary));
+  
+  /* 深色模式下的banner标题颜色 */
+  --title-color: oklch(100% 0 0 / 95%);
+  --subtitle-color: oklch(100% 0 0 / 85%);
 }
 
 /* EVA-01 初号机主题 - 基于官方紫绿配色 */
@@ -102,6 +106,10 @@
   --background-color: oklch(97% 0.02 var(--hue-primary));
   /* 橙黄胸甲点缀 #f7bb2a */
   --accent-color: oklch(80% 0.18 45);
+  
+  /* EVA-01主题下的banner标题颜色 */
+  --title-color: oklch(15% 0.08 var(--hue-primary) / 95%);
+  --subtitle-color: oklch(25% 0.12 var(--hue-primary) / 85%);
 }
 
 :root.eva-01.dark {
@@ -109,6 +117,10 @@
   --secondary-color: oklch(85% 0.22 var(--hue-secondary));
   --background-color: oklch(8% 0.03 var(--hue-primary));
   --accent-color: oklch(85% 0.2 45);
+  
+  /* EVA-01深色模式下的banner标题颜色 */
+  --title-color: oklch(100% 0 0 / 95%);
+  --subtitle-color: oklch(100% 0 0 / 85%);
 }
 
 /* EVA-00 零号机主题 - 基于官方蓝白配色 */
@@ -124,6 +136,10 @@
   --secondary-color: oklch(95% 0.01 var(--hue-secondary));
   --background-color: oklch(98% 0.01 var(--hue-primary));
   --accent-color: oklch(90% 0.02 var(--hue-secondary));
+  
+  /* EVA-00主题下的banner标题颜色 */
+  --title-color: oklch(15% 0.08 var(--hue-primary) / 95%);
+  --subtitle-color: oklch(25% 0.12 var(--hue-primary) / 85%);
 }
 
 :root.eva-00.dark {
@@ -131,6 +147,10 @@
   --secondary-color: oklch(85% 0.02 var(--hue-secondary));
   --background-color: oklch(10% 0.02 var(--hue-primary));
   --accent-color: oklch(80% 0.03 var(--hue-secondary));
+  
+  /* EVA-00深色模式下的banner标题颜色 */
+  --title-color: oklch(100% 0 0 / 95%);
+  --subtitle-color: oklch(100% 0 0 / 85%);
 }
 
 .swup-progress-bar {
