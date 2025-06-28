@@ -10,9 +10,27 @@
     "dev:main": "pnpm --filter @asuka/main run dev",
     "dev:blog": "pnpm --filter @asuka/blog run dev",
     "build:main": "pnpm --filter @asuka/main run build",
-    "build:blog": "pnpm --filter @asuka/blog run build"
+    "build:blog": "pnpm --filter @asuka/blog run build",
+    "prepare": "husky",
+    "lint": "biome lint --write .",
+    "format": "biome format --write ."
+  },
+  "lint-staged": {
+    "apps/blog/**/*.{js,jsx,ts,tsx,astro}": [
+      "biome check --write --files-ignore-unknown=true --config-path=apps/blog/biome.jsonc"
+    ],
+    "apps/main/**/*.{js,jsx,ts,tsx,astro}": [
+      "biome check --write --files-ignore-unknown=true --config-path=apps/main/biome.jsonc"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "biome check --write --files-ignore-unknown=true"
+    ]
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.0"
+    "@biomejs/biome": "2.0.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2"
   }
 }
