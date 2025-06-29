@@ -4,6 +4,7 @@ import AsukaConfig from "~/asuka.config";
 import I18nKeys from "@/i18n/keys";
 import { i18n } from "@/i18n/translation";
 import { GetCategories, GetTags } from "@/utils/content";
+import { IdToSlug } from "@/utils/hash";
 import SocialIcon from "./widgets/SocialIcon.astro";
 
 const tags = await GetTags();
@@ -65,7 +66,7 @@ const tagKeys = [...tags.keys()];
               .slice(0, AsukaConfig.maxSidebarCategoryChip + 1)
               .map((category) => (
                 <a
-                  href={`/categories/${category}`}
+                  href={`/categories/${IdToSlug(categories.get(category)!.name)}`}
                   class="category flex flex-row items-center justify-between rounded-lg px-3 py-2 transition-all hover:bg-[var(--primary-color-lighten)]"
                 >
                   <p class="text-[var(--text-color)] transition-all">
@@ -110,7 +111,7 @@ const tagKeys = [...tags.keys()];
           <div class="relative flex max-w-[224px] flex-row flex-wrap">
             {tagKeys.slice(0, AsukaConfig.maxSidebarTagChip + 1).map((tag) => (
               <a
-                href={`/tags/${tag}`}
+                href={`/tags/${IdToSlug(tags.get(tag)!.name)}`}
                 class="tag m-1 grow rounded-md bg-[var(--primary-color-lighten)] px-2 py-1 transition-all hover:brightness-95"
               >
                 <p class="text-center text-sm text-[var(--primary-color)]">

@@ -1,8 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/MainLayout.astro";
-import { getTranslation } from "@/i18n/translation";
 import type { Locale } from "@/i18n/translation";
+import { IdToSlug } from "@/utils/hash";
 import AsukaConfig from "~/asuka.config";
 
 // 获取所有博客文章
@@ -86,7 +86,7 @@ const totalPosts = sortedPosts.length;
                       </div>
                       <div class="post-content">
                         <h3 class="post-title">
-                          <a href={`/posts/${post.id}`}>
+                          <a href={`/posts/${IdToSlug(post.id)}`}>
                             {post.data.title}
                           </a>
                         </h3>
