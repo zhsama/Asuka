@@ -51,22 +51,11 @@ const totalTags = tags.length;
 ---
 
 <Layout 
-  title={`${getTranslation(locale, I18nKeys.pages_tags_title)} | ${AsukaConfig.title}`}
-  description="博客文章标签页面"
-  showBanner={false}
+  title={`标签 | ${AsukaConfig.title}`}
+  subTitle={`共 ${totalTags} 个标签`}
 >
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-6xl mx-auto">
-      <!-- Page Header -->
-      <header class="mb-12 text-center">
-        <h1 class="page-title">
-          {getTranslation(locale, I18nKeys.pages_tags_title)}
-        </h1>
-        <p class="page-subtitle">
-          共 <span class="eva-text-primary font-semibold">{totalTags}</span> 个标签
-        </p>
-      </header>
-
       {tags.length === 0 ? (
         <div class="text-center py-16">
           <div class="mb-4">
@@ -83,25 +72,7 @@ const totalTags = tags.length;
         </div>
       ) : (
         <div class="space-y-12">
-          <!-- Tag Cloud -->
-          <section class="tag-cloud-section">
-            <h2 class="section-title">标签云</h2>
-            <div class="tag-cloud">
-              {tags.map(([tag, count]) => (
-                <a 
-                  href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`}
-                  class={`tag-cloud-item ${getTagWeight(count)}`}
-                  title={`${tag} (${count} 篇文章)`}
-                >
-                  {tag}
-                </a>
-              ))}
-            </div>
-          </section>
-
-          <!-- Tags List -->
           <section class="tags-list-section">
-            <h2 class="section-title">全部标签</h2>
             <div class="tags-grid">
               {tags.map(([tag, count]) => {
                 const posts = tagPosts.get(tag) || [];

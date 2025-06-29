@@ -2,8 +2,7 @@
 import Layout from "../layouts/MainLayout.astro";
 import { getTranslation } from "@/i18n/translation";
 import type { Locale } from "@/i18n/translation";
-import I18nKeys from "../i18n/keys";
-import AsukaConfig from "../../asuka.config";
+import AsukaConfig from "~/asuka.config";
 
 const locale = AsukaConfig.locale as Locale;
 const friendLinks = AsukaConfig.friendLinks || [];
@@ -12,7 +11,6 @@ const friendLinks = AsukaConfig.friendLinks || [];
 <Layout 
   title={`${getTranslation(locale)} | ${AsukaConfig.title}`}
   subTitle="友情链接"
-  showBanner={false}
 >
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">

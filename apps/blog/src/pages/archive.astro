@@ -33,20 +33,11 @@ const totalPosts = sortedPosts.length;
 ---
 
 <Layout 
-  title={`${getTranslation(locale)} | ${AsukaConfig.title}`}
+  title={`归档 | ${AsukaConfig.title}`}
+  subTitle={`共 ${totalPosts} 篇文章`}
 >
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
-      <!-- Page Header -->
-      <header class="mb-12 text-center">
-        <h1 class="page-title">
-          {getTranslation(locale)}
-        </h1>
-        <p class="page-subtitle">
-          共收录 <span class="font-semibold eva-text-primary">{totalPosts}</span> 篇文章
-        </p>
-      </header>
-
       {yearGroups.length === 0 ? (
         <div class="text-center py-16">
           <div class="mb-4">

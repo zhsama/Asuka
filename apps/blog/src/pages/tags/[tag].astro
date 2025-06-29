@@ -1,30 +1,30 @@
 ---
-import { getCollection } from 'astro:content';
-import Layout from '@/layouts/MainLayout.astro';
-import PostCard from '@/components/PostCard.astro';
-import { IdToSlug, SlugToId } from '@/utils/hash';
-import AsukaConfig from '~/asuka.config';
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/MainLayout.astro";
+import PostCard from "@/components/PostCard.astro";
+import { IdToSlug, SlugToId } from "@/utils/hash";
+import AsukaConfig from "~/asuka.config";
 
 export async function getStaticPaths() {
   // Get all blog posts
-  const allPosts = await getCollection('blog', ({ data }) => {
+  const allPosts = await getCollection("blog", ({ data }) => {
     return import.meta.env.PROD ? data.draft !== true : true;
   });
 
   // Get all unique tags
   const tags = new Set<string>();
-  allPosts.forEach(post => {
+  allPosts.forEach((post) => {
     if (post.data.tags) {
-      post.data.tags.forEach(tag => tags.add(tag));
+      post.data.tags.forEach((tag) => tags.add(tag));
     }
   });
 
   // Generate paths for each tag
-  return Array.from(tags).map(tag => ({
+  return Array.from(tags).map((tag) => ({
     params: { tag: IdToSlug(tag) },
-    props: { 
+    props: {
       tag,
-      posts: allPosts.filter(post => post.data.tags?.includes(tag))
+      posts: allPosts.filter((post) => post.data.tags?.includes(tag)),
     },
   }));
 }
@@ -32,34 +32,20 @@ export async function getStaticPaths() {
 type Props = {
   tag: string;
   posts: any[];
-}
+};
 
 const { tag, posts } = Astro.props;
 
 // Sort posts by published date
-const sortedPosts = posts.sort((a, b) => 
-  new Date(b.data.published).getTime() - new Date(a.data.published).getTime()
-);
+const sortedPosts = posts.sort((a, b) => new Date(b.data.published).getTime() - new Date(a.data.published).getTime());
 ---
 
 <Layout 
   title={`标签：${tag} | ${AsukaConfig.title}`}
-  description={`查看所有关于 ${tag} 的文章`}
-  showBanner={false}
+  subTitle={`共 ${sortedPosts.length} 篇文章`}
 >
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
-      <!-- Page Header -->
-      <header class="mb-12 text-center">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          标签：#{tag}
-        </h1>
-        <p class="text-gray-600 dark:text-gray-400">
-          共 {sortedPosts.length} 篇文章
-        </p>
-      </header>
-
-      <!-- Posts List -->
       {sortedPosts.length === 0 ? (
         <div class="text-center py-16">
           <div class="mb-4">

@@ -68,6 +68,33 @@ const props = Astro.props;
 
   .side-bar {
     @apply hidden min-w-[248px] xl:block;
+    position: sticky;
+    top: 6rem;
+    align-self: flex-start;
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .side-bar > div {
+    transition: all 0.3s ease;
+  }
+
+  .side-bar::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .side-bar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .side-bar::-webkit-scrollbar-thumb {
+    background: var(--primary-color-transparent);
+    border-radius: 2px;
+  }
+
+  .side-bar::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
   }
 
   .content {

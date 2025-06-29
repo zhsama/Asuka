@@ -2,131 +2,17 @@
 import Layout from "../layouts/MainLayout.astro";
 import { getTranslation } from "@/i18n/translation";
 import type { Locale } from "@/i18n/translation";
-import I18nKeys from "../i18n/keys";
-import AsukaConfig from "../../asuka.config";
+import AsukaConfig from "~/asuka.config";
 
 const locale = AsukaConfig.locale as Locale;
 ---
 
 <Layout 
-  title={`${getTranslation(locale)} | ${AsukaConfig.title}`}
+  title={`关于我 | ${AsukaConfig.title}`}
 >
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
-      <!-- Page Header -->
-      <header class="mb-12 text-center">
-        <h1 class="page-title">
-          {getTranslation(locale)}
-        </h1>
-      </header>
-
       <div class="space-y-12">
-        <!-- Author Introduction -->
-        <section class="author-section">
-          <div class="author-card">
-            <div class="author-avatar">
-              <img 
-                src={AsukaConfig.avatarUrl} 
-                alt={`${AsukaConfig.username} 头像`}
-                class="avatar-image"
-              />
-              <div class="avatar-decoration"></div>
-            </div>
-            <div class="author-info">
-              <h2 class="author-name">{AsukaConfig.username}</h2>
-              <p class="author-sign">{AsukaConfig.sign}</p>
-              {AsukaConfig.author_description && (
-                <p class="author-description">
-                  {AsukaConfig.author_description}
-                </p>
-              )}
-              
-              <!-- Social Links -->
-              <div class="social-links">
-                {AsukaConfig.socialLinks.map((link) => (
-                  <a 
-                    href={link.link} 
-                    class="social-link"
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    title={link.link}
-                  >
-                    <span class="social-icon">
-                      {link.icon.includes('github') ? '🐙' : 
-                       link.icon.includes('bilibili') ? '📺' : 
-                       link.icon.includes('email') ? '📧' : 
-                       link.icon.includes('twitter') ? '🐦' : 
-                       '🔗'}
-                    </span>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Skills & Interests -->
-        <section class="skills-section">
-          <h2 class="section-title">技能与兴趣</h2>
-          <div class="skills-grid">
-            <div class="skill-category">
-              <h3 class="category-title">
-                <span class="category-icon">💻</span>
-                编程语言
-              </h3>
-              <div class="skill-tags">
-                <span class="skill-tag">JavaScript</span>
-                <span class="skill-tag">TypeScript</span>
-                <span class="skill-tag">Python</span>
-                <span class="skill-tag">Java</span>
-                <span class="skill-tag">Go</span>
-              </div>
-            </div>
-            
-            <div class="skill-category">
-              <h3 class="category-title">
-                <span class="category-icon">🚀</span>
-                前端技术
-              </h3>
-              <div class="skill-tags">
-                <span class="skill-tag">React</span>
-                <span class="skill-tag">Vue.js</span>
-                <span class="skill-tag">Astro</span>
-                <span class="skill-tag">Next.js</span>
-                <span class="skill-tag">Tailwind CSS</span>
-              </div>
-            </div>
-            
-            <div class="skill-category">
-              <h3 class="category-title">
-                <span class="category-icon">⚙️</span>
-                后端技术
-              </h3>
-              <div class="skill-tags">
-                <span class="skill-tag">Node.js</span>
-                <span class="skill-tag">Express</span>
-                <span class="skill-tag">Prisma</span>
-                <span class="skill-tag">PostgreSQL</span>
-                <span class="skill-tag">MongoDB</span>
-              </div>
-            </div>
-            
-            <div class="skill-category">
-              <h3 class="category-title">
-                <span class="category-icon">🛠️</span>
-                开发工具
-              </h3>
-              <div class="skill-tags">
-                <span class="skill-tag">Git</span>
-                <span class="skill-tag">Docker</span>
-                <span class="skill-tag">VS Code</span>
-                <span class="skill-tag">Figma</span>
-                <span class="skill-tag">Vercel</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
         <!-- Timeline -->
         <section class="timeline-section">
           <h2 class="section-title">个人经历</h2>
@@ -171,44 +57,6 @@ const locale = AsukaConfig.locale as Locale;
                 <h3 class="timeline-title">编程启蒙</h3>
                 <p class="timeline-description">
                   开始学习编程，从 Python 入门，逐步探索计算机科学的奥秘
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Contact -->
-        <section class="contact-section">
-          <h2 class="section-title">联系我</h2>
-          <div class="contact-grid">
-            {AsukaConfig.email && (
-              <div class="contact-item">
-                <div class="contact-icon">📧</div>
-                <div class="contact-info">
-                  <h3 class="contact-title">邮箱</h3>
-                  <a href={`mailto:${AsukaConfig.email}`} class="contact-link">
-                    {AsukaConfig.email}
-                  </a>
-                </div>
-              </div>
-            )}
-            
-            <div class="contact-item">
-              <div class="contact-icon">🌐</div>
-              <div class="contact-info">
-                <h3 class="contact-title">网站</h3>
-                <a href={AsukaConfig.site} class="contact-link">
-                  {AsukaConfig.site}
-                </a>
-              </div>
-            </div>
-            
-            <div class="contact-item">
-              <div class="contact-icon">💬</div>
-              <div class="contact-info">
-                <h3 class="contact-title">交流</h3>
-                <p class="contact-text">
-                  欢迎在博客文章下留言交流
                 </p>
               </div>
             </div>

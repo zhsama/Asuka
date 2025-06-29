@@ -3,8 +3,7 @@ import { getCollection } from "astro:content";
 import Layout from "../layouts/MainLayout.astro";
 import { getTranslation } from "@/i18n/translation";
 import type { Locale } from "@/i18n/translation";
-import I18nKeys from "../i18n/keys";
-import AsukaConfig from "../../asuka.config";
+import AsukaConfig from "~/asuka.config";
 
 // 获取所有博客文章
 const allPosts = await getCollection("blog", ({ data }) => {
@@ -35,22 +34,11 @@ const totalCategories = categories.length;
 ---
 
 <Layout 
-  title={`${getTranslation(locale)} | ${AsukaConfig.title}`}
-  subTitle="博客文章分类"
-  showBanner={false}
+  title={`分类 | ${AsukaConfig.title}`}
+  subTitle={`共 ${totalCategories} 个分类`}
 >
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-6xl mx-auto">
-      <!-- Page Header -->
-      <header class="mb-12 text-center">
-        <h1 class="page-title">
-          {getTranslation(locale)}
-        </h1>
-        <p class="page-subtitle">
-          共 <span class="eva-text-primary font-semibold">{totalCategories}</span> 个分类
-        </p>
-      </header>
-
       {categories.length === 0 ? (
         <div class="text-center py-16">
           <div class="mb-4">
