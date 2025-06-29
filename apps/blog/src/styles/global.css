@@ -22,19 +22,19 @@
   --eva-00-primary: 210; /* 蓝色 #1d446c (29,68,108) */
   --eva-00-secondary: 0; /* 白色 #f1f1f1 (241,241,241) */
 
-  /* 默认使用 EVA-02 (明日香) 配色 */
-  --hue-primary: var(--eva-02-primary);
-  --hue-secondary: var(--eva-02-secondary);
+  /* 默认使用 EVA-01 (初号机) 配色 */
+  --hue-primary: var(--eva-01-primary);
+  --hue-secondary: var(--eva-01-secondary);
   --hue: var(--hue-primary); /* 为了兼容代码块样式 */
 
-  /* 主色调 - 基于官方EVA-02红色 #d3290f (211,41,15) */
-  --primary-color: oklch(52% 0.42 var(--hue-primary));
+  /* 主色调 - 基于官方EVA-01紫色 #765898 (118,88,152) */
+  --primary-color: oklch(40% 0.15 var(--hue-primary));
   --primary-color-lighten: oklch(94% 0.08 var(--hue-primary));
-  --primary-color-hover: oklch(88% 0.18 var(--hue-primary));
-  --primary-color-transparent: oklch(52% 0.42 var(--hue-primary) / 20%);
+  --primary-color-hover: oklch(88% 0.12 var(--hue-primary));
+  --primary-color-transparent: oklch(40% 0.15 var(--hue-primary) / 20%);
   
-  /* 辅助色 - 基于官方橙色 #e6770b (230,119,11) */
-  --secondary-color: oklch(72% 0.28 var(--hue-secondary));
+  /* 辅助色 - 基于官方绿色 #52d053 (82,208,83) */
+  --secondary-color: oklch(65% 0.22 var(--hue-secondary));
   --secondary-color-lighten: oklch(92% 0.06 var(--hue-secondary));
   
   /* 文字颜色 */
@@ -48,8 +48,8 @@
   /* 背景色带有微妙的机体色调 */
   --background-color: oklch(97% 0.02 var(--hue-primary));
   
-  /* 强调色 - 用于特殊元素 */
-  --accent-color: oklch(78% 0.25 var(--hue-secondary));
+  /* 强调色 - 基于EVA-01橙黄胸甲 #f7bb2a */
+  --accent-color: oklch(70% 0.16 45);
 
   --brand-font: "Raleway", "Noto Sans SC", sans-serif;
   --primary-font: "Noto Sans SC", sans-serif;
@@ -89,6 +89,44 @@
   --accent-color: oklch(70% 0.2 var(--hue-secondary));
   
   /* 深色模式下的banner标题颜色 */
+  --title-color: oklch(92% 0 0 / 95%);
+  --subtitle-color: oklch(88% 0 0 / 85%);
+}
+
+/* EVA-02 二号机主题 - 基于官方红橙配色 */
+:root.eva-02 {
+  --hue-primary: var(--eva-02-primary);
+  --hue-secondary: var(--eva-02-secondary);
+  --hue: var(--hue-primary);
+}
+
+:root.eva-02 {
+  /* 基于 #d3290f (211,41,15) 的红色 - 亮色模式增强对比度 */
+  --primary-color: oklch(52% 0.42 var(--hue-primary));
+  --primary-color-lighten: oklch(94% 0.08 var(--hue-primary));
+  --primary-color-hover: oklch(88% 0.18 var(--hue-primary));
+  --primary-color-transparent: oklch(52% 0.42 var(--hue-primary) / 20%);
+  /* 基于 #e6770b (230,119,11) 的橙色 */
+  --secondary-color: oklch(72% 0.28 var(--hue-secondary));
+  --secondary-color-lighten: oklch(92% 0.06 var(--hue-secondary));
+  --background-color: oklch(97% 0.02 var(--hue-primary));
+  --accent-color: oklch(78% 0.25 var(--hue-secondary));
+  
+  /* EVA-02主题下的banner标题颜色 */
+  --title-color: oklch(15% 0.05 var(--hue-primary) / 95%);
+  --subtitle-color: oklch(20% 0.08 var(--hue-primary) / 85%);
+}
+
+:root.eva-02.dark {
+  --primary-color: oklch(50% 0.25 var(--hue-primary));
+  --primary-color-lighten: oklch(25% 0.08 var(--hue-primary));
+  --primary-color-hover: oklch(22% 0.06 var(--hue-primary));
+  --secondary-color: oklch(65% 0.18 var(--hue-secondary));
+  --secondary-color-lighten: oklch(30% 0.06 var(--hue-secondary));
+  --background-color: oklch(6% 0.02 var(--hue-primary));
+  --accent-color: oklch(70% 0.2 var(--hue-secondary));
+  
+  /* EVA-02深色模式下的banner标题颜色 */
   --title-color: oklch(92% 0 0 / 95%);
   --subtitle-color: oklch(88% 0 0 / 85%);
 }
