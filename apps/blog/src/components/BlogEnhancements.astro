@@ -1,0 +1,131 @@
+<!-- 阅读进度条 -->
+<div class="reading-progress">
+  <div class="progress-bar"></div>
+</div>
+
+<!-- 回到顶部按钮 -->
+<button class="back-to-top" id="backToTop" aria-label="回到顶部">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m18 15-6-6-6 6"/>
+  </svg>
+</button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.querySelector('.progress-bar') as HTMLElement;
+    const backToTopBtn = document.querySelector('#backToTop') as HTMLElement;
+    
+    // 更新阅读进度
+    function updateProgress() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / scrollHeight) * 100;
+      
+      if (progressBar) {
+        progressBar.style.width = `${Math.min(progress, 100)}%`;
+      }
+      
+      // 显示/隐藏回到顶部按钮
+      if (backToTopBtn) {
+        if (scrollTop > 300) {
+          backToTopBtn.classList.add('visible');
+        } else {
+          backToTopBtn.classList.remove('visible');
+        }
+      }
+    }
+    
+    // 滚动事件监听
+    let ticking = false;
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateProgress();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+    
+    window.addEventListener('scroll', onScroll);
+    
+    // 回到顶部功能
+    if (backToTopBtn) {
+      backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+    
+    // 初始化
+    updateProgress();
+  });
+</script>
+
+<style>
+  @reference "tailwindcss";
+  
+  /* 阅读进度条 */
+  .reading-progress {
+    @apply fixed top-0 left-0 w-full h-1 z-50;
+    background-color: var(--card-color-transparent);
+  }
+  
+  .progress-bar {
+    @apply h-full transition-all duration-150 ease-out;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  }
+  
+  /* 回到顶部按钮 */
+  .back-to-top {
+    @apply fixed bottom-8 right-8 w-12 h-12 rounded-full shadow-lg;
+    @apply flex items-center justify-center transition-all duration-300;
+    @apply opacity-0 pointer-events-none transform translate-y-4;
+    background-color: var(--card-color);
+    border: 2px solid var(--primary-color-transparent);
+    color: var(--primary-color);
+    z-index: 1000;
+  }
+  
+  .back-to-top:hover {
+    @apply scale-110 shadow-xl;
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+  }
+  
+  .back-to-top:active {
+    @apply scale-95;
+  }
+  
+  .back-to-top.visible {
+    @apply opacity-100 pointer-events-auto transform translate-y-0;
+  }
+  
+  .back-to-top svg {
+    @apply w-6 h-6;
+  }
+  
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .back-to-top {
+      @apply bottom-6 right-6 w-10 h-10;
+    }
+    
+    .back-to-top svg {
+      @apply w-5 h-5;
+    }
+  }
+  
+  /* 暗色模式优化 */
+  :root.dark .back-to-top {
+    box-shadow: 0 4px 20px var(--primary-color-transparent);
+  }
+  
+  :root.dark .back-to-top:hover {
+    box-shadow: 0 8px 30px var(--primary-color-transparent);
+  }
+</style> 

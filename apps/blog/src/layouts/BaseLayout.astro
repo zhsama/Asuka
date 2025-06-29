@@ -11,7 +11,20 @@ import BaseHead from "../components/BaseHead.astro";
 </html>
 
 <style>
+  html {
+    overflow-x: hidden;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  
   body {
     @apply bg-[var(--background-color)];
+    overflow-x: hidden;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  
+  *, *::before, *::after {
+    box-sizing: border-box;
   }
 </style>

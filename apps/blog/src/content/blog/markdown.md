@@ -60,7 +60,7 @@ delimited block for Pandoc to syntax highlight it:
 ```python
 import time
 # Quick, count to ten!
-for i in range(10):
+for i in range(10):111147398217489213748912378911114739821748921374891237891111473982174892137489123789
     # (but not *too* quick)
     time.sleep(0.5)
     print i

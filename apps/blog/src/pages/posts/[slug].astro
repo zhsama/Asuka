@@ -4,6 +4,9 @@ import { IdToSlug } from "@/utils/hash";
 import BlogLayout from "@/layouts/BlogLayout.astro";
 import { render } from "astro:content";
 import AsukaConfig from "~/asuka.config";
+import TableOfContents from "@/components/TableOfContents.astro";
+import BlogEnhancements from "@/components/BlogEnhancements.astro";
+import MobileTableOfContents from "@/components/MobileTableOfContents.astro";
 
 export async function getStaticPaths() {
   const postEntries = await getCollection("blog", ({ data }) => {
@@ -16,7 +19,7 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 ---
 
 <BlogLayout
@@ -27,6 +30,7 @@ const { Content } = await render(entry);
   license={AsukaConfig.license}
   author={entry.data.author}
 >
+  <!-- 主文章内容 -->
   <div
     class="hidden"
     data-pagefind-body
@@ -38,4 +42,13 @@ const { Content } = await render(entry);
   <div data-pagefind-body>
     <Content />
   </div>
+  
+  <!-- 右侧目录导航 -->
+  <TableOfContents slot="sidebar" headings={headings} />
 </BlogLayout>
+
+<!-- 博文阅读增强功能 -->
+<BlogEnhancements />
+
+<!-- 移动端目录导航 -->
+<MobileTableOfContents headings={headings} />

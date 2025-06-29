@@ -67,10 +67,64 @@ const { class: className } = Astro.props;
 
     observer.observe(document.body, { childList: true, subtree: true });
   }
+
+  // 代码块滚动指示器
+  function setupCodeBlockScrollIndicators() {
+    const codeBlocks = document.querySelectorAll('.astro-code');
+    
+    codeBlocks.forEach(codeBlock => {
+      const checkScrollable = () => {
+        const isScrollable = codeBlock.scrollHeight > codeBlock.clientHeight;
+        const isScrolledToBottom = Math.abs(codeBlock.scrollHeight - codeBlock.clientHeight - codeBlock.scrollTop) < 1;
+        
+        if (isScrollable && !isScrolledToBottom) {
+          codeBlock.classList.add('has-more-content');
+        } else {
+          codeBlock.classList.remove('has-more-content');
+        }
+      };
+      
+      // 初始检查
+      checkScrollable();
+      
+      // 滚动时检查
+      codeBlock.addEventListener('scroll', checkScrollable);
+      
+      // 内容变化时检查
+      const resizeObserver = new ResizeObserver(checkScrollable);
+      resizeObserver.observe(codeBlock);
+    });
+  }
+  
+  // 在DOM加载完成和内容变化时设置滚动指示器
+  document.addEventListener("DOMContentLoaded", setupCodeBlockScrollIndicators);
+  
+  // 监听动态内容变化
+  const codeObserver = new MutationObserver(setupCodeBlockScrollIndicators);
+  codeObserver.observe(document.body, { childList: true, subtree: true });
 </script>
 
 <style is:inline>
   @reference "tailwindcss";
+  
+  /* 移动端防溢出增强 */
+  .markdown-content {
+    overflow-x: hidden;
+    max-width: 100%;
+    word-wrap: break-word;
+  }
+  
+  @media (max-width: 768px) {
+    .markdown-content {
+      padding: 0;
+      margin: 0;
+    }
+    
+    .markdown-content * {
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+  }
   
   .btn-regular-dark {
     display: flex;

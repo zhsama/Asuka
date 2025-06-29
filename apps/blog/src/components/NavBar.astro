@@ -120,7 +120,43 @@ const navCount = AsukaConfig.navigators.length;
     }
   });
 
+  // 导航栏滚动效果 - 参考主站实现
+  const nav = document.getElementById('nav');
+  const maxScroll = 1000;
+  let rafId: number | null = null;
 
+  function updateNav() {
+    if (window.scrollY > 0) {
+      nav?.classList.add('scrolling');
+
+      const scrollProgress = Math.min(window.scrollY / maxScroll, 1);
+      const easeProgress = 1 - Math.pow(1 - scrollProgress, 4);
+
+      // 在桌面端动态调整宽度
+      if (window.innerWidth >= 1024) {
+        const minWidth = 768;
+        const maxWidth = window.innerWidth * 0.9;
+        const currentWidth = maxWidth - (maxWidth - minWidth) * easeProgress;
+        nav?.style.setProperty('width', `${currentWidth}px`);
+      }
+    } else {
+      nav?.classList.remove('scrolling');
+      if (window.innerWidth >= 1024) {
+        nav?.style.setProperty('width', '');
+      }
+    }
+    rafId = null;
+  }
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!rafId) {
+        rafId = requestAnimationFrame(updateNav);
+      }
+    },
+    { passive: true }
+  );
 
   // Theme toggle functionality (dark/light mode)
   const themeToggle = document.getElementById('theme-switcher');
@@ -158,12 +194,43 @@ const navCount = AsukaConfig.navigators.length;
   @reference "tailwindcss";
   
   .nav {
-    @apply fixed left-1/2 z-10 flex w-full select-none flex-col justify-end rounded-b-xl bg-[var(--card-color-transparent)] px-2.5 opacity-0 backdrop-blur-md transition-all;
+    @apply fixed left-1/2 z-10 flex w-full select-none flex-col justify-end rounded-b-xl px-2.5 opacity-0 transition-all duration-500;
     @apply lg:w-[var(--page-width-lg)] lg:rounded-b-2xl;
     @apply xl:w-[var(--page-width-xl)];
     transform: translateX(-50%) translateY(-5rem);
     animation: 300ms nav-onload-animation;
     animation-fill-mode: forwards;
+    max-width: 100vw;
+    box-sizing: border-box;
+    
+    /* 初始状态：透明背景 */
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  /* 滚动时的样式变化 */
+  .nav.scrolling {
+    background: var(--card-color-transparent);
+    backdrop-filter: blur(20px);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* 移动端适配 */
+  @media (max-width: 768px) {
+    .nav {
+      @apply px-2;
+      width: calc(100vw - 1rem);
+      max-width: calc(100vw - 1rem);
+    }
+    
+    .nav.scrolling {
+      background: var(--card-color-transparent);
+      backdrop-filter: blur(15px);
+    }
   }
 
   .brand {

@@ -16,46 +16,103 @@ interface Props {
   sourceLink?: string;
 }
 
-const {
-  title,
-  subTitle,
-  bannerImage,
-  published,
-  license,
-  author,
-  sourceLink,
-} = Astro.props;
+const { title, subTitle, bannerImage, published, license, author, sourceLink } = Astro.props;
 ---
 
 <Main title={title} subTitle={subTitle} bannerImage={bannerImage}>
-  <!-- <Fragment set:html={tocHTMLString} /> -->
-  <div class="article-wrapper">
-    <div class="article">
-      <Markdown>
-        <slot />
-      </Markdown>
-      {
-        published && title && (
-          <License
-            title={title}
-            published={published}
-            license={license}
-            author={author}
-            sourceLink={sourceLink}
-          />
-        )
-      }
+  <div class="blog-container">
+    <!-- 主内容区域 -->
+    <div class="article-wrapper">
+      <div class="article">
+        <Markdown>
+          <slot />
+        </Markdown>
+        {
+          published && title && (
+            <License
+              title={title}
+              published={published}
+              license={license}
+              author={author}
+              sourceLink={sourceLink}
+            />
+          )
+        }
+      </div>
     </div>
+    
+    <!-- 右侧导航区域 -->
+    <aside class="sidebar-wrapper">
+      <slot name="sidebar" />
+    </aside>
   </div>
 </Main>
 
 <style>
   @reference "tailwindcss";
-  .article-wrapper {
-    @apply mx-3 rounded-2xl bg-[var(--card-color)] px-5 py-6 lg:mx-0 lg:px-10 lg:py-9;
+  
+  .blog-container {
+    @apply flex gap-8 items-start;
+    max-width: var(--page-width-xl);
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
   }
+  
+  .article-wrapper {
+    @apply rounded-2xl bg-[var(--card-color)] px-5 py-6 lg:px-10 lg:py-9;
+    flex: 1;
+    min-width: 0; /* 防止内容溢出 */
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
   .article {
     @apply flex flex-col;
     font-size: var(--primary-font);
   }
+  
+  .sidebar-wrapper {
+    @apply hidden xl:block flex-shrink-0;
+    width: 280px;
+    padding-top: 2rem;
+  }
+  
+  /* 响应式布局 */
+  @media (max-width: 1280px) {
+    .blog-container {
+      @apply block;
+      padding: 0;
+    }
+    
+    .article-wrapper {
+      @apply w-full;
+      margin: 0;
+    }
+    
+    .sidebar-wrapper {
+      @apply hidden;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .blog-container {
+      padding: 0;
+      margin: 0;
+    }
+    
+    .article-wrapper {
+      @apply px-3 py-4;
+      margin: 0;
+      border-radius: 0;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .article-wrapper {
+      @apply px-2 py-3;
+    }
+  }
 </style>
+

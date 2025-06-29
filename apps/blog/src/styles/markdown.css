@@ -1,6 +1,19 @@
 @import "tailwindcss";
 
 @layer components {
+  /* 文章容器基础样式 - 防止内容溢出 */
+  .article {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  
+  .article * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
   .article code:not(pre code)::before {
     content: none;
   }
@@ -168,6 +181,12 @@
   .article a {
     color: var(--primary-color);
     text-decoration: underline;
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
+    display: inline-block;
   }
 
   .article a:hover {
@@ -181,7 +200,11 @@
 
   .article pre {
     margin: 0.75rem 0;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    word-wrap: normal;
+    white-space: pre;
+    max-width: 100%;
   }
 
   .article span.line {
@@ -199,9 +222,19 @@
     counter-increment: line;
     direction: rtl;
     display: inline-block;
-    margin-right: 1rem;
-    width: 1rem;
-    color: rgba(255, 255, 255, 0.25);
+    margin-left: 1rem;
+    margin-right: 1.25rem;
+    width: 2.5rem;
+    text-align: right;
+    color: oklch(70% 0.02 var(--hue-primary) / 50%);
+    font-size: 12px;
+    line-height: inherit;
+    user-select: none;
+  }
+  
+  /* 暗色模式下的行号颜色 */
+  :root.dark .article span.line:before {
+    color: oklch(60% 0.02 var(--hue-primary) / 60%);
   }
 
   .article span.line:last-child:empty,
@@ -214,18 +247,125 @@
     margin-bottom: 0.75rem;
     color: var(--text-color);
     line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
+
 
   .article .astro-code {
     border-radius: 0.75rem;
     scrollbar-width: thin;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-width: 100%;
+    max-height: calc(20 * 1.5em + 2rem); /* 20行 + padding */
+    word-wrap: normal;
+    white-space: pre;
+    padding: 1rem 1.5rem 1rem 0;
+    position: relative;
+  }
+  
+  /* 代码块滚动指示器 - 底部渐变 */
+  .article .astro-code::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2rem;
+    background: linear-gradient(to bottom, 
+      transparent 0%, 
+      var(--card-color) 80%
+    );
+    pointer-events: none;
+    border-radius: 0 0 0.75rem 0.75rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* 只有当代码块有更多内容时才显示指示器 */
+  .article .astro-code.has-more-content::after {
+    opacity: 1;
+  }
+  
+
+  
+  /* 代码块滚动条样式 */
+  .article .astro-code::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .article .astro-code::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+  }
+  
+  .article .astro-code::-webkit-scrollbar-thumb {
+    background: oklch(50% 0.05 var(--hue-primary) / 30%);
+    border-radius: 4px;
+    border: 1px solid oklch(40% 0.03 var(--hue-primary) / 20%);
+  }
+  
+  .article .astro-code::-webkit-scrollbar-thumb:hover {
+    background: oklch(60% 0.08 var(--hue-primary) / 50%);
+  }
+  
+  /* 暗色模式下的滚动条 */
+  :root.dark .article .astro-code::-webkit-scrollbar-thumb {
+    background: oklch(40% 0.05 var(--hue-primary) / 40%);
+    border: 1px solid oklch(50% 0.03 var(--hue-primary) / 30%);
+  }
+  
+  :root.dark .article .astro-code::-webkit-scrollbar-thumb:hover {
+    background: oklch(50% 0.08 var(--hue-primary) / 60%);
+  }
+  
+  /* 移动端代码块优化 */
+  @media (max-width: 768px) {
+    .article .astro-code {
+      padding: 0.75rem 1rem 0.75rem 0;
+      max-height: calc(15 * 1.4em + 1.5rem); /* 移动端显示15行 */
+    }
+    
+    .article span.line:before {
+      margin-left: 0.5rem;
+      margin-right: 1rem;
+      width: 1rem;
+      font-size: 11px;
+    }
+    
+    /* 移动端滚动条更细 */
+    .article .astro-code::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    
+    /* 移动端滚动指示器调整 */
+    .article .astro-code::after {
+      height: 1.5rem;
+    }
   }
 
-  /* 表格样式 */
+  /* 表格容器 - 防止溢出 */
   .article table {
     width: 100%;
     border-collapse: collapse;
     margin: 1rem 0;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .article table thead,
+  .article table tbody {
+    display: table;
+    width: 100%;
+  }
+  
+  .article table tr {
+    display: table-row;
   }
 
   .article table th,

@@ -51,6 +51,45 @@ function hello() {
 def hello():
     print("Hello, World!")
     return True
+    def hello():
+    print("Hello, World!")
+    return True
+
+    print("Hello, World!")
+    return True
+    def hello():
+    print("Hello, World!")
+    return True
+
+    print("Hello, World!")
+    return True
+    def hello():
+    print("Hello, World!")
+    return True
+
+    print("Hello, World!")
+    return True
+    def hello():
+    print("Hello, World!")
+    return True
+
+    print("Hello, World!")
+    return True
+    def hello():
+    print("Hello, World!")
+    return True
+
+    print("Hello, World!")
+    return True
+    def hello():
+    print("Hello, World!")
+    return True
+
+    print("Hello, World!")
+    return True
+    def hello():
+    print("Hello, World!")
+    return True
 ```
 
 ###### 六级标题测试

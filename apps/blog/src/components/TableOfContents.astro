@@ -1,0 +1,333 @@
+---
+export interface Props {
+  headings: {
+    depth: number;
+    slug: string;
+    text: string;
+  }[];
+}
+
+const { headings } = Astro.props;
+
+// 过滤掉 h1 标题，只显示 h2-h6
+const filteredHeadings = headings.filter((heading) => heading.depth > 1);
+---
+
+<nav class="toc-nav">
+  <div class="toc-header">
+    <h3 class="toc-title">
+      <svg class="toc-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12h18"></path>
+        <path d="M3 6h18"></path>
+        <path d="M3 18h18"></path>
+      </svg>
+      目录
+    </h3>
+  </div>
+  
+  {filteredHeadings.length > 0 ? (
+    <ul class="toc-list">
+      {filteredHeadings.map((heading) => {
+        const paddingLeft = (heading.depth - 2) * 0.75; // 层级缩进
+        return (
+          <li class="toc-item" style={`padding-left: ${paddingLeft}rem`}>
+            <a 
+              href={`#${heading.slug}`}
+              class="toc-link"
+              data-heading-depth={heading.depth}
+            >
+              {heading.text}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  ) : (
+    <p class="toc-empty">该文章暂无目录</p>
+  )}
+</nav>
+
+<script>
+  // 平滑滚动到目标标题
+  document.addEventListener('DOMContentLoaded', () => {
+    const tocLinks = document.querySelectorAll('.toc-link');
+    
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        if (!href) return;
+        
+        const targetId = href.substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+          
+          // 更新URL但不触发页面跳转
+          if (history.pushState) {
+            history.pushState(null, '', `#${targetId}`);
+          }
+        }
+      });
+    });
+    
+    // 高亮当前阅读位置
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const id = entry.target.getAttribute('id');
+        const tocLink = document.querySelector(`a[href="#${id}"]`);
+        
+        if (entry.isIntersecting) {
+          // 移除所有活跃状态
+          document.querySelectorAll('.toc-link').forEach(link => {
+            link.classList.remove('active');
+          });
+          // 添加当前活跃状态
+          tocLink?.classList.add('active');
+        }
+      });
+    }, {
+      rootMargin: '-20% 0% -35% 0%'
+    });
+    
+    // 观察所有标题元素
+    document.querySelectorAll('h2, h3, h4, h5, h6').forEach(heading => {
+      observer.observe(heading);
+    });
+    
+    // 滚动优化：动态调整目录位置
+    const tocNav = document.querySelector('.toc-nav');
+    let lastScrollY = window.scrollY;
+    let scrollTimeout: ReturnType<typeof setTimeout>;
+    
+    function handleScroll() {
+      const currentScrollY = window.scrollY;
+      
+      // 清除之前的超时
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
+      
+      // 当滚动超过200px时，调整目录位置使其更贴近顶部
+      if (currentScrollY > 200) {
+        tocNav?.classList.add('scrolled');
+      } else {
+        tocNav?.classList.remove('scrolled');
+      }
+      
+      // 防抖：在滚动停止后进行最终调整
+      scrollTimeout = setTimeout(() => {
+        // 可以在这里添加滚动停止后的额外逻辑
+      }, 150);
+      
+      lastScrollY = currentScrollY;
+    }
+    
+    // 节流滚动事件监听
+    let scrollTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    });
+    
+    // 初始化检查
+    handleScroll();
+    
+    // 检测目录是否可滚动并添加指示器
+    function checkTocScrollable() {
+      if (!tocNav) return;
+      
+      const isScrollable = tocNav.scrollHeight > tocNav.clientHeight;
+      if (isScrollable) {
+        tocNav.classList.add('has-scroll');
+      } else {
+        tocNav.classList.remove('has-scroll');
+      }
+    }
+    
+    // 初始检查
+    checkTocScrollable();
+    
+    // 监听目录滚动，到底部时隐藏指示器
+    tocNav?.addEventListener('scroll', () => {
+      if (!tocNav) return;
+      
+      const isAtBottom = Math.abs(tocNav.scrollHeight - tocNav.clientHeight - tocNav.scrollTop) < 1;
+      
+      if (isAtBottom) {
+        tocNav.classList.remove('has-scroll');
+      } else {
+        checkTocScrollable();
+      }
+    });
+    
+    // 监听窗口大小变化，重新检查滚动状态
+    window.addEventListener('resize', checkTocScrollable);
+  });
+</script>
+
+<style>
+  @reference "tailwindcss";
+  
+  .toc-nav {
+    @apply sticky w-full max-w-xs;
+    top: 6rem; /* 导航栏高度(4.5rem) + 额外间距(1.5rem) */
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+    transition: all 0.3s ease;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: transparent;
+    opacity: 0;
+    transform: translateX(20px);
+    animation: slideInToc 0.6s ease-out 0.3s forwards;
+  }
+  
+  @keyframes slideInToc {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* 滚动时的优化定位和视觉效果 */
+  .toc-nav.scrolled {
+    top: 5rem;
+    max-height: calc(100vh - 6rem);
+    background: var(--card-color-transparent);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--primary-color-transparent);
+    box-shadow: 0 4px 20px var(--primary-color-transparent);
+    transform: translateX(0) scale(1);
+  }
+  
+  /* 鼠标悬停在滚动状态的目录上时的效果 */
+  .toc-nav.scrolled:hover {
+    transform: translateX(0) scale(1.02);
+    box-shadow: 0 6px 25px var(--primary-color-transparent);
+  }
+  
+  /* 暗色模式下的滚动效果优化 */
+  :root.dark .toc-nav.scrolled {
+    background: var(--card-color);
+    border-color: var(--primary-color-transparent);
+    box-shadow: 0 8px 30px var(--primary-color-transparent);
+  }
+  
+  :root.dark .toc-nav.scrolled:hover {
+    box-shadow: 0 12px 40px var(--primary-color-transparent);
+  }
+  
+  /* 目录滚动指示器 */
+  .toc-nav::after {
+    content: '';
+    position: absolute;
+    bottom: 0.5rem;
+    left: 1.5rem;
+    right: 1.5rem;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 1px;
+  }
+  
+  .toc-nav.has-scroll::after {
+    opacity: 0.6;
+  }
+  
+  /* 滚动状态下的指示器增强 */
+  .toc-nav.scrolled.has-scroll::after {
+    opacity: 0.8;
+    background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+  }
+  
+  .toc-header {
+    @apply mb-4 pb-3 border-b border-[var(--primary-color-transparent)];
+  }
+  
+  .toc-title {
+    @apply flex items-center gap-2 text-base font-semibold;
+    color: var(--text-color);
+  }
+  
+  .toc-icon {
+    @apply w-4 h-4;
+    color: var(--primary-color);
+  }
+  
+  .toc-list {
+    @apply space-y-1;
+  }
+  
+  .toc-item {
+    @apply list-none;
+  }
+  
+  .toc-link {
+    @apply block py-1.5 px-2 text-sm rounded-md transition-all duration-200;
+    color: var(--text-color-lighten);
+    border-left: 2px solid transparent;
+  }
+  
+  .toc-link:hover {
+    @apply bg-[var(--primary-color-transparent)];
+    color: var(--text-color);
+    border-left-color: var(--primary-color);
+  }
+  
+  .toc-link.active {
+    @apply bg-[var(--primary-color-transparent)] font-medium;
+    color: var(--primary-color);
+    border-left-color: var(--primary-color);
+  }
+  
+  .toc-empty {
+    @apply text-sm italic;
+    color: var(--text-color-lighten);
+  }
+  
+  /* 响应式设计 */
+  @media (max-width: 1280px) {
+    .toc-nav {
+      @apply hidden;
+    }
+  }
+  
+  /* 确保在超宽屏下的定位 */
+  @media (min-width: 1920px) {
+    .toc-nav {
+      max-width: 20rem;
+    }
+  }
+  
+  /* 自定义滚动条 */
+  .toc-nav::-webkit-scrollbar {
+    @apply w-1;
+  }
+  
+  .toc-nav::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  .toc-nav::-webkit-scrollbar-thumb {
+    @apply bg-[var(--primary-color-transparent)] rounded-full;
+  }
+  
+  .toc-nav::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary-color);
+  }
+</style> 
