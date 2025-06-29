@@ -120,44 +120,6 @@ const navCount = AsukaConfig.navigators.length;
     }
   });
 
-  // 导航栏滚动效果 - 参考主站实现
-  const nav = document.getElementById('nav');
-  const maxScroll = 1000;
-  let rafId: number | null = null;
-
-  function updateNav() {
-    if (window.scrollY > 0) {
-      nav?.classList.add('scrolling');
-
-      const scrollProgress = Math.min(window.scrollY / maxScroll, 1);
-      const easeProgress = 1 - Math.pow(1 - scrollProgress, 4);
-
-      // 在桌面端动态调整宽度
-      if (window.innerWidth >= 1024) {
-        const minWidth = 768;
-        const maxWidth = window.innerWidth * 0.9;
-        const currentWidth = maxWidth - (maxWidth - minWidth) * easeProgress;
-        nav?.style.setProperty('width', `${currentWidth}px`);
-      }
-    } else {
-      nav?.classList.remove('scrolling');
-      if (window.innerWidth >= 1024) {
-        nav?.style.setProperty('width', '');
-      }
-    }
-    rafId = null;
-  }
-
-  window.addEventListener(
-    'scroll',
-    () => {
-      if (!rafId) {
-        rafId = requestAnimationFrame(updateNav);
-      }
-    },
-    { passive: true }
-  );
-
   // Theme toggle functionality (dark/light mode)
   const themeToggle = document.getElementById('theme-switcher');
   const lightIcon = document.getElementById('theme-icon-light');
@@ -203,13 +165,7 @@ const navCount = AsukaConfig.navigators.length;
     max-width: 100vw;
     box-sizing: border-box;
     
-    /* 初始状态：透明背景 */
-    background: transparent;
-    backdrop-filter: none;
-  }
-
-  /* 滚动时的样式变化 */
-  .nav.scrolling {
+    /* 固定样式：半透明背景 */
     background: var(--card-color-transparent);
     backdrop-filter: blur(20px);
     box-shadow: 
@@ -225,9 +181,6 @@ const navCount = AsukaConfig.navigators.length;
       @apply px-2;
       width: calc(100vw - 1rem);
       max-width: calc(100vw - 1rem);
-    }
-    
-    .nav.scrolling {
       background: var(--card-color-transparent);
       backdrop-filter: blur(15px);
     }

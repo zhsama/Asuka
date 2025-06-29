@@ -1,6 +1,6 @@
 ---
 import AsukaConfig from "~/asuka.config";
-import { GetCoverURLForUnspecifiedEntry } from "../utils/cover";
+import { GetCoverURLForUnspecifiedEntry } from "@/utils/cover";
 
 export interface Props {
   title?: string;
@@ -13,7 +13,7 @@ const { title, subTitle, bannerImage, slug } = Astro.props;
 const hasTitle = title !== undefined || subTitle !== undefined;
 const hasHeaderImg = bannerImage !== undefined || slug !== undefined;
 
-let carouselImgsList = AsukaConfig.banners; 
+let carouselImgsList = AsukaConfig.banners;
 const carouselAnimationTime = `${carouselImgsList.length * 6}s`;
 ---
 

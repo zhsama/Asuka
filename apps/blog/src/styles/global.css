@@ -80,9 +80,9 @@
   --text-color-lighten: oklch(75% 0.01 var(--hue-primary));
   
   /* 深色卡片带有机体感的色调 */
-  --card-color: oklch(12% 0.025 var(--hue-primary));
-  --card-color-lighten: oklch(20% 0.05 var(--hue-primary));
-  --card-color-transparent: oklch(15% 0.03 var(--hue-primary) / 90%);
+  --card-color: oklch(18% 0.03 var(--hue-primary));
+  --card-color-lighten: oklch(25% 0.05 var(--hue-primary));
+  --card-color-transparent: oklch(20% 0.04 var(--hue-primary) / 95%);
   
   /* 深色背景 */
   --background-color: oklch(6% 0.02 var(--hue-primary));

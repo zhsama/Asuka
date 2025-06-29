@@ -69,7 +69,6 @@ const props = Astro.props;
   .side-bar {
     @apply hidden min-w-[248px] xl:block;
     position: sticky;
-    top: 6rem;
     align-self: flex-start;
     max-height: calc(100vh - 8rem);
     overflow-y: auto;
@@ -104,3 +103,85 @@ const props = Astro.props;
     box-sizing: border-box;
   }
 </style>
+
+<script>
+  function throttle(func: Function, limit: number) {
+    let inThrottle: boolean;
+    return function(this: any, ...args: any[]) {
+      if (!inThrottle) {
+        func.apply(this, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    }
+  }
+
+  function initNavAutoHide() {
+    const nav = document.getElementById('nav');
+    const banner = document.getElementById('banner');
+    
+    if (!nav || !banner) return;
+
+    let lastScrollY = window.scrollY;
+    let isHidden = false;
+
+    const calculateThreshold = () => {
+      return Math.max(banner.offsetHeight - nav.offsetHeight, 0);
+    };
+
+    let threshold = calculateThreshold();
+
+    const setNavStyle = (hidden: boolean) => {
+      nav.style.transform = `translateX(-50%) translateY(${hidden ? '-100%' : '0'})`;
+      nav.style.opacity = hidden ? '0' : '1';
+      nav.style.transition = 'transform 0.3s ease-in-out, opacity 0.3s ease-in-out';
+      nav.style.willChange = hidden ? 'transform, opacity' : 'auto';
+      isHidden = hidden;
+    };
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrollDiff = Math.abs(currentScrollY - lastScrollY);
+      const scrollingDown = currentScrollY > lastScrollY;
+
+      if (scrollDiff < 5) return;
+
+      if (currentScrollY > threshold) {
+        if (scrollingDown && !isHidden) {
+          setNavStyle(true);
+        } else if (!scrollingDown && isHidden) {
+          setNavStyle(false);
+        }
+      } else if (isHidden) {
+        setNavStyle(false);
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    const throttledHandleScroll = throttle(handleScroll, 16);
+    window.addEventListener('scroll', throttledHandleScroll, { passive: true });
+
+    const handleResize = throttle(() => {
+      threshold = calculateThreshold();
+    }, 100);
+    window.addEventListener('resize', handleResize);
+
+    setTimeout(() => {
+      nav.style.animation = 'none';
+      nav.style.animationFillMode = 'none';
+      setNavStyle(false);
+    }, 350);
+
+    const cleanup = () => {
+      window.removeEventListener('scroll', throttledHandleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
+
+    document.addEventListener('astro:before-preparation', cleanup);
+    window.addEventListener('beforeunload', cleanup);
+  }
+
+  document.addEventListener('DOMContentLoaded', initNavAutoHide);
+  document.addEventListener('astro:page-load', initNavAutoHide);
+</script>
