@@ -33,10 +33,10 @@ const AsukaConfig: Configuration = {
 
   username: "zhsama",
   sign: "我没有敌人",
-  avatarUrl: "/avatar.webp",
+  avatarUrl: "/avatar.jpeg",
   author_description: "自闭症肥宅，懂一点点前端和AI",
   email: "a602693793@gmail.com",
-  
+
   socialLinks: [
     {
       icon: "line-md:github-loop",
@@ -51,27 +51,23 @@ const AsukaConfig: Configuration = {
       link: "mailto:a602693793@gmail.com",
     },
   ],
-  
+
   // 友情链接配置
   friendLinks: [
     {
       name: "示例博客",
       url: "https://example.com",
       avatar: "https://example.com/avatar.png",
-      description: "这是一个示例友链"
-    }
+      description: "这是一个示例友链",
+    },
   ],
-  
+
   maxSidebarCategoryChip: 6,
   maxSidebarTagChip: 12,
   maxFooterCategoryChip: 6,
   maxFooterTagChip: 24,
 
-  banners: [
-    "/banner1.webp",
-    "/banner2.webp",
-    "/banner3.webp",
-  ],
+  banners: ["/banner1.webp", "/banner2.webp", "/banner3.webp"],
 
   slugMode: "HASH",
 
@@ -81,20 +77,20 @@ const AsukaConfig: Configuration = {
   },
 
   bannerStyle: "LOOP",
-  
+
   // SEO 配置
   seo: {
     twitter: "@a602693793",
     ogImage: "/og-image.png",
   },
-  
+
   // 瀑布流配置
   waterfallColumns: {
     default: 3,
     lg: 3,
     md: 2,
-    sm: 1
-  }
+    sm: 1,
+  },
 };
 
 export default AsukaConfig;
