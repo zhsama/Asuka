@@ -42,8 +42,9 @@
   --text-color-lighten: oklch(45% 0.05 var(--hue-primary));
   
   /* 卡片颜色 */
-  --card-color: oklch(99% 0.01 var(--hue-primary));
-  --card-color-transparent: oklch(99% 0.01 var(--hue-primary) / 90%);
+  --card-color: oklch(92% 0.015 var(--hue-primary));
+  --card-color-lighten: oklch(96% 0.01 var(--hue-primary));
+  --card-color-transparent: oklch(92% 0.015 var(--hue-primary) / 90%);
   
   /* 背景色带有微妙的机体色调 */
   --background-color: oklch(97% 0.02 var(--hue-primary));
@@ -60,9 +61,9 @@
 
   --banner-height: 55vh;
   --title-font: var(--brand-font);
-  --title-color: oklch(15% 0.05 var(--hue-primary) / 95%);
+  --title-color: oklch(95% 0 0 / 95%);
   --subtitle-font: var(--brand-font);
-  --subtitle-color: oklch(20% 0.08 var(--hue-primary) / 85%);
+  --subtitle-color: oklch(90% 0 0 / 85%);
 
   --onload-animation-delay: 100ms;
   --onload-animation-interval: 100ms;
@@ -112,9 +113,14 @@
   --background-color: oklch(97% 0.02 var(--hue-primary));
   --accent-color: oklch(78% 0.25 var(--hue-secondary));
   
+  /* EVA-02主题下的卡片颜色 */
+  --card-color: oklch(92% 0.02 var(--hue-primary));
+  --card-color-lighten: oklch(96% 0.015 var(--hue-primary));
+  --card-color-transparent: oklch(92% 0.02 var(--hue-primary) / 90%);
+  
   /* EVA-02主题下的banner标题颜色 */
-  --title-color: oklch(15% 0.05 var(--hue-primary) / 95%);
-  --subtitle-color: oklch(20% 0.08 var(--hue-primary) / 85%);
+  --title-color: oklch(95% 0 0 / 95%);
+  --subtitle-color: oklch(90% 0 0 / 85%);
 }
 
 :root.eva-02.dark {
@@ -125,6 +131,11 @@
   --secondary-color-lighten: oklch(30% 0.06 var(--hue-secondary));
   --background-color: oklch(6% 0.02 var(--hue-primary));
   --accent-color: oklch(70% 0.2 var(--hue-secondary));
+  
+  /* EVA-02深色模式下的卡片颜色 */
+  --card-color: oklch(18% 0.03 var(--hue-primary));
+  --card-color-lighten: oklch(25% 0.05 var(--hue-primary));
+  --card-color-transparent: oklch(20% 0.04 var(--hue-primary) / 95%);
   
   /* EVA-02深色模式下的banner标题颜色 */
   --title-color: oklch(92% 0 0 / 95%);
@@ -150,9 +161,14 @@
   /* 橙黄胸甲点缀 #f7bb2a */
   --accent-color: oklch(70% 0.16 45);
   
+  /* EVA-01主题下的卡片颜色 */
+  --card-color: oklch(92% 0.02 var(--hue-primary));
+  --card-color-lighten: oklch(96% 0.015 var(--hue-primary));
+  --card-color-transparent: oklch(92% 0.02 var(--hue-primary) / 90%);
+  
   /* EVA-01主题下的banner标题颜色 */
-  --title-color: oklch(15% 0.08 var(--hue-primary) / 95%);
-  --subtitle-color: oklch(25% 0.12 var(--hue-primary) / 85%);
+  --title-color: oklch(95% 0 0 / 95%);
+  --subtitle-color: oklch(90% 0 0 / 85%);
 }
 
 :root.eva-01.dark {
@@ -162,6 +178,11 @@
   --secondary-color: oklch(85% 0.22 var(--hue-secondary));
   --background-color: oklch(8% 0.03 var(--hue-primary));
   --accent-color: oklch(85% 0.2 45);
+  
+  /* EVA-01深色模式下的卡片颜色 */
+  --card-color: oklch(18% 0.03 var(--hue-primary));
+  --card-color-lighten: oklch(25% 0.05 var(--hue-primary));
+  --card-color-transparent: oklch(20% 0.04 var(--hue-primary) / 95%);
   
   /* EVA-01深色模式下的banner标题颜色 */
   --title-color: oklch(100% 0 0 / 95%);
@@ -186,9 +207,14 @@
   --background-color: oklch(98% 0.01 var(--hue-primary));
   --accent-color: oklch(75% 0.02 var(--hue-secondary));
   
+  /* EVA-00主题下的卡片颜色 */
+  --card-color: oklch(93% 0.015 var(--hue-primary));
+  --card-color-lighten: oklch(96% 0.01 var(--hue-primary));
+  --card-color-transparent: oklch(93% 0.015 var(--hue-primary) / 90%);
+  
   /* EVA-00主题下的banner标题颜色 */
-  --title-color: oklch(15% 0.08 var(--hue-primary) / 95%);
-  --subtitle-color: oklch(25% 0.12 var(--hue-primary) / 85%);
+  --title-color: oklch(95% 0 0 / 95%);
+  --subtitle-color: oklch(90% 0 0 / 85%);
 }
 
 :root.eva-00.dark {
@@ -198,6 +224,11 @@
   --secondary-color: oklch(85% 0.02 var(--hue-secondary));
   --background-color: oklch(10% 0.02 var(--hue-primary));
   --accent-color: oklch(80% 0.03 var(--hue-secondary));
+  
+  /* EVA-00深色模式下的卡片颜色 */
+  --card-color: oklch(18% 0.03 var(--hue-primary));
+  --card-color-lighten: oklch(25% 0.05 var(--hue-primary));
+  --card-color-transparent: oklch(20% 0.04 var(--hue-primary) / 95%);
   
   /* EVA-00深色模式下的banner标题颜色 */
   --title-color: oklch(100% 0 0 / 95%);
@@ -228,4 +259,44 @@
 
 .eva-border {
   border: 2px solid var(--primary-color);
+}
+
+/* 卡片立体效果增强 */
+:root {
+  --card-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.24),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  --card-shadow-hover:
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+:root.dark {
+  --card-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    0 1px 3px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  --card-shadow-hover:
+    0 8px 25px rgba(0, 0, 0, 0.4),
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* 为所有使用卡片背景色的元素添加阴影 */
+[class*="bg-[var(--card-color)]"],
+.post-card,
+.sidebar-card,
+.footer-card {
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+[class*="bg-[var(--card-color)]:hover"],
+.post-card:hover,
+.sidebar-card:hover,
+.footer-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-1px);
 }

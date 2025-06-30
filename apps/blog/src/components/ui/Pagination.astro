@@ -1,0 +1,159 @@
+---
+import type { Page } from "astro";
+import { Icon } from "astro-icon/components";
+import { url } from "@/utils/url-utils";
+
+interface Props {
+  page: Page;
+  class?: string;
+  style?: string;
+}
+
+const { page, style } = Astro.props;
+
+const HIDDEN = -1;
+
+const className = Astro.props.class;
+
+const ADJ_DIST = 2;
+const VISIBLE = ADJ_DIST * 2 + 1;
+
+// for test
+let count = 1;
+let l = page.currentPage;
+let r = page.currentPage;
+while (0 < l - 1 && r + 1 <= page.lastPage && count + 2 <= VISIBLE) {
+  count += 2;
+  l--;
+  r++;
+}
+while (0 < l - 1 && count < VISIBLE) {
+  count++;
+  l--;
+}
+while (r + 1 <= page.lastPage && count < VISIBLE) {
+  count++;
+  r++;
+}
+
+let pages: number[] = [];
+if (l > 1) pages.push(1);
+if (l === 3) pages.push(2);
+if (l > 3) pages.push(HIDDEN);
+for (let i = l; i <= r; i++) pages.push(i);
+if (r < page.lastPage - 2) pages.push(HIDDEN);
+if (r === page.lastPage - 2) pages.push(page.lastPage - 1);
+if (r < page.lastPage) pages.push(page.lastPage);
+
+const getPageUrl = (p: number) => {
+  if (p === 1) return "/";
+  return `/${p}/`;
+};
+---
+
+<div class:list={[className, "pagination-container"]} style={style}>
+    <a href={page.url.prev || ""} aria-label={page.url.prev ? "Previous Page" : null}
+       class:list={["pagination-btn overflow-hidden rounded-lg text-[var(--primary-color)] w-11 h-11 flex items-center justify-center transition-all hover:bg-[var(--primary-color-hover)]",
+           {"disabled pointer-events-none opacity-50": page.url.prev == undefined}
+       ]}
+    >
+        <Icon name="mingcute:arrow-left-line" class="text-[1.75rem]"></Icon>
+    </a>
+    <div class="flex flex-row items-center gap-2">
+        {pages.map((p) => {
+            if (p == HIDDEN)
+                return <Icon name="mdi:dots-horizontal" class="mx-1 text-[var(--text-color-lighten)]"/>;
+            if (p == page.currentPage)
+                return <div class="current-page h-11 w-11 rounded-lg bg-[var(--primary-color)] flex items-center justify-center
+                    font-bold text-white shadow-lg"
+                >
+                    {p}
+                </div>
+            return <a href={url(getPageUrl(p))} aria-label={`Page ${p}`}
+                class="pagination-btn w-11 h-11 rounded-lg overflow-hidden active:scale-[0.85] flex items-center justify-center transition-all hover:bg-[var(--primary-color-hover)] hover:text-[var(--primary-color)] bg-[var(--card-color)]"
+            >{p}</a>
+        })}
+    </div>
+    <a href={page.url.next || ""} aria-label={page.url.next ? "Next Page" : null}
+       class:list={["pagination-btn overflow-hidden rounded-lg text-[var(--primary-color)] w-11 h-11 flex items-center justify-center transition-all hover:bg-[var(--primary-color-hover)]",
+           {"disabled pointer-events-none opacity-50": page.url.next == undefined}
+       ]}
+    >
+        <Icon name="mingcute:arrow-right-line" class="text-[1.75rem]"></Icon>
+    </a>
+</div>
+
+<style>
+  @reference "tailwindcss";
+  
+  .pagination-btn {
+    @apply transition-all duration-200 ease-in-out;
+    box-shadow: var(--card-shadow);
+    color: var(--text-color);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .pagination-btn:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-1px);
+    background-color: var(--primary-color-hover) !important;
+    color: var(--primary-color) !important;
+  }
+  
+  .pagination-btn:active {
+    transform: translateY(0) scale(0.95);
+  }
+  
+  /* 深色模式下的页码按钮边框 */
+  :root.dark .pagination-btn {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .pagination-btn.disabled {
+    @apply cursor-not-allowed;
+    transform: none;
+  }
+  
+  .pagination-btn.disabled:hover {
+    box-shadow: var(--card-shadow);
+    transform: none;
+  }
+  
+  /* 分页容器样式 */
+  .pagination-container {
+    @apply flex flex-row gap-3 justify-center items-center;
+  }
+  
+  /* 当前页码特殊效果 */
+  .current-page {
+    box-shadow: 
+      0 4px 16px var(--primary-color-transparent),
+      0 2px 8px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border: 2px solid transparent;
+    background: var(--primary-color) !important;
+    color: white !important;
+    font-weight: 700;
+  }
+  
+  /* 浅色模式下增强当前页码对比度 */
+  :root:not(.dark) .current-page {
+    background: oklch(45% 0.25 var(--hue-primary)) !important;
+    box-shadow: 
+      0 6px 20px var(--primary-color-transparent),
+      0 2px 8px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+  
+  /* 响应式设计 */
+  @media (max-width: 640px) {
+    .pagination-container {
+      @apply gap-1;
+    }
+    
+    .pagination-btn,
+    .current-page {
+      @apply w-10 h-10 text-sm;
+    }
+  }
+</style>

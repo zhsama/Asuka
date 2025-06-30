@@ -7,6 +7,7 @@ import { i18n } from "@/i18n/translation";
 import I18nKeys from "@/i18n/keys";
 import AsukaConfig from "~/asuka.config";
 import { formatDate } from "@/utils/date";
+import type { CollectionEntry } from "astro:content";
 
 export interface Props {
   id: string;
@@ -17,16 +18,25 @@ export interface Props {
   description?: string;
   image?: string;
   readingMetadata?: { time: number; wordCount: number };
+  entry?: CollectionEntry<"blog">;
 }
 
 const props = Astro.props;
 const entryID = IdToSlug(props.id);
 const contentUrl = `/posts/${entryID}`;
-const { time = 1, wordCount = 0 } = props.readingMetadata || {};
+
+// 获取阅读时间数据
+let time = 1;
+let wordCount = 0;
+
+if (props.readingMetadata) {
+  time = props.readingMetadata.time;
+  wordCount = props.readingMetadata.wordCount;
+}
 ---
 
 <div
-  class="mx-3 flex flex-col rounded-3xl bg-[var(--card-color)] lg:mx-0 lg:h-[212px]"
+  class="post-card mx-3 flex flex-col rounded-3xl bg-[var(--card-color)] lg:mx-0 lg:h-[212px]"
 >
   <a
     href={contentUrl}

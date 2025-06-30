@@ -165,14 +165,62 @@ const navCount = AsukaConfig.navigators.length;
     max-width: 100vw;
     box-sizing: border-box;
     
-    /* 固定样式：半透明背景 */
-    background: var(--card-color-transparent);
-    backdrop-filter: blur(20px);
+    /* 亮色模式毛玻璃材质效果 */
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(40px) saturate(180%) brightness(110%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(110%);
     box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.12),
-      0 0 0 1px rgba(255, 255, 255, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+      0 8px 32px rgba(0, 0, 0, 0.08),
+      0 2px 4px rgba(0, 0, 0, 0.04),
+      0 1px 1px rgba(255, 255, 255, 0.8),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  /* 深色模式毛玻璃效果 */
+  :root.dark .nav {
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(40px) saturate(160%) brightness(120%);
+    -webkit-backdrop-filter: blur(40px) saturate(160%) brightness(120%);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      0 2px 8px rgba(0, 0, 0, 0.2),
+      0 1px 1px rgba(255, 255, 255, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  /* EVA主题特定毛玻璃效果 */
+  :root.eva-02 .nav {
+    background: rgba(255, 250, 248, 0.45);
+    border: 1px solid rgba(255, 180, 160, 0.25);
+  }
+
+  :root.eva-02.dark .nav {
+    background: rgba(20, 10, 8, 0.6);
+    border: 1px solid rgba(255, 100, 80, 0.2);
+  }
+
+  :root.eva-01 .nav {
+    background: rgba(252, 250, 255, 0.45);
+    border: 1px solid rgba(200, 180, 220, 0.25);
+  }
+
+  :root.eva-01.dark .nav {
+    background: rgba(15, 10, 20, 0.6);
+    border: 1px solid rgba(150, 120, 200, 0.2);
+  }
+
+  :root.eva-00 .nav {
+    background: rgba(248, 252, 255, 0.45);
+    border: 1px solid rgba(180, 200, 230, 0.25);
+  }
+
+  :root.eva-00.dark .nav {
+    background: rgba(8, 15, 25, 0.6);
+    border: 1px solid rgba(100, 150, 200, 0.2);
   }
 
   /* 移动端适配 */
@@ -181,8 +229,40 @@ const navCount = AsukaConfig.navigators.length;
       @apply px-2;
       width: calc(100vw - 1rem);
       max-width: calc(100vw - 1rem);
-      background: var(--card-color-transparent);
-      backdrop-filter: blur(15px);
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(30px) saturate(150%) brightness(105%);
+      -webkit-backdrop-filter: blur(30px) saturate(150%) brightness(105%);
+    }
+    
+    :root.dark .nav {
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(30px) saturate(140%) brightness(115%);
+      -webkit-backdrop-filter: blur(30px) saturate(140%) brightness(115%);
+    }
+
+    /* 移动端EVA主题毛玻璃 */
+    :root.eva-02 .nav {
+      background: rgba(255, 250, 248, 0.55);
+    }
+    
+    :root.eva-02.dark .nav {
+      background: rgba(20, 10, 8, 0.7);
+    }
+
+    :root.eva-01 .nav {
+      background: rgba(252, 250, 255, 0.55);
+    }
+    
+    :root.eva-01.dark .nav {
+      background: rgba(15, 10, 20, 0.7);
+    }
+
+    :root.eva-00 .nav {
+      background: rgba(248, 252, 255, 0.55);
+    }
+    
+    :root.eva-00.dark .nav {
+      background: rgba(8, 15, 25, 0.7);
     }
   }
 
