@@ -1,17 +1,13 @@
 ---
 // Component imports
 import Main from "../layouts/MainLayout.astro";
-import PostCard from "../components/PostCard.astro";
-// import Pagination from "../components/controllers/Pagination.astro";
+import PostCard from "@/components/PostCard.astro";
+import Pagination from "@/components/ui/Pagination.astro";
 // Utils
 import type { PaginateFunction } from "astro";
 import { GetSortedPosts } from "../utils/content";
 
-export async function getStaticPaths({
-  paginate,
-}: {
-  paginate: PaginateFunction;
-}) {
+export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
   const postCollections = await GetSortedPosts();
   return paginate(postCollections, { pageSize: 6 });
 }
@@ -43,5 +39,6 @@ const { page } = Astro.props;
         ))
       }
     </div>
+    <Pagination page={page} />
   </div>
 </Main>
