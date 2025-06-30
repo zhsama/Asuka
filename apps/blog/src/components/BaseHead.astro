@@ -55,3 +55,72 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   href="https://fonts.bunny.net/css?family=noto-sans-sc:100,200,300,400,500,600,700,800,900|raleway:500,700"
   rel="stylesheet"
 />
+
+<!-- Lazy Loading Script -->
+<script>
+  // 使用原生 Intersection Observer 实现延迟加载
+  function initLazyLoading() {
+    // 检查浏览器是否支持 Intersection Observer
+    if (!('IntersectionObserver' in window)) {
+      // 如果不支持，直接加载所有图片
+      loadAllImages();
+      return;
+    }
+
+    // 创建观察器
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const element = entry.target;
+          
+          // 处理背景图片
+          const bgImage = element.getAttribute('data-background-image');
+          if (bgImage && element instanceof HTMLElement) {
+            element.style.backgroundImage = `url(${bgImage})`;
+          }
+          
+          // 处理 img 元素
+          const dataSrc = element.getAttribute('data-src');
+          if (dataSrc && element instanceof HTMLImageElement) {
+            element.src = dataSrc;
+          }
+          
+          // 停止观察已加载的元素
+          observer.unobserve(element);
+        }
+      });
+    }, {
+      rootMargin: '50px' // 提前50px开始加载
+    });
+
+    // 观察所有需要延迟加载的元素
+    document.querySelectorAll('.lozad').forEach(el => {
+      observer.observe(el);
+    });
+  }
+
+  // 备用方案：直接加载所有图片
+  function loadAllImages() {
+    document.querySelectorAll('.lozad').forEach(el => {
+      const bgImage = el.getAttribute('data-background-image');
+      if (bgImage && el instanceof HTMLElement) {
+        el.style.backgroundImage = `url(${bgImage})`;
+      }
+      
+      const dataSrc = el.getAttribute('data-src');
+      if (dataSrc && el instanceof HTMLImageElement) {
+        el.src = dataSrc;
+      }
+    });
+  }
+
+  // DOM 加载完成后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLazyLoading);
+  } else {
+    initLazyLoading();
+  }
+
+  // 对于 SPA 路由也需要重新初始化
+  document.addEventListener('astro:page-load', initLazyLoading);
+</script>

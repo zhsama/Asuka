@@ -1,5 +1,5 @@
 import { GetIndexFromSlugID } from "./hash";
-import AsukaConfig from "../../asuka.config";
+import AsukaConfig from "~/asuka.config";
 
 /**
  * Retrieves the cover URL for an unspecified entry based on the provided ID.
