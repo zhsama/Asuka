@@ -54,7 +54,7 @@ const props = Astro.props;
     @apply md:min-w-[80%] md:max-w-[80%] lg:min-w-[var(--page-width-lg)] lg:max-w-[var(--page-width-lg)] xl:min-w-[var(--page-width-xl)] xl:max-w-[var(--page-width-xl)];
     @apply md:mx-auto;
     box-sizing: border-box;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
   
   @media (max-width: 768px) {

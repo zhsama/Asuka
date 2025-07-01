@@ -179,8 +179,8 @@ const filteredHeadings = headings.filter((heading) => heading.depth > 1);
   @reference "tailwindcss";
   
   .toc-nav {
-    @apply sticky w-full max-w-xs;
-    top: 6rem; /* 导航栏高度(4.5rem) + 额外间距(1.5rem) */
+    @apply w-full;
+    position: sticky;
     max-height: calc(100vh - 8rem);
     overflow-y: auto;
     transition: all 0.3s ease;
@@ -301,7 +301,7 @@ const filteredHeadings = headings.filter((heading) => heading.depth > 1);
   }
   
   /* 响应式设计 */
-  @media (max-width: 1280px) {
+  @media (max-width: 1279px) {
     .toc-nav {
       @apply hidden;
     }

@@ -5,23 +5,25 @@ import BaseHead from "../components/BaseHead.astro";
 
 <html lang={AsukaConfig.locale}>
   <BaseHead />
-  <body class="overflow-y-hidden">
+  <body>
     <slot />
   </body>
 </html>
 
 <style>
   html {
-    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100vw;
     box-sizing: border-box;
+    scroll-behavior: smooth;
   }
   
   body {
     @apply bg-[var(--background-color)];
-    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100vw;
     box-sizing: border-box;
+    min-height: 100vh;
   }
   
   *, *::before, *::after {

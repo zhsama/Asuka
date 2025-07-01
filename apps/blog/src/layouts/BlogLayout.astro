@@ -76,7 +76,9 @@ const { title, subTitle, bannerImage, published, license, author, sourceLink } =
   .sidebar-wrapper {
     @apply hidden xl:block flex-shrink-0;
     width: 280px;
-    padding-top: 2rem;
+    height: calc(100vh - 2rem);
+    position: sticky;
+    top: 2rem;
   }
   
   /* 响应式布局 */
