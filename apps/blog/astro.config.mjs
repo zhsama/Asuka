@@ -8,28 +8,35 @@ import rehypeMathjax from 'rehype-mathjax';
 import tailwindcss from '@tailwindcss/vite';
 import swup from '@swup/astro';
 import icon from 'astro-icon';
+import { remarkReadingTime } from './src/script/remark-reading-time.mjs';
 
 export default defineConfig({
   site: 'https://blog.asuka.dev',
-  integrations: [react(), mdx({
-    remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex],
-  }), sitemap(), icon(),    swup({
-    theme: false,
-    containers: ["main", "footer", ".banner-inner"],
-    smoothScrolling: true,
-    progress: true,
-    cache: true,
-    preload: true,
-    updateHead: true,
-    updateBodyClass: false,
-    globalInstance: true,
-  }),],
+  integrations: [
+    react(),
+    mdx({
+      remarkPlugins: [remarkMath, remarkReadingTime],
+      rehypePlugins: [rehypeKatex, rehypeMathjax],
+    }),
+    sitemap(),
+    icon(),
+    swup({
+      theme: false,
+      containers: ["main", "footer", ".banner-inner"],
+      smoothScrolling: true,
+      progress: true,
+      cache: true,
+      preload: true,
+      updateHead: true,
+      updateBodyClass: false,
+      globalInstance: true,
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
   },
   markdown: {
-    remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeMathjax],
+    remarkPlugins: [remarkMath, remarkReadingTime],
+    rehypePlugins: [rehypeKatex, rehypeMathjax],
   },
 });

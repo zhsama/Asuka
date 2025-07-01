@@ -8,6 +8,7 @@ import I18nKeys from "@/i18n/keys";
 import AsukaConfig from "~/asuka.config";
 import { formatDate } from "@/utils/date";
 import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
 
 export interface Props {
   id: string;
@@ -26,13 +27,8 @@ const entryID = IdToSlug(props.id);
 const contentUrl = `/posts/${entryID}`;
 
 // 获取阅读时间数据
-let time = 1;
-let wordCount = 0;
-
-if (props.readingMetadata) {
-  time = props.readingMetadata.time;
-  wordCount = props.readingMetadata.wordCount;
-}
+const { entry } = Astro.props;
+const { remarkPluginFrontmatter } = await render(entry as CollectionEntry<"blog">);
 ---
 
 <div
@@ -141,12 +137,12 @@ if (props.readingMetadata) {
         <div class="select-none lg:ml-2">
           <div class="reading-time">
             <span>
-              {wordCount}
+              {remarkPluginFrontmatter.words}
               {i18n(I18nKeys.post_card_words)}
             </span>
             <span>|</span>
             <span>
-              {time}
+              {remarkPluginFrontmatter.minutes}
               {i18n(I18nKeys.post_card_minutes)}
             </span>
           </div>
