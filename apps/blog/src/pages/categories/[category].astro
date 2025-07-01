@@ -45,7 +45,7 @@ const sortedPosts = posts.sort((a, b) => new Date(b.data.published).getTime() - 
   title={`分类：${category} | ${AsukaConfig.title}`}
   subTitle={`共 ${sortedPosts.length} 篇文章`}
 >
-  <div class="container mx-auto px-4 py-8">
+  <div class="container mx-auto">
     <div class="max-w-4xl mx-auto">
       {sortedPosts.length === 0 ? (
         <div class="text-center py-16">

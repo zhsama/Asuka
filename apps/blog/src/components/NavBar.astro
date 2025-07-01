@@ -159,7 +159,8 @@ const navCount = AsukaConfig.navigators.length;
     @apply fixed left-1/2 z-10 flex w-full select-none flex-col justify-end rounded-b-xl px-2.5 opacity-0 transition-all duration-500;
     @apply lg:w-[var(--page-width-lg)] lg:rounded-b-2xl;
     @apply xl:w-[var(--page-width-xl)];
-    transform: translateX(-50%) translateY(-5rem);
+    top: 0;
+    transform: translateX(-50%);
     animation: 300ms nav-onload-animation;
     animation-fill-mode: forwards;
     max-width: 100vw;
@@ -364,11 +365,13 @@ const navCount = AsukaConfig.navigators.length;
 
   @keyframes nav-onload-animation {
     0% {
-      transform: translateY(-5rem) translateX(-50%);
+      top: -5rem;
+      transform: translateX(-50%);
       opacity: 0;
     }
     100% {
-      transform: translateY(0) translateX(-50%);
+      top: 0;
+      transform: translateX(-50%);
       opacity: 1;
     }
   }
