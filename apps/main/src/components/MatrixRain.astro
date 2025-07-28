@@ -19,17 +19,17 @@ export interface Props {
 
 const {
   opacity = 0.6,
-  color = '#39ff14', // 经典黑客帝国绿色
+  color = "#39ff14", // 经典黑客帝国绿色
   fontSize = 14,
   speed = 50, // 动画间隔毫秒
   density = 0.975, // 雨滴重置概率（越大越稀疏）
   glowEffect = true,
-  characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?',
+  characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?",
   zIndex = -1,
   fullscreen = false, // 是否全屏模式
-  width = '100%',
-  height = '100%',
-  className = '',
+  width = "100%",
+  height = "100%",
+  className = "",
 } = Astro.props;
 
 // 生成唯一ID避免多个实例冲突
@@ -41,7 +41,7 @@ const containerStyle = fullscreen
   : `position: relative; width: ${width}; height: ${height}; z-index: ${zIndex}; overflow: hidden;`;
 
 // 构建类名
-const containerClass = `matrix-rain-container ${fullscreen ? 'fullscreen' : 'embedded'} ${className}`.trim();
+const containerClass = `matrix-rain-container ${fullscreen ? "fullscreen" : "embedded"} ${className}`.trim();
 ---
 
 <!-- 代码雨背景容器 -->
@@ -178,3 +178,4 @@ const containerClass = `matrix-rain-container ${fullscreen ? 'fullscreen' : 'emb
     }
   }
 </style>
+// Test comment
