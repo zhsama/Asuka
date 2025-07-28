@@ -2,9 +2,7 @@ import { z } from "zod/v4";
 
 // 定义环境变量的schema
 const envSchema = z.object({
-  NODE_ENV: z
-    .enum(["development", "production", "test"])
-    .default("development"),
+  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   SITE_AUTHOR: z.string().default("zhsama"),
   SITE_URL: z.url().default("http://localhost:4321"),
   SITE_TITLE: z.string().default("Zhsama's Blog"),
@@ -22,9 +20,7 @@ function parseEnv() {
       error.issues.forEach((issue) => {
         console.error(`  - ${issue.path.join(".")}: ${issue.message}`);
       });
-      throw new Error(
-        "Environment variable configuration error, please check the .env file"
-      );
+      throw new Error("Environment variable configuration error, please check the .env file");
     }
     throw error;
   }

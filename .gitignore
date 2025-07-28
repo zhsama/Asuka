@@ -25,3 +25,8 @@ pnpm-debug.log*
 .claude/
 .templates/
 templates/
+
+.bmad-core
+.cursor
+.gemini
+.turbo  
