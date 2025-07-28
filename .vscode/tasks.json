@@ -1,0 +1,87 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Biome: Check Current File",
+      "type": "shell",
+      "command": "npx",
+      "args": ["biome", "check", "${file}", "--write"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Biome: Check All Files",
+      "type": "shell",
+      "command": "npx",
+      "args": ["biome", "check", ".", "--write"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Blog",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["build:blog"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Build Main",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["build:main"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Dev Blog",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["dev:blog"],
+      "group": "build",
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Dev Main",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["dev:main"],
+      "group": "build",
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      }
+    }
+  ]
+}

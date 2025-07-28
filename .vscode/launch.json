@@ -2,10 +2,25 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "command": "./node_modules/.bin/astro dev",
-      "name": "Development server",
+      "name": "Launch Blog App",
+      "type": "node-terminal",
       "request": "launch",
-      "type": "node-terminal"
+      "command": "pnpm dev:blog",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Launch Main App", 
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev:main",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Launch Both Apps",
+      "type": "node-terminal", 
+      "request": "launch",
+      "command": "pnpm dev",
+      "cwd": "${workspaceFolder}"
     }
   ]
 }
