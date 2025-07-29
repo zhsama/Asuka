@@ -1,0 +1,33 @@
+# Netlify configuration for Blog App
+[build]
+  # Build command is run from the repository root
+  command = "pnpm build:blog"
+  # Publish directory relative to the repository root
+  publish = "apps/blog/dist/"
+
+# Headers for better SEO and security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Astro specific redirects and rewrites
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/sitemap-index.xml"
+  status = 200
+
+# Handle 404s
+[[redirects]]
+  from = "/*"
+  to = "/404"
+  status = 404
