@@ -24,6 +24,8 @@ enum I18nKeys {
 
   pages_tags_title = "pages_tags_title",
   pages_categories_title = "pages_categories_title",
+
+  uncategorized = "uncategorized",
 }
 
 export default I18nKeys;

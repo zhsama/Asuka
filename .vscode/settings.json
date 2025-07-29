@@ -6,10 +6,10 @@
     "source.organizeImports.biome": "explicit",
     "source.fixAll.biome": "explicit"
   },
-  
+
   // 默认格式化器设置
   "editor.defaultFormatter": "biomejs.biome",
-  
+
   // 针对特定文件类型的配置
   "[javascript]": {
     "editor.defaultFormatter": "biomejs.biome"
@@ -32,24 +32,24 @@
   "[jsonc]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
-  
+
   // Biome 扩展配置
   "biome.lsp.bin": "biome",
-  
+
   // 禁用其他可能冲突的格式化器
   "eslint.enable": false,
   "prettier.enable": false,
-  
+
   // 文件关联
   "files.associations": {
     "*.astro": "astro"
   },
-  
+
   // 编辑器行为
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
-  
+
   // 保存时的行为
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,

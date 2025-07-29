@@ -1,14 +1,15 @@
 import I18nKeys from "./src/i18n/keys";
 import type { Configuration } from "./src/types/config";
+import { env } from "./src/config/env";
 
 const AsukaConfig: Configuration = {
-  title: "zhsama's blog",
+  title: env.PUBLIC_SITE_TITLE,
   subTitle: "Frontend && AI",
   brandTitle: "zhsama",
 
-  description: "I'm a frontend developer and AI enthusiast.",
+  description: env.PUBLIC_SITE_DESCRIPTION,
 
-  site: "https://blog.zhsama.xyz",
+  site: env.PUBLIC_SITE_URL,
 
   locale: "zh-CN",
 

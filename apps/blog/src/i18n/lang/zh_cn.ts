@@ -27,4 +27,6 @@ export const zh_CN: Translation = {
 
   [key.pages_tags_title]: "标签",
   [key.pages_categories_title]: "分类",
+
+  [key.uncategorized]: "未分类",
 };

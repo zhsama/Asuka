@@ -1,0 +1,41 @@
+import { z } from "zod";
+
+/**
+ * 基础环境类型定义
+ */
+export type Environment = "development" | "production";
+
+/**
+ * Blog应用环境变量Schema
+ */
+export const blogEnvSchema = z.object({
+  NODE_ENV: z.enum(["development", "production"]).default("development"),
+
+  PUBLIC_SITE_URL: z.string().url().default("http://localhost:4321"),
+  PUBLIC_SITE_TITLE: z.string().default("zhsama's blog"),
+  PUBLIC_SITE_DESCRIPTION: z.string().default("I'm a frontend developer and AI enthusiast."),
+  PUBLIC_BUILD_ENV: z.enum(["development", "production"]).default("development"),
+});
+
+/**
+ * Blog应用环境变量类型
+ */
+export type BlogEnvironmentConfig = z.infer<typeof blogEnvSchema>;
+
+/**
+ * 环境工具类型
+ */
+export interface EnvironmentUtils {
+  isDevelopment: boolean;
+  isProduction: boolean;
+  currentEnv: Environment;
+}
+
+/**
+ * 环境变量解析错误类型
+ */
+export interface EnvironmentError {
+  field: string;
+  message: string;
+  received: unknown;
+}

@@ -10,8 +10,10 @@ import swup from '@swup/astro';
 import icon from 'astro-icon';
 import { remarkReadingTime } from './src/script/remark-reading-time.mjs';
 
+const SITE_URL = process.env.PUBLIC_SITE_URL || 'http://localhost:4321';
+
 export default defineConfig({
-  site: 'https://blog.zhsama.xyz',
+  site: SITE_URL,
   integrations: [
     react(),
     mdx({

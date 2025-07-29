@@ -27,4 +27,6 @@ export const en: Translation = {
 
   [key.pages_tags_title]: "Tags",
   [key.pages_categories_title]: "Categories",
+
+  [key.uncategorized]: "Uncategorized",
 };

@@ -29,4 +29,5 @@ templates/
 .bmad-core
 .cursor
 .gemini
-.turbo  
+.turbo
+.mcp*

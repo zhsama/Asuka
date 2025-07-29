@@ -1,14 +1,14 @@
-import type { MainEnvironmentConfig, EnvironmentUtils, EnvironmentError } from "@/types/environment";
-import { mainEnvSchema } from "@/types/environment";
+import type { BlogEnvironmentConfig, EnvironmentUtils, EnvironmentError } from "@/types/environment";
+import { blogEnvSchema } from "@/types/environment";
 import { z } from "zod";
 
-function parseMainEnvironment(): MainEnvironmentConfig {
+function parseBlogEnvironment(): BlogEnvironmentConfig {
   const rawEnv = import.meta.env;
 
   try {
-    return mainEnvSchema.parse(rawEnv);
+    return blogEnvSchema.parse(rawEnv);
   } catch (error) {
-    console.error("❌ Main环境变量配置错误:");
+    console.error("❌ Blog环境变量配置错误:");
 
     if (error instanceof z.ZodError) {
       const errors: EnvironmentError[] = error.issues.map((issue) => ({
@@ -22,14 +22,14 @@ function parseMainEnvironment(): MainEnvironmentConfig {
         console.error(`    接收到的值: ${err.received}`);
       });
 
-      throw new Error("Main环境变量配置验证失败，请检查.env文件");
+      throw new Error("Blog环境变量配置验证失败，请检查.env文件");
     }
 
     throw error;
   }
 }
 
-function createEnvironmentUtils(env: MainEnvironmentConfig): EnvironmentUtils {
+function createEnvironmentUtils(env: BlogEnvironmentConfig): EnvironmentUtils {
   const isDevelopment = env.PUBLIC_BUILD_ENV === "development";
   const isProduction = env.PUBLIC_BUILD_ENV === "production";
 
@@ -40,9 +40,7 @@ function createEnvironmentUtils(env: MainEnvironmentConfig): EnvironmentUtils {
   };
 }
 
-export const env = parseMainEnvironment();
+export const env = parseBlogEnvironment();
 export const envUtils = createEnvironmentUtils(env);
 
-export type Env = MainEnvironmentConfig;
-
-export type { MainEnvironmentConfig } from "@/types/environment";
+export type { BlogEnvironmentConfig } from "@/types/environment";

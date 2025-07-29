@@ -4,7 +4,7 @@ import SkillsList from "../React/SkillsList.tsx";
 import MatrixRain from "./MatrixRain.astro";
 
 import { env } from "../config/env";
-const author = env.SITE_AUTHOR;
+const author = env.PUBLIC_SITE_AUTHOR;
 ---
 
 <section class="text-[var(--white)] mt-12 md:mt-0 cyber-glitch-container" id="home">
@@ -12,7 +12,7 @@ const author = env.SITE_AUTHOR;
     <!-- 故障装饰元素 -->
     <div class="glitch-overlay"></div>
     <div class="scan-interference"></div>
-    
+
     <div class="text-left space-y-4">
       <p class="text-md md:text-lg text-[var(--white-icon)] glitch-flicker">
         Hi, I'm <span class="neon-text cyber-name-glitch">{author}</span>
@@ -281,16 +281,16 @@ const author = env.SITE_AUTHOR;
   }
 
   @keyframes cyber-glitch-1 {
-    0%, 100% { 
+    0%, 100% {
       clip-path: inset(0 0 0 0);
       opacity: 0;
     }
-    20% { 
+    20% {
       clip-path: inset(20% 0 60% 0);
       opacity: 0.8;
       transform: translate(-2px, 2px);
     }
-    40% { 
+    40% {
       clip-path: inset(60% 0 20% 0);
       opacity: 0.8;
       transform: translate(2px, -2px);
@@ -298,16 +298,16 @@ const author = env.SITE_AUTHOR;
   }
 
   @keyframes cyber-glitch-2 {
-    0%, 100% { 
+    0%, 100% {
       clip-path: inset(0 0 0 0);
       opacity: 0;
     }
-    30% { 
+    30% {
       clip-path: inset(40% 0 40% 0);
       opacity: 0.6;
       transform: translate(1px, 1px);
     }
-    60% { 
+    60% {
       clip-path: inset(20% 0 60% 0);
       opacity: 0.6;
       transform: translate(-1px, -1px);
@@ -323,16 +323,16 @@ const author = env.SITE_AUTHOR;
   }
 
   @keyframes cyber-title-glitch-1 {
-    0%, 100% { 
+    0%, 100% {
       clip-path: inset(0 0 0 0);
       opacity: 0;
     }
-    10% { 
+    10% {
       clip-path: inset(10% 0 70% 0);
       opacity: 0.7;
       transform: translate(-3px, 2px);
     }
-    30% { 
+    30% {
       clip-path: inset(50% 0 30% 0);
       opacity: 0.7;
       transform: translate(2px, -1px);
@@ -340,16 +340,16 @@ const author = env.SITE_AUTHOR;
   }
 
   @keyframes cyber-title-glitch-2 {
-    0%, 100% { 
+    0%, 100% {
       clip-path: inset(0 0 0 0);
       opacity: 0;
     }
-    15% { 
+    15% {
       clip-path: inset(30% 0 50% 0);
       opacity: 0.5;
       transform: translate(1px, -2px);
     }
-    45% { 
+    45% {
       clip-path: inset(70% 0 10% 0);
       opacity: 0.5;
       transform: translate(-1px, 1px);
@@ -365,13 +365,13 @@ const author = env.SITE_AUTHOR;
   }
 
   @keyframes cyber-highlight-pulse {
-    0%, 100% { 
-      text-shadow: 
+    0%, 100% {
+      text-shadow:
         0 0 5px var(--primary),
         0 0 10px var(--primary);
     }
-    50% { 
-      text-shadow: 
+    50% {
+      text-shadow:
         0 0 10px var(--primary),
         0 0 20px var(--primary),
         0 0 30px var(--primary);
@@ -439,7 +439,7 @@ const author = env.SITE_AUTHOR;
     .scan-interference {
       opacity: 0.5;
     }
-    
+
     .cyber-word-glitch::before,
     .cyber-word-glitch::after {
       opacity: 0.3;

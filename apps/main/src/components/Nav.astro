@@ -3,29 +3,29 @@ import { env } from "@/config/env";
 import ThemeSwitcher from "@/React/ThemeSwitcher";
 
 interface NavItem {
-	label: string;
-	href: string;
-	external?: boolean;
+  label: string;
+  href: string;
+  external?: boolean;
 }
 
 const navItems: NavItem[] = [
-	{
-		label: "Home",
-		href: "#home",
-	},
-	{
-		label: "Projects",
-		href: "#projects",
-	},
-	{
-		label: "Contact",
-		href: "#contact",
-	},
+  {
+    label: "Home",
+    href: "#home",
+  },
+  {
+    label: "Projects",
+    href: "#projects",
+  },
+  {
+    label: "Contact",
+    href: "#contact",
+  },
   {
     label: "Blog",
-    href: env.BLOG_URL,
+    href: env.PUBLIC_BLOG_URL,
     external: true,
-  }
+  },
 ];
 ---
 
@@ -53,21 +53,21 @@ const navItems: NavItem[] = [
               >
                 <!-- 霓虹指示器 -->
                 <div class="nav-indicator absolute -left-8 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full transition-all duration-300 scale-0" />
-                
+
                 <!-- 悬停效果背景 -->
                 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-lg"></div>
-                
+
                 <!-- 文本和外链图标的容器 -->
                 <div class="flex items-center gap-1 relative z-10">
                   <span class="hidden md:inline-block nav-text">{item.label}</span>
                   <span class="md:hidden nav-text">{item.label}</span>
-                  
+
                   <!-- 外部链接图标 -->
                   {item.external && (
-                    <svg 
-                      class="w-3 h-3 opacity-60 ml-1" 
-                      fill="currentColor" 
-                      viewBox="0 0 20 20" 
+                    <svg
+                      class="w-3 h-3 opacity-60 ml-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path>
@@ -137,7 +137,7 @@ const navItems: NavItem[] = [
   document.addEventListener("DOMContentLoaded", () => {
     const sections = document.querySelectorAll("section[id]");
     const navLinks = document.querySelectorAll("nav a[href^='#']");
-    const observerOptions = { 
+    const observerOptions = {
       threshold: 0.3,
       rootMargin: "-50px 0px -50px 0px"
     };
@@ -183,9 +183,9 @@ const navItems: NavItem[] = [
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
       const sections = Array.from(document.querySelectorAll("section[id]"));
-      
+
       let currentSection = sections[0]; // 默认为第一个section
-      
+
       // 检查是否在页面底部（接近contact section）
       if (scrollY + windowHeight >= documentHeight - 100) {
         currentSection = sections[sections.length - 1]; // 使用最后一个section (contact)
@@ -194,17 +194,17 @@ const navItems: NavItem[] = [
           const rect = section.getBoundingClientRect();
           const sectionTop = rect.top + scrollY;
           const sectionHeight = rect.height;
-          
+
           // 更宽松的检测条件
           if (scrollY >= sectionTop - 200 && scrollY < sectionTop + sectionHeight - 100) {
             currentSection = section;
           }
         });
       }
-      
+
       if (currentSection) {
         const id = currentSection.getAttribute("id");
-        
+
         // 移除所有active状态
         navLinks.forEach((link) => {
           link.classList.remove("active");
@@ -214,7 +214,7 @@ const navItems: NavItem[] = [
             indicator.style.opacity = "0";
           }
         });
-        
+
         // 添加当前section的active状态
         const activeLink = document.querySelector(`nav a[href="#${id}"]`);
         if (activeLink) {
@@ -227,10 +227,10 @@ const navItems: NavItem[] = [
         }
       }
     };
-    
+
     // 初始检查
     checkInitialSection();
-    
+
     // 滚动时也检查（作为IntersectionObserver的补充）
     window.addEventListener("scroll", () => {
       setTimeout(checkInitialSection, 50);
@@ -255,15 +255,15 @@ const navItems: NavItem[] = [
     backdrop-filter: blur(15px);
     border-radius: 9999px;
     border-color: var(--primary);
-    box-shadow: 
-      0 0 40px rgba(252, 238, 9, 0.4), 
+    box-shadow:
+      0 0 40px rgba(252, 238, 9, 0.4),
       inset 0 0 30px rgba(252, 238, 9, 0.08),
       0 0 80px rgba(0, 245, 255, 0.15);
   }
 
   .nav-indicator {
     background: var(--primary);
-    box-shadow: 
+    box-shadow:
       0 0 15px var(--primary),
       0 0 30px var(--primary),
       0 0 45px var(--primary);
@@ -287,14 +287,14 @@ const navItems: NavItem[] = [
 
   nav a.active {
     color: var(--primary) !important;
-    text-shadow: 
+    text-shadow:
       0 0 10px var(--primary),
       0 0 20px var(--primary),
       0 0 30px var(--primary);
   }
 
   nav a.active .nav-text {
-    text-shadow: 
+    text-shadow:
       0 0 10px var(--primary),
       0 0 20px var(--primary),
       0 0 30px var(--primary);
@@ -303,14 +303,14 @@ const navItems: NavItem[] = [
 
   .nav-link {
     color: rgba(255, 255, 255, 0.9);
-    text-shadow: 
+    text-shadow:
       0 0 5px rgba(255, 255, 255, 0.3),
       0 0 10px rgba(0, 245, 255, 0.2);
   }
 
   .nav-link:hover {
     color: var(--secondary);
-    text-shadow: 
+    text-shadow:
       0 0 8px var(--secondary),
       0 0 16px var(--secondary),
       0 0 24px var(--secondary);
@@ -318,7 +318,7 @@ const navItems: NavItem[] = [
   }
 
   .nav-link:hover .nav-text {
-    text-shadow: 
+    text-shadow:
       0 0 8px var(--secondary),
       0 0 16px var(--secondary),
       0 0 24px var(--secondary);
