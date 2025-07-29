@@ -34,6 +34,6 @@
     "@commitlint/config-conventional": "^19.8.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
-    "turbo": "^2.3.3"
+    "turbo": "^2.5.5"
   }
 }
