@@ -1,0 +1,140 @@
+# Workflow 名称，在 GitHub Actions 页面显示
+name: Deploy to Cloudflare Workers
+
+# 触发条件配置
+on:
+  # 当推送到指定分支时触发
+  push:
+    branches:
+      - master    # 主分支
+      - main      # 备用主分支名
+  # 允许手动触发 workflow
+  workflow_dispatch:
+
+# 定义 workflow 中的作业
+jobs:
+  # 部署 Blog 应用的作业
+  deploy-blog:
+    # 作业显示名称
+    name: Deploy Blog to Cloudflare Workers
+    # 运行环境：最新版 Ubuntu
+    runs-on: ubuntu-latest
+    # 作业步骤
+    steps:
+      # 检出代码到运行器
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 设置 pnpm 包管理器
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          # 指定 pnpm 版本，与项目保持一致
+          version: 10.10.0
+
+      # 设置 Node.js 环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          # Node.js 版本
+          node-version: '20'
+          # 使用 pnpm 缓存依赖，加速构建
+          cache: 'pnpm'
+
+      # 安装项目依赖
+      - name: Install dependencies
+        run: pnpm install
+
+      # 构建 blog 应用
+      - name: Build blog
+        run: pnpm build:blog
+
+      # 部署到 Cloudflare Workers
+      - name: Deploy blog to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          # Cloudflare API Token（从 GitHub Secrets 读取）
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          # Cloudflare 账户 ID（从 GitHub Secrets 读取）
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # 工作目录，wrangler.toml 所在位置
+          workingDirectory: 'apps/blog'
+          # Wrangler CLI 版本
+          wranglerVersion: 'latest'
+          # 执行的 wrangler 命令，--env 指定环境
+          command: deploy --env production
+
+  # 部署 Main 应用的作业
+  deploy-main:
+    # 作业显示名称
+    name: Deploy Main to Cloudflare Workers
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 作业步骤（与 blog 部署类似）
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.10.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build main
+        run: pnpm build:main
+
+      - name: Deploy main to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: 'apps/main'
+          wranglerVersion: 'latest'
+          command: deploy --env production
+
+  # 部署状态通知作业
+  comment-deployment-status:
+    # 作业显示名称
+    name: Comment Deployment Status
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 依赖其他作业完成
+    needs: [deploy-blog, deploy-main]
+    # 条件执行：仅在 push 事件触发时运行
+    if: github.event_name == 'push'
+    steps:
+      # 使用 GitHub Script 创建评论
+      - name: Comment deployment URLs
+        uses: actions/github-script@v7
+        with:
+          # JavaScript 脚本，用于创建评论
+          script: |
+            // 构建部署成功消息
+            const deploymentMessage = `
+            🚀 **Deployment Successful!**
+            
+            - Blog: https://blog.zhsama.xyz
+            - Main: https://me.zhsama.xyz
+            
+            Deployed at: ${new Date().toISOString()}
+            `;
+            
+            // 仅在 PR 上下文中创建评论
+            if (context.payload.pull_request) {
+              // 调用 GitHub API 创建评论
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: deploymentMessage
+              });
+            }

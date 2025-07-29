@@ -1,0 +1,152 @@
+# Workflow 名称
+name: Deploy to Vercel
+
+# 触发条件
+on:
+  # 推送到指定分支时触发
+  push:
+    branches:
+      - master
+      - main
+  # 允许手动触发
+  workflow_dispatch:
+
+# 环境变量
+env:
+  # 设置部署目标为 Vercel
+  DEPLOY_TARGET: vercel
+  # Vercel 组织 ID（从 Vercel 项目设置获取）
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  # Vercel 项目 ID（从 Vercel 项目设置获取）
+  VERCEL_PROJECT_ID_BLOG: ${{ secrets.VERCEL_PROJECT_ID_BLOG }}
+  VERCEL_PROJECT_ID_MAIN: ${{ secrets.VERCEL_PROJECT_ID_MAIN }}
+
+jobs:
+  # 部署 Blog 应用
+  deploy-blog:
+    name: Deploy Blog to Vercel
+    runs-on: ubuntu-latest
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 设置 pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.10.0
+
+      # 设置 Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      # 安装 Vercel CLI
+      - name: Install Vercel CLI
+        run: pnpm add -g vercel@latest
+
+      # 拉取 Vercel 环境信息
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ./apps/blog
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_BLOG }}
+
+      # 构建项目
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ./apps/blog
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_BLOG }}
+
+      # 部署到 Vercel
+      - name: Deploy to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ./apps/blog
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_BLOG }}
+
+  # 部署 Main 应用
+  deploy-main:
+    name: Deploy Main to Vercel
+    runs-on: ubuntu-latest
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 设置 pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.10.0
+
+      # 设置 Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      # 安装 Vercel CLI
+      - name: Install Vercel CLI
+        run: pnpm add -g vercel@latest
+
+      # 拉取 Vercel 环境信息
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ./apps/main
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_MAIN }}
+
+      # 构建项目
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ./apps/main
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_MAIN }}
+
+      # 部署到 Vercel
+      - name: Deploy to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ./apps/main
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_MAIN }}
+
+  # 部署成功通知
+  comment-deployment-status:
+    name: Comment Deployment Status
+    runs-on: ubuntu-latest
+    needs: [deploy-blog, deploy-main]
+    if: github.event_name == 'push'
+    steps:
+      - name: Comment deployment URLs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deploymentMessage = `
+            🚀 **Vercel Deployment Successful!**
+            
+            - Blog: https://asuka-blog.vercel.app
+            - Main: https://asuka-main.vercel.app
+            
+            Deployed at: ${new Date().toISOString()}
+            `;
+            
+            if (context.payload.pull_request) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: deploymentMessage
+              });
+            }
