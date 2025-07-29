@@ -9,12 +9,35 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.6.0",
-    "@astrojs/vercel": "^8.2.1",
+    "@astrojs/mdx": "catalog:",
+    "@astrojs/react": "catalog:",
+    "@astrojs/sitemap": "catalog:",
+    "@radix-ui/react-dropdown-menu": "catalog:",
+    "@radix-ui/react-popover": "catalog:",
+    "@radix-ui/react-select": "catalog:",
+    "@radix-ui/react-separator": "catalog:",
+    "@radix-ui/react-slot": "catalog:",
+    "@radix-ui/react-tabs": "catalog:",
+    "@tailwindcss/vite": "catalog:",
     "@types/canvas-confetti": "^1.9.0",
-    "canvas-confetti": "^1.9.3"
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "astro": "catalog:",
+    "canvas-confetti": "^1.9.3",
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
+    "lucide-react": "catalog:",
+    "react": "catalog:",
+    "react-day-picker": "catalog:",
+    "react-dom": "catalog:",
+    "rehype-katex": "catalog:",
+    "remark-math": "catalog:",
+    "tailwind-merge": "catalog:",
+    "tailwindcss": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "tw-animate-css": "^1.3.4"
+    "@biomejs/biome": "catalog:",
+    "tw-animate-css": "catalog:"
   }
 }

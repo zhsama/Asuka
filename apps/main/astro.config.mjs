@@ -47,6 +47,11 @@ export default defineConfig({
     adapter: getAdapter(),
     vite: {
         plugins: [tailwindcss()],
+        resolve: {
+            alias: {
+                '@': '/src'
+            }
+        }
     },
     integrations: [
         react(),
