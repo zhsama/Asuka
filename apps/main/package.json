@@ -33,6 +33,7 @@
     "react-dom": "catalog:",
     "rehype-katex": "catalog:",
     "remark-math": "catalog:",
+    "sharp": "^0.34.3",
     "tailwind-merge": "catalog:",
     "tailwindcss": "catalog:",
     "zod": "catalog:"
