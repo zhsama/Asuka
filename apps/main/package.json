@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/mdx": "catalog:",
+    "@astrojs/node": "catalog:",
     "@astrojs/react": "catalog:",
     "@astrojs/sitemap": "catalog:",
     "@radix-ui/react-dropdown-menu": "catalog:",
