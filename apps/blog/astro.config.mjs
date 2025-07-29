@@ -8,15 +8,10 @@ import rehypeMathjax from 'rehype-mathjax';
 import tailwindcss from '@tailwindcss/vite';
 import swup from '@swup/astro';
 import icon from 'astro-icon';
-import node from '@astrojs/node';
 import { remarkReadingTime } from './src/script/remark-reading-time.mjs';
 
 export default defineConfig({
   site: 'https://blog.zhsama.xyz',
-  output: 'server',
-  adapter: node({
-    mode: 'standalone',
-  }),
   integrations: [
     react(),
     mdx({
