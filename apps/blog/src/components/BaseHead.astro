@@ -72,19 +72,19 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const element = entry.target;
-          
+
           // 处理背景图片
           const bgImage = element.getAttribute('data-background-image');
           if (bgImage && element instanceof HTMLElement) {
             element.style.backgroundImage = `url(${bgImage})`;
           }
-          
+
           // 处理 img 元素
           const dataSrc = element.getAttribute('data-src');
           if (dataSrc && element instanceof HTMLImageElement) {
             element.src = dataSrc;
           }
-          
+
           // 停止观察已加载的元素
           observer.unobserve(element);
         }
@@ -106,7 +106,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       if (bgImage && el instanceof HTMLElement) {
         el.style.backgroundImage = `url(${bgImage})`;
       }
-      
+
       const dataSrc = el.getAttribute('data-src');
       if (dataSrc && el instanceof HTMLImageElement) {
         el.src = dataSrc;
