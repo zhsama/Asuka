@@ -9,12 +9,10 @@ export type Environment = "development" | "production";
  * Blog应用环境变量Schema
  */
 export const blogEnvSchema = z.object({
-  NODE_ENV: z.enum(["development", "production"]).default("development"),
-
-  PUBLIC_SITE_URL: z.string().url().default("http://localhost:4321"),
-  PUBLIC_SITE_TITLE: z.string().default("zhsama's blog"),
-  PUBLIC_SITE_DESCRIPTION: z.string().default("I'm a frontend developer and AI enthusiast."),
-  PUBLIC_BUILD_ENV: z.enum(["development", "production"]).default("development"),
+  PUBLIC_SITE_URL: z.string().url(),
+  PUBLIC_SITE_TITLE: z.string(),
+  PUBLIC_SITE_DESCRIPTION: z.string(),
+  PUBLIC_BUILD_ENV: z.enum(["development", "production"]),
 });
 
 /**

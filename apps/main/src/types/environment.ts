@@ -3,8 +3,6 @@ import { z } from "zod";
 export type Environment = "development" | "production";
 
 export const mainEnvSchema = z.object({
-  NODE_ENV: z.enum(["development", "production"]),
-
   PUBLIC_SITE_URL: z.string().url(),
   PUBLIC_SITE_TITLE: z.string(),
   PUBLIC_SITE_AUTHOR: z.string(),
