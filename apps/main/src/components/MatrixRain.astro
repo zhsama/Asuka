@@ -82,7 +82,7 @@ const containerClass = `matrix-rain-container ${fullscreen ? "fullscreen" : "emb
 
         function drawMatrix() {
           if (!canvas || !ctx) return;
-          
+
           // 半透明黑色覆盖，创建拖尾效果
           ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -102,9 +102,9 @@ const containerClass = `matrix-rain-container ${fullscreen ? "fullscreen" : "emb
               ctx.shadowColor = color;
               ctx.shadowBlur = 8;
             }
-            
+
             ctx.fillText(text, x, y);
-            
+
             if (glowEffect) {
               ctx.shadowBlur = 0;
             }
