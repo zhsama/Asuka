@@ -1,7 +1,7 @@
 # Netlify configuration for Main App
 [build]
   # Build command is run from the repository root
-  command = "cd ../.. && pnpm build:main"
+  command = "pnpm build:main"
   # Publish directory relative to the repository root
   publish = "apps/main/dist/"
 
