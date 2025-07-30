@@ -9,6 +9,13 @@ export const mainEnvSchema = z.object({
   PUBLIC_SITE_START_YEAR: z.string(),
   PUBLIC_BLOG_URL: z.string().url(),
   PUBLIC_BUILD_ENV: z.enum(["development", "production"]),
+
+  // Open Graph 元数据
+  PUBLIC_OG_TITLE: z.string(),
+  PUBLIC_OG_DESCRIPTION: z.string(),
+  PUBLIC_OG_IMAGE: z.string().url(),
+  PUBLIC_OG_URL: z.string().url(),
+  PUBLIC_OG_SITE_NAME: z.string(),
 });
 
 export type MainEnvironmentConfig = z.infer<typeof mainEnvSchema>;

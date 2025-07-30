@@ -3,7 +3,14 @@ import "@/styles/global.css";
 import CyberBackground from "@/components/CyberBackground.astro";
 
 import { env } from "@/config/env";
-const { PUBLIC_SITE_TITLE } = env;
+const {
+  PUBLIC_SITE_TITLE,
+  PUBLIC_OG_TITLE,
+  PUBLIC_OG_DESCRIPTION,
+  PUBLIC_OG_IMAGE,
+  PUBLIC_OG_URL,
+  PUBLIC_OG_SITE_NAME,
+} = env;
 ---
 
 <!doctype html>
@@ -13,12 +20,12 @@ const { PUBLIC_SITE_TITLE } = env;
     <meta name="description" content="Software Developer" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.jpg" />
-    <meta property="og:title" content="zhsama" />
-    <meta property="og:description" content="Software Developer" />
-    <meta property="og:image" content="https://oscarhernandez.vercel.app/og.image.png" />
-    <meta property="og:url" content="https://oscarhernandez.vercel.app" />
+    <meta property="og:title" content={PUBLIC_OG_TITLE} />
+    <meta property="og:description" content={PUBLIC_OG_DESCRIPTION} />
+    <meta property="og:image" content={PUBLIC_OG_IMAGE} />
+    <meta property="og:url" content={PUBLIC_OG_URL} />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="zhsama Portfolio" />
+    <meta property="og:site_name" content={PUBLIC_OG_SITE_NAME} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
