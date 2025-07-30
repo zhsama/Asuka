@@ -3,7 +3,7 @@ import "@/styles/global.css";
 import CyberBackground from "@/components/CyberBackground.astro";
 
 import { env } from "@/config/env";
-const { SITE_TITLE } = env;
+const { PUBLIC_SITE_TITLE } = env;
 ---
 
 <!doctype html>
@@ -12,7 +12,7 @@ const { SITE_TITLE } = env;
     <meta charset="UTF-8" />
     <meta name="description" content="Software Developer" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="../../public/favicon.jpg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.jpg" />
     <meta property="og:title" content="zhsama" />
     <meta property="og:description" content="Software Developer" />
     <meta property="og:image" content="https://oscarhernandez.vercel.app/og.image.png" />
@@ -40,7 +40,7 @@ const { SITE_TITLE } = env;
       />
     </noscript>
 
-    <title>{SITE_TITLE}</title>
+    <title>{PUBLIC_SITE_TITLE}</title>
     
     <!-- 主题初始化脚本 -->
     <script>

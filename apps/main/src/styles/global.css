@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 /* 自定义动画 - Tailwind CSS v4 */
 @keyframes scaleAnim {
   0% {
@@ -16,7 +14,7 @@
   }
 }
 
-@utility scale {
+.scale {
   animation: scaleAnim 300ms ease-in-out;
 }
 
@@ -526,13 +524,13 @@ html {
 
 @keyframes synthwave-glow {
   0% {
-    text-shadow: 
+    text-shadow:
       0 0 5px var(--primary),
       0 0 10px var(--primary),
       0 0 15px var(--primary);
   }
   100% {
-    text-shadow: 
+    text-shadow:
       0 0 8px var(--primary),
       0 0 16px var(--primary),
       0 0 24px var(--primary),
@@ -542,7 +540,7 @@ html {
 
 /* 主题过渡动画 */
 * {
-  transition: 
+  transition:
     background-color 0.5s ease,
     border-color 0.5s ease,
     color 0.5s ease,
@@ -647,9 +645,6 @@ html {
     @apply bg-background text-foreground;
   }
 }
-
-/* KaTeX 数学公式样式 */
-@import 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
 
 @layer base {
   :root {
@@ -777,7 +772,7 @@ html {
   }
 
   .btn-cyberpunk:hover {
-    box-shadow: 
+    box-shadow:
       0 0 20px hsl(var(--primary) / 0.5),
       inset 0 0 20px hsl(var(--primary) / 0.1);
     text-shadow: 0 0 8px hsl(var(--primary-foreground));
@@ -811,7 +806,7 @@ html {
 
   .input-cyberpunk:focus {
     @apply border-primary outline-none;
-    box-shadow: 
+    box-shadow:
       0 0 0 1px hsl(var(--primary)),
       0 0 20px hsl(var(--primary) / 0.4),
       inset 0 0 10px hsl(var(--primary) / 0.1);
@@ -988,7 +983,7 @@ html {
   /* Cyberpunk 霓虹文字效果 */
   .text-neon-primary {
     @apply text-primary;
-    text-shadow: 
+    text-shadow:
       0 0 5px hsl(var(--primary)),
       0 0 10px hsl(var(--primary)),
       0 0 15px hsl(var(--primary));
@@ -996,7 +991,7 @@ html {
 
   .text-neon-secondary {
     @apply text-secondary;
-    text-shadow: 
+    text-shadow:
       0 0 5px hsl(var(--secondary)),
       0 0 10px hsl(var(--secondary)),
       0 0 15px hsl(var(--secondary));
@@ -1005,8 +1000,8 @@ html {
   /* Cyberpunk 渐变背景 */
   .bg-gradient-cyberpunk {
     background: linear-gradient(
-      135deg, 
-      hsl(var(--primary) / 0.1) 0%, 
+      135deg,
+      hsl(var(--primary) / 0.1) 0%,
       hsl(var(--secondary) / 0.1) 50%,
       hsl(var(--accent) / 0.1) 100%
     );
@@ -1029,13 +1024,13 @@ html {
 
   /* 阴影工具类 */
   .shadow-cyberpunk {
-    box-shadow: 
+    box-shadow:
       0 4px 20px hsl(var(--primary) / 0.1),
       0 0 40px hsl(var(--secondary) / 0.05);
   }
 
   .shadow-cyberpunk-hover {
-    box-shadow: 
+    box-shadow:
       0 8px 30px hsl(var(--primary) / 0.2),
       0 0 60px hsl(var(--secondary) / 0.1);
   }
