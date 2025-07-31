@@ -133,99 +133,98 @@ export const lightTheme: Theme = {
 };
 
 // 主题管理器
-export class ThemeManager {
-  private static currentTheme: Theme = cyberpunk2077Theme;
-  private static subscribers: Array<(theme: Theme) => void> = [];
+let currentTheme: Theme = cyberpunk2077Theme;
+let subscribers: Array<(theme: Theme) => void> = [];
 
-  static getCurrentTheme(): Theme {
-    return ThemeManager.currentTheme;
-  }
-  static setTheme(theme: Theme): void {
-    ThemeManager.currentTheme = theme;
-    ThemeManager.applyTheme(theme);
-    ThemeManager.notifySubscribers(theme);
-    // 保存到本地存储
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem("selected-theme", theme.id);
-    }
-  }
+export function getCurrentTheme(): Theme {
+  return currentTheme;
+}
 
-  static getThemeById(id: string): Theme | undefined {
-    const themes = [cyberpunk2077Theme, matrixTheme, synthwaveTheme, lightTheme];
-    return themes.find((theme) => theme.id === id);
+export function setTheme(theme: Theme): void {
+  currentTheme = theme;
+  applyTheme(theme);
+  notifySubscribers(theme);
+  // 保存到本地存储
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem("selected-theme", theme.id);
   }
+}
 
-  static getAllThemes(): Theme[] {
-    return [cyberpunk2077Theme, matrixTheme, synthwaveTheme, lightTheme];
-  }
+export function getThemeById(id: string): Theme | undefined {
+  const themes = [cyberpunk2077Theme, matrixTheme, synthwaveTheme, lightTheme];
+  return themes.find((theme) => theme.id === id);
+}
 
-  static initializeTheme(): void {
-    // 从本地存储加载主题
-    if (typeof localStorage !== "undefined") {
-      const savedThemeId = localStorage.getItem("selected-theme");
-      if (savedThemeId) {
-        const savedTheme = ThemeManager.getThemeById(savedThemeId);
-        if (savedTheme) {
-          ThemeManager.currentTheme = savedTheme;
-        }
+export function getAllThemes(): Theme[] {
+  return [cyberpunk2077Theme, matrixTheme, synthwaveTheme, lightTheme];
+}
+
+export function initializeTheme(): void {
+  // 从本地存储加载主题
+  if (typeof localStorage !== "undefined") {
+    const savedThemeId = localStorage.getItem("selected-theme");
+    if (savedThemeId) {
+      const savedTheme = getThemeById(savedThemeId);
+      if (savedTheme) {
+        currentTheme = savedTheme;
       }
     }
-    ThemeManager.applyTheme(ThemeManager.currentTheme);
   }
+  applyTheme(currentTheme);
+}
 
-  static subscribe(callback: (theme: Theme) => void): () => void {
-    ThemeManager.subscribers.push(callback);
-    // 返回取消订阅函数
-    return () => {
-      const index = ThemeManager.subscribers.indexOf(callback);
-      if (index > -1) {
-        ThemeManager.subscribers.splice(index, 1);
-      }
-    };
-  }
-
-  private static applyTheme(theme: Theme): void {
-    if (typeof document === "undefined") return;
-
-    const root = document.documentElement;
-
-    // 应用颜色变量
-    root.style.setProperty("--background", theme.colors.background);
-    root.style.setProperty("--primary", theme.colors.primary);
-    root.style.setProperty("--secondary", theme.colors.secondary);
-    root.style.setProperty("--accent", theme.colors.accent);
-    root.style.setProperty("--success", theme.colors.success);
-    root.style.setProperty("--text-primary", theme.colors.textPrimary);
-    root.style.setProperty("--text-secondary", theme.colors.textSecondary);
-    root.style.setProperty("--text-muted", theme.colors.textMuted);
-    root.style.setProperty("--border", theme.colors.border);
-    root.style.setProperty("--border-light", theme.colors.borderLight);
-    root.style.setProperty("--component-bg", theme.colors.componentBg);
-
-    // 兼容性变量
-    root.style.setProperty("--sec", theme.colors.primary);
-    root.style.setProperty("--white", theme.colors.textPrimary);
-    root.style.setProperty("--white-icon", theme.colors.textSecondary + "98");
-    root.style.setProperty("--white-icon-tr", theme.colors.borderLight);
-
-    // 应用效果变量
-    if (theme.effects) {
-      root.style.setProperty("--glow-intensity", theme.effects.glowIntensity.toString());
-      root.style.setProperty("--pulse-speed", `${theme.effects.pulseSpeed}s`);
-      root.style.setProperty("--matrix-opacity", theme.effects.matrixOpacity.toString());
-      root.style.setProperty("--grid-opacity", theme.effects.gridOpacity.toString());
-      root.style.setProperty("--data-stream-opacity", theme.effects.dataStreamOpacity.toString());
+export function subscribe(callback: (theme: Theme) => void): () => void {
+  subscribers.push(callback);
+  // 返回取消订阅函数
+  return () => {
+    const index = subscribers.indexOf(callback);
+    if (index > -1) {
+      subscribers.splice(index, 1);
     }
+  };
+}
 
-    // 添加主题类名到body和data-theme属性到root
-    document.body.className = document.body.className.replace(/theme-\w+/, "");
-    document.body.classList.add(`theme-${theme.id}`);
-    root.setAttribute("data-theme", theme.id);
+function applyTheme(theme: Theme): void {
+  if (typeof document === "undefined") return;
+
+  const root = document.documentElement;
+
+  // 应用颜色变量
+  root.style.setProperty("--background", theme.colors.background);
+  root.style.setProperty("--primary", theme.colors.primary);
+  root.style.setProperty("--secondary", theme.colors.secondary);
+  root.style.setProperty("--accent", theme.colors.accent);
+  root.style.setProperty("--success", theme.colors.success);
+  root.style.setProperty("--text-primary", theme.colors.textPrimary);
+  root.style.setProperty("--text-secondary", theme.colors.textSecondary);
+  root.style.setProperty("--text-muted", theme.colors.textMuted);
+  root.style.setProperty("--border", theme.colors.border);
+  root.style.setProperty("--border-light", theme.colors.borderLight);
+  root.style.setProperty("--component-bg", theme.colors.componentBg);
+
+  // 兼容性变量
+  root.style.setProperty("--sec", theme.colors.primary);
+  root.style.setProperty("--white", theme.colors.textPrimary);
+  root.style.setProperty("--white-icon", theme.colors.textSecondary + "98");
+  root.style.setProperty("--white-icon-tr", theme.colors.borderLight);
+
+  // 应用效果变量
+  if (theme.effects) {
+    root.style.setProperty("--glow-intensity", theme.effects.glowIntensity.toString());
+    root.style.setProperty("--pulse-speed", `${theme.effects.pulseSpeed}s`);
+    root.style.setProperty("--matrix-opacity", theme.effects.matrixOpacity.toString());
+    root.style.setProperty("--grid-opacity", theme.effects.gridOpacity.toString());
+    root.style.setProperty("--data-stream-opacity", theme.effects.dataStreamOpacity.toString());
   }
 
-  private static notifySubscribers(theme: Theme): void {
-    ThemeManager.subscribers.forEach((callback) => callback(theme));
-  }
+  // 添加主题类名到body和data-theme属性到root
+  document.body.className = document.body.className.replace(/theme-\w+/, "");
+  document.body.classList.add(`theme-${theme.id}`);
+  root.setAttribute("data-theme", theme.id);
+}
+
+function notifySubscribers(theme: Theme): void {
+  subscribers.forEach((callback) => callback(theme));
 }
 
 // 主题切换器组件的数据
