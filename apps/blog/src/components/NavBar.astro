@@ -4,6 +4,7 @@ import { Icon } from "astro-icon/components";
 import { i18n } from "@/i18n/translation";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import ErrorBoundary from "@/components/React/ErrorBoundary";
+import { env } from "@/config/env";
 
 const navCount = AsukaConfig.navigators.length;
 ---
@@ -31,11 +32,11 @@ const navCount = AsukaConfig.navigators.length;
           class="mx-auto hidden"
         />
       </button>
-      <a class="title" href="/">
+      <a class="title" href={AsukaConfig.site}>
         {AsukaConfig.brandTitle}
       </a>
     </div>
-    <a class="brand-lg" href="/">
+    <a class="brand-lg" href={env.PUBLIC_MAIN_URL}>
       <div class="title space-x-2">
         <Icon name="heroicons:home" size={32} />
         <p>{AsukaConfig.brandTitle}</p>

@@ -13,6 +13,7 @@ export const blogEnvSchema = z.object({
   PUBLIC_SITE_TITLE: z.string(),
   PUBLIC_SITE_DESCRIPTION: z.string(),
   PUBLIC_BUILD_ENV: z.enum(["development", "production"]),
+  PUBLIC_MAIN_URL: z.string().url(),
 });
 
 /**
