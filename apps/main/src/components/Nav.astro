@@ -261,6 +261,48 @@ const navItems: NavItem[] = [
       0 0 80px rgba(0, 245, 255, 0.15);
   }
 
+  /* 亮色主题下的导航栏样式 */
+  :root[data-theme="light"] nav.scrolling,
+  body.theme-light nav.scrolling {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(15px);
+    border-radius: 9999px;
+    border-color: var(--border);
+    box-shadow:
+      0 0 20px rgba(37, 99, 235, 0.2),
+      inset 0 0 20px rgba(37, 99, 235, 0.05),
+      0 0 40px rgba(124, 58, 237, 0.1);
+  }
+
+  /* 亮色主题下的导航链接样式 */
+  :root[data-theme="light"] .nav-link,
+  body.theme-light .nav-link {
+    color: var(--text-primary);
+    text-shadow: none;
+  }
+
+  :root[data-theme="light"] .nav-link:hover,
+  body.theme-light .nav-link:hover {
+    color: var(--primary);
+    text-shadow: none;
+  }
+
+  :root[data-theme="light"] nav a.active,
+  body.theme-light nav a.active {
+    color: var(--primary) !important;
+    text-shadow: none;
+  }
+
+  :root[data-theme="light"] nav a.active .nav-text,
+  body.theme-light nav a.active .nav-text {
+    text-shadow: none;
+  }
+
+  :root[data-theme="light"] .nav-link:hover .nav-text,
+  body.theme-light .nav-link:hover .nav-text {
+    text-shadow: none;
+  }
+
   .nav-indicator {
     background: var(--primary);
     box-shadow:

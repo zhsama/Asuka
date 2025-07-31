@@ -106,6 +106,32 @@ export const synthwaveTheme: Theme = {
   },
 };
 
+export const lightTheme: Theme = {
+  name: "Light Mode",
+  id: "light",
+  description: "亮色主题，适合日间使用",
+  colors: {
+    background: "#ffffff",
+    primary: "#2563eb", // 蓝色
+    secondary: "#7c3aed", // 紫色
+    accent: "#dc2626", // 红色
+    success: "#16a34a", // 绿色
+    textPrimary: "#1f2937",
+    textSecondary: "#4b5563",
+    textMuted: "#9ca3af",
+    border: "#2563eb40",
+    borderLight: "#e5e7eb",
+    componentBg: "#f9fafb",
+  },
+  effects: {
+    glowIntensity: 0.6,
+    pulseSpeed: 2.0,
+    matrixOpacity: 0.2,
+    gridOpacity: 0.1,
+    dataStreamOpacity: 0.3,
+  },
+};
+
 // 主题管理器
 export class ThemeManager {
   private static currentTheme: Theme = cyberpunk2077Theme;
@@ -125,12 +151,12 @@ export class ThemeManager {
   }
 
   static getThemeById(id: string): Theme | undefined {
-    const themes = [cyberpunk2077Theme, matrixTheme, synthwaveTheme];
+    const themes = [cyberpunk2077Theme, matrixTheme, synthwaveTheme, lightTheme];
     return themes.find((theme) => theme.id === id);
   }
 
   static getAllThemes(): Theme[] {
-    return [cyberpunk2077Theme, matrixTheme, synthwaveTheme];
+    return [cyberpunk2077Theme, matrixTheme, synthwaveTheme, lightTheme];
   }
 
   static initializeTheme(): void {
@@ -191,9 +217,10 @@ export class ThemeManager {
       root.style.setProperty("--data-stream-opacity", theme.effects.dataStreamOpacity.toString());
     }
 
-    // 添加主题类名到body
+    // 添加主题类名到body和data-theme属性到root
     document.body.className = document.body.className.replace(/theme-\w+/, "");
     document.body.classList.add(`theme-${theme.id}`);
+    root.setAttribute("data-theme", theme.id);
   }
 
   private static notifySubscribers(theme: Theme): void {
@@ -231,6 +258,16 @@ export const themeOptions = [
       primary: synthwaveTheme.colors.primary,
       secondary: synthwaveTheme.colors.secondary,
       accent: synthwaveTheme.colors.accent,
+    },
+  },
+  {
+    id: lightTheme.id,
+    name: lightTheme.name,
+    description: lightTheme.description,
+    preview: {
+      primary: lightTheme.colors.primary,
+      secondary: lightTheme.colors.secondary,
+      accent: lightTheme.colors.accent,
     },
   },
 ];
