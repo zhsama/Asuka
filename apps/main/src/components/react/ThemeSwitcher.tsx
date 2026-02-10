@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { ThemeManager, themeOptions, type Theme } from "@/config/themes";
+import {
+  getCurrentTheme,
+  subscribe,
+  setTheme,
+  initializeTheme,
+  getThemeById,
+  themeOptions,
+  type Theme
+} from "@/config/themes";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,28 +15,28 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
   DropdownMenuLabel,
-} from "@/React/ui/DropdownMenu";
+} from "@/components/ui/DropdownMenu";
 import { ChevronDownIcon, CheckIcon } from "lucide-react";
 
 const ThemeSwitcher = () => {
-  const [currentTheme, setCurrentTheme] = useState<Theme>(ThemeManager.getCurrentTheme());
+  const [currentThemeState, setCurrentThemeState] = useState<Theme>(getCurrentTheme());
 
   useEffect(() => {
     // 初始化主题
-    ThemeManager.initializeTheme();
+    initializeTheme();
 
     // 订阅主题变化
-    const unsubscribe = ThemeManager.subscribe((theme) => {
-      setCurrentTheme(theme);
+    const unsubscribe = subscribe((theme) => {
+      setCurrentThemeState(theme);
     });
 
     return unsubscribe;
   }, []);
 
   const handleThemeChange = (themeId: string) => {
-    const theme = ThemeManager.getThemeById(themeId);
+    const theme = getThemeById(themeId);
     if (theme) {
-      ThemeManager.setTheme(theme);
+      setTheme(theme);
     }
   };
 
@@ -43,18 +51,18 @@ const ThemeSwitcher = () => {
           <div className="flex gap-1">
             <div
               className="w-3 h-3 rounded-full border border-white/20 shadow-sm"
-              style={{ backgroundColor: currentTheme.colors.primary }}
+              style={{ backgroundColor: currentThemeState.colors.primary }}
             />
             <div
               className="w-3 h-3 rounded-full border border-white/20 shadow-sm"
-              style={{ backgroundColor: currentTheme.colors.secondary }}
+              style={{ backgroundColor: currentThemeState.colors.secondary }}
             />
             <div
               className="w-3 h-3 rounded-full border border-white/20 shadow-sm"
-              style={{ backgroundColor: currentTheme.colors.accent }}
+              style={{ backgroundColor: currentThemeState.colors.accent }}
             />
           </div>
-          {/* <span className="hidden md:inline text-[var(--text-primary)]">{currentTheme.name}</span> */}
+          {/* <span className="hidden md:inline text-[var(--text-primary)]">{currentThemeState.name}</span> */}
           <ChevronDownIcon className="w-4 h-4 transition-transform duration-200 text-[var(--text-secondary)]" />
         </button>
       </DropdownMenuTrigger>
@@ -71,7 +79,7 @@ const ThemeSwitcher = () => {
             key={option.id}
             onClick={() => handleThemeChange(option.id)}
             className={`p-4 cursor-pointer transition-all duration-300 focus:bg-[var(--primary)]/10 hover:bg-[var(--secondary)]/5 ${
-              currentTheme.id === option.id
+              currentThemeState.id === option.id
                 ? 'bg-[var(--primary)]/10 border-l-2 border-l-[var(--primary)]'
                 : ''
             }`}
@@ -80,14 +88,14 @@ const ThemeSwitcher = () => {
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="font-medium text-[var(--text-primary)]">{option.name}</span>
-                  {currentTheme.id === option.id && (
+                  {currentThemeState.id === option.id && (
                     <CheckIcon className="w-4 h-4 text-[var(--primary)]" />
                   )}
                 </div>
                 <p className="text-sm text-[var(--text-muted)] mb-2">{option.description}</p>
 
                 {/* 当前主题指示器 */}
-                {currentTheme.id === option.id && (
+                {currentThemeState.id === option.id && (
                   <div className="flex items-center gap-2 text-xs text-[var(--primary)]">
                     <div className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse" />
                     当前主题
@@ -118,4 +126,4 @@ const ThemeSwitcher = () => {
   );
 };
 
-export default ThemeSwitcher; 
+export default ThemeSwitcher;
